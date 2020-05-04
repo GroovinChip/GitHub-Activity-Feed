@@ -20,6 +20,8 @@ dependencies:
   path_provider: ^1.6.7
   cloud_firestore: ^0.13.5
   material_design_icons_flutter: ^4.0.5145
+  rxdart: ^0.24.0
+  groovin_widgets: ^1.5.0+1
 
 dev_dependencies:
   flutter_test:

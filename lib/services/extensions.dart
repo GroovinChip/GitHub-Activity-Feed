@@ -8,4 +8,5 @@ extension ThemeExt on BuildContext {
   Color get primaryColorDark => Theme.of(this).primaryColorDark;
   Color get accentColor => Theme.of(this).accentColor;
   Color get canvasColor => Theme.of(this).canvasColor;
+  bool get isDarkTheme => Theme.of(this).brightness == Brightness.dark;
 }

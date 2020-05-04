@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/app/provided.dart';
+import 'package:github_activity_feed/screens/mobile/mobile_profile.dart';
 import 'package:github_activity_feed/services/extensions.dart';
 import 'package:github_activity_feed/screens/widgets/following_feed.dart';
 import 'package:github_activity_feed/screens/widgets/personal_feed.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:rxdart/rxdart.dart';
 
 class MobileActivityFeed extends StatefulWidget {
   @override
@@ -42,7 +44,9 @@ class _MobileActivityFeedState extends State<MobileActivityFeed> with ProvidedSt
               ),
             ),
           ),
-          onTap: () {},
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => MobileProfile()),
+          ),
         ),
         title: Text(
           'Activity Feed',
