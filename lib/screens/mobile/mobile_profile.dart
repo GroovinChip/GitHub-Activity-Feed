@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/services/extensions.dart';
 import 'package:groovin_widgets/avatar_back_button.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:rxdart/rxdart.dart';
 
 class MobileProfile extends StatefulWidget {
   MobileProfile({Key key}) : super(key: key);
@@ -54,9 +56,21 @@ class _MobileProfileState extends State<MobileProfile>
               onPressed: () => Navigator.pop(context),
             ),
             SizedBox(width: 16),
-            Text(
-              user.login,
-              style: TextStyle(fontWeight: FontWeight.bold),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  user.login,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  user.name,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -84,27 +98,64 @@ class _MobileProfileState extends State<MobileProfile>
       body: TabBarView(
         controller: _tabController,
         children: [
-          ListView(
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.link),
-                  SizedBox(width: 8),
-                  Text(user.blog, style: TextStyle(color: textColor)),
-                ],
-              ),
-              Row(
-                children: [
-                  Icon(Icons.location_on),
-                  SizedBox(width: 8),
-                  Text(user.location, style: TextStyle(color: textColor)),
-                ],
-              ),
-              Text(
+          StreamBuilder(
+            stream: CombineLatestStream.combine2(
+              github.github.organizations.list().toList().asStream(),
+              github.github.activity.listStarred().toList().asStream(),
+              (List<Organization> a, List<Repository> b) => [a, b],
+            ),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Center(child: CircularProgressIndicator());
+              } else {
+                List<Organization> _organizations = snapshot.data[0];
+                List<Repository> _starred = snapshot.data[1];
+                return ListView(
+                  children: [
+                    ListTile(
+                      title: Text(user.bio, style: TextStyle(color: textColor)),
+                    ),
+                    ListTile(
+                      leading: Icon(MdiIcons.mapMarkerOutline),
+                      title: Text(user.location, style: TextStyle(color: textColor)),
+                    ),
+                    ListTile(
+                      leading: Icon(MdiIcons.emailOutline),
+                      title: Text(user.email, style: TextStyle(color: textColor)),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.link),
+                      title: Text(user.blog, style: TextStyle(color: textColor)),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.access_time),
+                      title: Text(user.createdAt.toString(), style: TextStyle(color: textColor)),
+                    ),
+                    /*Text(
                 '${user.ownedPrivateReposCount} pinned repositories',
                 style: TextStyle(color: textColor),
-              ),
-            ],
+              ),*/
+                    Divider(height: 0),
+                    ListTile(
+                      title: Text('Organizations', style: TextStyle(color: textColor)),
+                      trailing: Text(
+                        '${_organizations.length}',
+                        style: TextStyle(color: textColor),
+                      ),
+                      onTap: () {},
+                    ),
+                    ListTile(
+                      title: Text('Starred', style: TextStyle(color: textColor)),
+                      trailing: Text(
+                        '${_starred.length}',
+                        style: TextStyle(color: textColor),
+                      ),
+                      onTap: () {},
+                    ),
+                  ],
+                );
+              }
+            },
           ),
           Container(),
           Container(),
