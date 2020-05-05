@@ -61,26 +61,34 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
         navigatorKey: _navigatorKey,
         title: 'Github Auth Test',
         theme: ThemeData(
-          primaryColor: Color(0xff2962FF),
-          accentColor: Color(0xff3BACFF),
+          colorScheme: ColorScheme.light().copyWith(
+            primary: Color(0xff2962FF),
+            primaryVariant: Color(0xff0039cb),
+            secondary: Color(0xff3BACFF),
+            secondaryVariant: Color(0xff007ecb),
+          ),
           textTheme: GoogleFonts.interTextTheme(
-            context.textTheme,
+            Theme.of(context).textTheme,
           ),
           bottomNavigationBarTheme: BottomNavigationBarThemeData(
-            selectedItemColor: context.accentColor,
-            unselectedItemColor: context.brightness == Brightness.dark ? Color(0xff92A9DE) : Colors.black,
+            selectedItemColor: Theme.of(context).colorScheme.secondary,
+            unselectedItemColor: Color(0xff92A9DE),
           ),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         darkTheme: ThemeData.dark().copyWith(
-          primaryColor: Color(0xff2962FF),
-          accentColor: Color(0xff3BACFF),
+          colorScheme: ColorScheme.dark().copyWith(
+            primary: Color(0xff2962FF),
+            primaryVariant: Color(0xff0039cb),
+            secondary: Color(0xff3BACFF),
+            secondaryVariant: Color(0xff007ecb),
+          ),
           textTheme: GoogleFonts.interTextTheme(
-            context.textTheme,
+            Theme.of(context).textTheme,
           ),
           bottomNavigationBarTheme: BottomNavigationBarThemeData(
-            selectedItemColor: Color(0xff3BACFF),
-            unselectedItemColor: Color(0xffE6F4F1),
+            selectedItemColor: Theme.of(context).colorScheme.secondary,
+            unselectedItemColor: Color(0xff92A9DE),
           ),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),

@@ -24,31 +24,11 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> with ProvidedState {
   bool _loading = false;
-  Brightness brightness;
-  Color buttonTextColor, buttonIconColor, buttonColor;
-  Color textColor;
 
   @override
   void initState() {
     super.initState();
     auth.startAuth();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    brightness = context.brightness;
-    if (brightness == Brightness.light) {
-      textColor = Colors.black;
-      buttonColor = Colors.black;
-      buttonTextColor = Colors.white;
-      buttonIconColor = Colors.white;
-    } else {
-      textColor = Colors.white;
-      buttonColor = Colors.white;
-      buttonTextColor = Colors.black;
-      buttonIconColor = Colors.black;
-    }
   }
 
   @override
@@ -61,7 +41,7 @@ class _LoginPageState extends State<LoginPage> with ProvidedState {
             Text(
               'GitHub Activity Feed',
               style: TextStyle(
-                color: textColor,
+                color: context.colorScheme.onBackground,
               ),
             ),
             AnimatedSwitcher(
@@ -69,17 +49,10 @@ class _LoginPageState extends State<LoginPage> with ProvidedState {
               child: _loading
                   ? CircularProgressIndicator()
                   : RaisedButton.icon(
-                      label: Text(
-                        'Login with GitHub',
-                        style: TextStyle(
-                          color: buttonTextColor,
-                        ),
-                      ),
-                      icon: Icon(
-                        MdiIcons.github,
-                        color: buttonIconColor,
-                      ),
-                      color: buttonColor,
+                      color: context.isDarkTheme ? Colors.white : Colors.black,
+                      textColor: context.colorScheme.onPrimary,
+                      label: Text('Login with GitHub'),
+                      icon: Icon(MdiIcons.github),
                       onPressed: () {
                         setState(() => _loading = true);
                         url_launcher.launch(

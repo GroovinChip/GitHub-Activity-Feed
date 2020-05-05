@@ -18,7 +18,11 @@ class _PersonalFeedState extends State<PersonalFeed> with ProvidedState {
       stream: github.github.activity.listEventsPerformedByUser(user.login).toList().asStream(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return Center(child: CircularProgressIndicator());
+          return Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(context.colorScheme.secondary),
+            ),
+          );
         } else {
           final events = snapshot?.data;
           return ListView.builder(
@@ -91,16 +95,14 @@ class _PersonalFeedState extends State<PersonalFeed> with ProvidedState {
 
   Widget _buildStar(Widget eventWidget, Event event) {
     eventWidget = RichText(
-      text: TextSpan(
-        children: <TextSpan>[
-          TextSpan(text: user.login),
-          TextSpan(
-            text: ' starred',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          TextSpan(text: ' starred ${event.repo.name}'),
-        ]
-      ),
+      text: TextSpan(children: <TextSpan>[
+        TextSpan(text: user.login),
+        TextSpan(
+          text: ' starred',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        TextSpan(text: ' starred ${event.repo.name}'),
+      ]),
     );
     return eventWidget;
   }
@@ -183,9 +185,6 @@ class _PersonalFeedState extends State<PersonalFeed> with ProvidedState {
     }
     eventWidget = RichText(
       text: TextSpan(
-        style: TextStyle(
-          color: context.brightness == Brightness.light ? Colors.black : Color(0xffE6F4F1),
-        ),
         children: <TextSpan>[
           TextSpan(text: '${issueCommentEvent.comment.user.login} '),
           TextSpan(

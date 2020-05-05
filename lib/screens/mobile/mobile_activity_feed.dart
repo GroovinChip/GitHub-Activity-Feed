@@ -32,9 +32,6 @@ class _MobileActivityFeedState extends State<MobileActivityFeed> with ProvidedSt
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: context.brightness == Brightness.light
-            ? context.primaryColor
-            : context.primaryColorDark,
         leading: InkResponse(
           child: Padding(
             padding: const EdgeInsets.all(12.0),
