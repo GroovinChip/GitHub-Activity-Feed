@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github/hooks.dart';
 import 'package:github_activity_feed/app/provided.dart';
-import 'package:github_activity_feed/services/extensions.dart';
 
 class PersonalFeed extends StatefulWidget {
-  PersonalFeed({Key key}) : super(key: key);
+  PersonalFeed({
+    Key key,
+    @required this.events,
+  }) : super(key: key);
+
+  final List<Event> events;
 
   @override
   _PersonalFeedState createState() => _PersonalFeedState();
@@ -14,55 +18,43 @@ class PersonalFeed extends StatefulWidget {
 class _PersonalFeedState extends State<PersonalFeed> with ProvidedState {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<Event>>(
-      stream: github.github.activity.listEventsPerformedByUser(user.login).toList().asStream(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(context.colorScheme.secondary),
-            ),
-          );
-        } else {
-          final events = snapshot?.data;
-          return ListView.builder(
-            padding: const EdgeInsets.only(left: 8, right: 8),
-            itemCount: events.length,
-            itemBuilder: (context, index) {
-              final event = events[index];
-              Widget eventWidget;
+    return Scrollbar(
+      child: ListView.builder(
+        padding: const EdgeInsets.only(left: 8, right: 8),
+        itemCount: widget.events.length,
+        itemBuilder: (context, index) {
+          final event = widget.events[index];
+          Widget eventWidget;
 
-              eventWidget = _determineEvent(event, eventWidget, context);
+          eventWidget = _determineEvent(event, eventWidget, context);
 
-              return eventWidget != null
-                  ? Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: InkWell(
-                        customBorder: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
+          return eventWidget != null
+              ? Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: InkWell(
+                    customBorder: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    onTap: () {},
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ListTile(
+                          /*leading: CircleAvatar(
+                            backgroundImage: NetworkImage(user.avatarUrl),
+                          ),*/
+                          title: eventWidget,
                         ),
-                        onTap: () {},
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ListTile(
-                              leading: CircleAvatar(
-                                backgroundImage: NetworkImage(user.avatarUrl),
-                              ),
-                              title: eventWidget,
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  : Container();
-            },
-          );
-        }
-      },
+                      ],
+                    ),
+                  ),
+                )
+              : Container();
+        },
+      ),
     );
   }
 

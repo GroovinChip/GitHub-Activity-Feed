@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/mobile/mobile_settings.dart';
+import 'package:github_activity_feed/screens/widgets/personal_feed.dart';
 import 'package:github_activity_feed/services/extensions.dart';
 import 'package:groovin_widgets/avatar_back_button.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -18,10 +19,14 @@ class _MobileProfileState extends State<MobileProfile>
     with ProvidedState, SingleTickerProviderStateMixin {
   TabController _tabController;
 
+  Stream<User> listCurrentUserFollowing() => PaginationHelper(github.github).objects(
+      'GET', '/user/following', (i) => User.fromJson(i),
+      statusCode: 200);
+
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(initialIndex: 0, length: 4, vsync: this);
+    _tabController = TabController(initialIndex: 0, length: 2, vsync: this);
   }
 
   @override
@@ -75,85 +80,145 @@ class _MobileProfileState extends State<MobileProfile>
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: context.colorScheme.secondary,
-          isScrollable: true,
           tabs: [
             Tab(text: 'Overview'),
-            Tab(text: 'Repositories (${user.publicReposCount + user.privateReposCount})'),
-            Tab(text: 'Following (${user.followingCount})'),
-            Tab(text: 'Followers (${user.followersCount})'),
+            Tab(text: 'Activity'),
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          StreamBuilder(
-            stream: CombineLatestStream.combine2(
-              github.github.organizations.list().toList().asStream(),
-              github.github.activity.listStarred().toList().asStream(),
-              (List<Organization> a, List<Repository> b) => [a, b],
-            ),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(context.colorScheme.secondary),
-                  ),
-                );
-              } else {
-                List<Organization> _organizations = snapshot.data[0];
-                List<Repository> _starred = snapshot.data[1];
-                return ListView(
+      body: StreamBuilder(
+        stream: CombineLatestStream.list([
+          github.github.repositories.listRepositories().toList().asStream(),
+          listCurrentUserFollowing().toList().asStream(),
+          github.github.users.listCurrentUserFollowers().toList().asStream(),
+          github.github.activity.listStarred().toList().asStream(),
+          github.github.activity.listEventsPerformedByUser(user.login).toList().asStream(),
+          github.github.organizations.list().toList().asStream(),
+        ]),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(context.colorScheme.secondary),
+              ),
+            );
+          } else {
+            List<Repository> _repositories = snapshot.data[0];
+            List<User> _following = snapshot.data[1];
+            List<User> _followers = snapshot.data[2];
+            List<Repository> _starred = snapshot.data[3];
+            List<Event> _activity = snapshot.data[4];
+            List<Organization> _organizations = snapshot.data[5];
+            return TabBarView(
+              controller: _tabController,
+              children: [
+                ListView(
                   children: [
                     ListTile(
-                      title: Text(user.bio, style: TextStyle(color: context.colorScheme.onBackground)),
+                      title: Text(
+                        user.bio,
+                        style: TextStyle(color: context.colorScheme.onBackground),
+                      ),
                     ),
                     ListTile(
                       leading: Icon(MdiIcons.mapMarkerOutline),
-                      title: Text(user.location, style: TextStyle(color: context.colorScheme.onBackground)),
+                      title: Text(
+                        user.location,
+                        style: TextStyle(color: context.colorScheme.onBackground),
+                      ),
                     ),
                     ListTile(
                       leading: Icon(MdiIcons.emailOutline),
-                      title: Text(user.email, style: TextStyle(color: context.colorScheme.onBackground)),
+                      title: Text(
+                        user.email,
+                        style: TextStyle(color: context.colorScheme.onBackground),
+                      ),
                     ),
                     ListTile(
                       leading: Icon(Icons.link),
-                      title: Text(user.blog, style: TextStyle(color: context.colorScheme.onBackground)),
+                      title: Text(
+                        user.blog,
+                        style: TextStyle(color: context.colorScheme.onBackground),
+                      ),
                     ),
                     ListTile(
                       leading: Icon(Icons.access_time),
-                      title: Text(user.createdAt.toString(), style: TextStyle(color: context.colorScheme.onBackground)),
+                      title: Text(
+                        user.createdAt.toString(),
+                        style: TextStyle(color: context.colorScheme.onBackground),
+                      ),
                     ),
-                    /*Text(
-                '${user.ownedPrivateReposCount} pinned repositories',
-                style: TextStyle(color: textColor),
-              ),*/
                     Divider(height: 0),
                     ListTile(
-                      title: Text('Organizations', style: TextStyle(color: context.colorScheme.onBackground)),
-                      trailing: Text(
-                        '${_organizations.length}',
+                      title: Text(
+                        'Repositories',
                         style: TextStyle(color: context.colorScheme.onBackground),
+                      ),
+                      trailing: Text(
+                        '${_repositories.length}',
+                        style: TextStyle(
+                          color: context.colorScheme.onBackground,
+                        ),
                       ),
                       onTap: () {},
                     ),
                     ListTile(
-                      title: Text('Starred', style: TextStyle(color: context.colorScheme.onBackground)),
+                      title: Text(
+                        'Following',
+                        style: TextStyle(color: context.colorScheme.onBackground),
+                      ),
+                      trailing: Text(
+                        '${_following.length}',
+                        style: TextStyle(
+                          color: context.colorScheme.onBackground,
+                        ),
+                      ),
+                      onTap: () {},
+                    ),
+                    ListTile(
+                      title: Text(
+                        'Followers',
+                        style: TextStyle(color: context.colorScheme.onBackground),
+                      ),
+                      trailing: Text(
+                        '${_followers.length}',
+                        style: TextStyle(
+                          color: context.colorScheme.onBackground,
+                        ),
+                      ),
+                      onTap: () {},
+                    ),
+                    ListTile(
+                      title: Text(
+                        'Starred',
+                        style: TextStyle(color: context.colorScheme.onBackground),
+                      ),
                       trailing: Text(
                         '${_starred.length}',
                         style: TextStyle(color: context.colorScheme.onBackground),
                       ),
                       onTap: () {},
                     ),
+                    ListTile(
+                      title: Text(
+                        'Organizations',
+                        style: TextStyle(color: context.colorScheme.onBackground),
+                      ),
+                      trailing: Text(
+                        '${_organizations.length}',
+                        style: TextStyle(color: context.colorScheme.onBackground),
+                      ),
+                      onTap: () {},
+                    ),
                   ],
-                );
-              }
-            },
-          ),
-          Container(),
-          Container(),
-          Container(),
-        ],
+                ),
+                PersonalFeed(
+                  events: _activity,
+                ),
+              ],
+            );
+          }
+        },
       ),
     );
   }

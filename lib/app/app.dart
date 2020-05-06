@@ -70,10 +70,6 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
           textTheme: GoogleFonts.interTextTheme(
             Theme.of(context).textTheme,
           ),
-          bottomNavigationBarTheme: BottomNavigationBarThemeData(
-            selectedItemColor: Theme.of(context).colorScheme.secondary,
-            unselectedItemColor: Color(0xff92A9DE),
-          ),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         darkTheme: ThemeData.dark().copyWith(
@@ -85,10 +81,6 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
           ),
           textTheme: GoogleFonts.interTextTheme(
             Theme.of(context).textTheme,
-          ),
-          bottomNavigationBarTheme: BottomNavigationBarThemeData(
-            selectedItemColor: Theme.of(context).colorScheme.secondary,
-            unselectedItemColor: Color(0xff92A9DE),
           ),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
