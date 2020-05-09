@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:github_activity_feed/screens/home_page.dart';
+import 'package:github_activity_feed/screens/determine_layout.dart';
 import 'package:github_activity_feed/screens/login_page.dart';
 import 'package:github_activity_feed/services/auth_service.dart';
 import 'package:github_activity_feed/services/github_service.dart';
@@ -37,7 +37,7 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
       _navigatorKey.currentState.pushAndRemoveUntil(LoginPage.route(), (route) => false);
     } else {
       url_launcher.closeWebView();
-      _navigatorKey.currentState.pushAndRemoveUntil(HomePage.route(), (route) => false);
+      _navigatorKey.currentState.pushAndRemoveUntil(DetermineLayout.route(), (route) => false);
     }
   }
 
@@ -70,6 +70,10 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
           textTheme: GoogleFonts.interTextTheme(
             Theme.of(context).textTheme,
           ),
+          bottomNavigationBarTheme: BottomNavigationBarThemeData(
+            selectedItemColor: context.colorScheme.primary,
+            unselectedItemColor: context.colorScheme.onSurface,
+          ),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         darkTheme: ThemeData.dark().copyWith(
@@ -82,12 +86,16 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
           textTheme: GoogleFonts.interTextTheme(
             Theme.of(context).textTheme,
           ),
+          bottomNavigationBarTheme: BottomNavigationBarThemeData(
+            selectedItemColor: context.colorScheme.primary,
+            unselectedItemColor: context.colorScheme.onBackground,
+          ),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         themeMode: ThemeMode.system,
         initialRoute: widget.githubService.currentUser.value == null
             ? LoginPage.routeName
-            : HomePage.routeName,
+            : DetermineLayout.routeName,
         onGenerateInitialRoutes: (String initialRoute) => [
           _onGenerateRoute(RouteSettings(name: initialRoute)),
         ],
@@ -99,8 +107,8 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
 
   Route<dynamic> _onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case HomePage.routeName:
-        return HomePage.route(settings: settings);
+      case DetermineLayout.routeName:
+        return DetermineLayout.route(settings: settings);
       case LoginPage.routeName:
         return LoginPage.route(settings: settings);
       default:

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/mobile/mobile_settings.dart';
-import 'package:github_activity_feed/screens/widgets/personal_feed.dart';
+import 'package:github_activity_feed/screens/widgets/mobile_activity_feed.dart';
 import 'package:github_activity_feed/services/extensions.dart';
 import 'package:groovin_widgets/avatar_back_button.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -212,7 +212,7 @@ class _MobileProfileState extends State<MobileProfile>
                     ),
                   ],
                 ),
-                PersonalFeed(
+                MobileActivityFeed(
                   events: _activity,
                 ),
               ],

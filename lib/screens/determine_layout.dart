@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/breakpoints.dart';
-import 'file:///C:/Users/groov/Flutter_Projects/github_activity_feed/lib/screens/mobile/mobile_activity_feed.dart';
-import 'file:///C:/Users/groov/Flutter_Projects/github_activity_feed/lib/screens/tablet/tablet_activity_feed.dart';
-import 'file:///C:/Users/groov/Flutter_Projects/github_activity_feed/lib/screens/desktop/desktop_activity_feed.dart';
+import 'package:github_activity_feed/screens/desktop/desktop_activity_feed.dart';
+import 'package:github_activity_feed/screens/mobile/mobile_home_screen.dart';
+import 'package:github_activity_feed/screens/tablet/tablet_activity_feed.dart';
 
-class HomePage extends StatefulWidget {
+class DetermineLayout extends StatefulWidget {
   static const routeName = Navigator.defaultRouteName;
 
   static Route<dynamic> route({
@@ -13,16 +13,16 @@ class HomePage extends StatefulWidget {
     return MaterialPageRoute(
       settings: settings,
       builder: (BuildContext context) {
-        return HomePage();
+        return DetermineLayout();
       },
     );
   }
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _DetermineLayoutState createState() => _DetermineLayoutState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _DetermineLayoutState extends State<DetermineLayout> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
         } else if (constraints.maxWidth >= kTabletBreakpoint) {
           return TabletActivityFeed();
         } else {
-          return MobileActivityFeed();
+          return MobileHomeScreen();
         }
       },
     );
