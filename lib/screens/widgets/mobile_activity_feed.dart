@@ -29,14 +29,13 @@ class _MobileActivityFeedState extends State<MobileActivityFeed> {
           final event = events[index];
           return OpenContainer(
             closedColor: Theme.of(context).canvasColor,
-            closedBuilder: (context, action) {
+            closedBuilder: (BuildContext context, action) {
               return ActivityCard(event: event);
             },
-            openBuilder: (context, action) {
+            openBuilder: (BuildContext context, action) {
               return EventDetailsScreen(event: event);
             },
           );
-          //return ActivityCard(event: event);
         },
       ),
     );
