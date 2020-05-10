@@ -121,10 +121,15 @@ class _MobileProfileState extends State<MobileProfile> with ProvidedState, Singl
                 ListView(
                   children: [
                     if (_currentUser.bio != null)
-                      ListTile(
-                        title: Text(
-                          _currentUser.bio,
-                          style: TextStyle(color: context.colorScheme.onBackground),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                        child: Card(
+                          child: ListTile(
+                            title: Text(
+                              _currentUser.bio,
+                              style: TextStyle(color: context.colorScheme.onBackground),
+                            ),
+                          ),
                         ),
                       ),
                     if (_currentUser.location != null)
