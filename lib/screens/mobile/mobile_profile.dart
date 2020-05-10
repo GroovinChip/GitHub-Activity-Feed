@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/mobile/mobile_settings.dart';
-import 'package:github_activity_feed/screens/widgets/following_users.dart';
+import 'package:github_activity_feed/screens/mobile/repository_list.dart';
 import 'package:github_activity_feed/screens/widgets/mobile_activity_feed.dart';
 import 'package:github_activity_feed/services/extensions.dart';
 import 'package:groovin_widgets/avatar_back_button.dart';
@@ -21,12 +21,14 @@ class MobileProfile extends StatefulWidget {
   _MobileProfileState createState() => _MobileProfileState();
 }
 
-class _MobileProfileState extends State<MobileProfile> with ProvidedState, SingleTickerProviderStateMixin {
+class _MobileProfileState extends State<MobileProfile>
+    with ProvidedState, SingleTickerProviderStateMixin {
   User get _currentUser => widget.user;
 
   TabController _tabController;
 
-  Stream<User> listCurrentUserFollowing() => PaginationHelper(github.github).objects('GET', '/user/following', (i) => User.fromJson(i), statusCode: 200);
+  Stream<User> listCurrentUserFollowing() => PaginationHelper(github.github)
+      .objects('GET', '/user/following', (i) => User.fromJson(i), statusCode: 200);
 
   @override
   void initState() {
@@ -60,15 +62,16 @@ class _MobileProfileState extends State<MobileProfile> with ProvidedState, Singl
                   _currentUser.login,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                _currentUser.email != null
-                    ? Text(
-                        _currentUser.email,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      )
-                    : Container(),
+                if (_currentUser.email != null)
+                  Text(
+                    _currentUser.email,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  )
+                else
+                  Container(),
               ],
             ),
           ],
@@ -123,10 +126,15 @@ class _MobileProfileState extends State<MobileProfile> with ProvidedState, Singl
                 ListView(
                   children: [
                     if (_currentUser.bio != null)
-                      ListTile(
-                        title: Text(
-                          _currentUser.bio,
-                          style: TextStyle(color: context.colorScheme.onBackground),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                        child: Card(
+                          child: ListTile(
+                            title: Text(
+                              _currentUser.bio,
+                              style: TextStyle(color: context.colorScheme.onBackground),
+                            ),
+                          ),
                         ),
                       ),
                     if (_currentUser.location != null)
@@ -137,14 +145,13 @@ class _MobileProfileState extends State<MobileProfile> with ProvidedState, Singl
                           style: TextStyle(color: context.colorScheme.onBackground),
                         ),
                       ),
-                    if (_currentUser.email != null)
-                      ListTile(
-                        leading: Icon(Icons.access_time),
-                        title: Text(
-                          _currentUser.createdAt.toString(),
-                          style: TextStyle(color: context.colorScheme.onBackground),
-                        ),
+                    if (_currentUser.createdAt != null) ListTile(
+                      leading: Icon(Icons.access_time),
+                      title: Text(
+                        _currentUser.createdAt.asMonthDayYear,
+                        style: TextStyle(color: context.colorScheme.onBackground),
                       ),
+                    ),
                     Divider(height: 0),
                     ListTile(
                       title: Text(
@@ -157,28 +164,27 @@ class _MobileProfileState extends State<MobileProfile> with ProvidedState, Singl
                           color: context.colorScheme.onBackground,
                         ),
                       ),
-                      onTap: () {},
-                    ),
-                    ListTile(
-                      title: Text(
-                        'Following',
-                        style: TextStyle(color: context.colorScheme.onBackground),
-                      ),
-                      trailing: Text(
-                        '${_following.length}',
-                        style: TextStyle(
-                          color: context.colorScheme.onBackground,
-                        ),
-                      ),
                       onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => Scaffold(
-                            appBar: AppBar(),
-                            body: FollowingUsers(users: _following),
+                        MaterialPageRoute(builder: (context) => RepositoryList(
+                          user: _currentUser,
+                          repositories: _repositories,
+                        )),
+                      ),
+                    ),
+                    if (widget.user.login != user.login)
+                      ListTile(
+                        title: Text(
+                          'Following',
+                          style: TextStyle(color: context.colorScheme.onBackground),
+                        ),
+                        trailing: Text(
+                          '${_following.length}',
+                          style: TextStyle(
+                            color: context.colorScheme.onBackground,
                           ),
                         ),
+                        onTap: () {},
                       ),
-                    ),
                     ListTile(
                       title: Text(
                         'Followers',
