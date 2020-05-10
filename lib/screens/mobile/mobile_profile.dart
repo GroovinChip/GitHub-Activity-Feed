@@ -162,7 +162,7 @@ class _MobileProfileState extends State<MobileProfile> with ProvidedState, Singl
                       ),
                       onTap: () {},
                     ),
-                    ListTile(
+                    if (widget.user.login != user.login) ListTile(
                       title: Text(
                         'Following',
                         style: TextStyle(color: context.colorScheme.onBackground),
