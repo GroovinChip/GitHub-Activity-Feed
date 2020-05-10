@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:github_activity_feed/screens/determine_layout.dart';
 import 'package:github_activity_feed/screens/login_page.dart';
 import 'package:github_activity_feed/services/auth_service.dart';
+import 'package:github_activity_feed/services/extensions.dart';
 import 'package:github_activity_feed/services/github_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
-import 'package:github_activity_feed/services/extensions.dart';
 
 class GitHubActivityFeedApp extends StatefulWidget {
   const GitHubActivityFeedApp({
@@ -67,6 +67,8 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
             secondary: Color(0xff3BACFF),
             secondaryVariant: Color(0xff007ecb),
           ),
+          // for CircularProgressIndicator and material scroll color
+          accentColor: Theme.of(context).colorScheme.secondary,
           textTheme: GoogleFonts.interTextTheme(
             Theme.of(context).textTheme,
           ),
@@ -83,6 +85,8 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
             secondary: Color(0xff3BACFF),
             secondaryVariant: Color(0xff007ecb),
           ),
+          // for CircularProgressIndicator and material scroll color
+          accentColor: Theme.of(context).colorScheme.secondary,
           textTheme: GoogleFonts.interTextTheme(
             Theme.of(context).textTheme,
           ),
@@ -93,9 +97,7 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         themeMode: ThemeMode.system,
-        initialRoute: widget.githubService.currentUser.value == null
-            ? LoginPage.routeName
-            : DetermineLayout.routeName,
+        initialRoute: widget.githubService.currentUser.value == null ? LoginPage.routeName : DetermineLayout.routeName,
         onGenerateInitialRoutes: (String initialRoute) => [
           _onGenerateRoute(RouteSettings(name: initialRoute)),
         ],
