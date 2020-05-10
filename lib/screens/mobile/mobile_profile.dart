@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/mobile/mobile_settings.dart';
+import 'package:github_activity_feed/screens/mobile/repository_list.dart';
 import 'package:github_activity_feed/screens/widgets/mobile_activity_feed.dart';
 import 'package:github_activity_feed/services/extensions.dart';
 import 'package:groovin_widgets/avatar_back_button.dart';
@@ -163,7 +164,12 @@ class _MobileProfileState extends State<MobileProfile>
                           color: context.colorScheme.onBackground,
                         ),
                       ),
-                      onTap: () {},
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => RepositoryList(
+                          user: _currentUser,
+                          repositories: _repositories,
+                        )),
+                      ),
                     ),
                     if (widget.user.login != user.login)
                       ListTile(
