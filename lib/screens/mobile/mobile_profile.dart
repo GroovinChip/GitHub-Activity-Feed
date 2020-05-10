@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/mobile/mobile_settings.dart';
+import 'package:github_activity_feed/screens/mobile/organizations_list.dart';
 import 'package:github_activity_feed/screens/mobile/repository_list.dart';
 import 'package:github_activity_feed/screens/mobile/starred_repositories.dart';
 import 'package:github_activity_feed/screens/mobile/user_follows_screen.dart';
@@ -36,10 +37,22 @@ class _MobileProfileState extends State<MobileProfile> with ProvidedState, Singl
         statusCode: 200,
       );
 
+  Stream orgStream;
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(initialIndex: 0, length: 2, vsync: this);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_currentUser.login == user.login) {
+      orgStream = github.github.organizations.list().toList().asStream();
+    } else {
+      orgStream = github.github.organizations.list(_currentUser.login).toList().asStream();
+    }
   }
 
   @override
@@ -110,7 +123,7 @@ class _MobileProfileState extends State<MobileProfile> with ProvidedState, Singl
           github.github.users.listUserFollowers(_currentUser.login).toList().asStream(),
           github.github.activity.listStarred().toList().asStream(),
           github.github.activity.listEventsPerformedByUser(_currentUser.login).toList().asStream(),
-          github.github.organizations.list().toList().asStream(),
+          orgStream,
         ]),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
@@ -234,17 +247,25 @@ class _MobileProfileState extends State<MobileProfile> with ProvidedState, Singl
                         ),
                       )),
                     ),
-                    ListTile(
-                      title: Text(
-                        'Organizations',
-                        style: TextStyle(color: context.colorScheme.onBackground),
+                    if (_organizations.length > 0)
+                      ListTile(
+                        title: Text(
+                          'Organizations',
+                          style: TextStyle(color: context.colorScheme.onBackground),
+                        ),
+                        trailing: Text(
+                          '${_organizations.length}',
+                          style: TextStyle(color: context.colorScheme.onBackground),
+                        ),
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => OrganizationsList(
+                              user: _currentUser,
+                              organizations: _organizations,
+                            ),
+                          ),
+                        ),
                       ),
-                      trailing: Text(
-                        '${_organizations.length}',
-                        style: TextStyle(color: context.colorScheme.onBackground),
-                      ),
-                      onTap: () {},
-                    ),
                   ],
                 ),
                 MobileActivityFeed(
