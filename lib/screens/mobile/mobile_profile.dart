@@ -3,6 +3,7 @@ import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/mobile/mobile_settings.dart';
 import 'package:github_activity_feed/screens/mobile/repository_list.dart';
+import 'package:github_activity_feed/screens/widgets/following_users.dart';
 import 'package:github_activity_feed/screens/widgets/mobile_activity_feed.dart';
 import 'package:github_activity_feed/services/extensions.dart';
 import 'package:groovin_widgets/avatar_back_button.dart';
@@ -21,14 +22,10 @@ class MobileProfile extends StatefulWidget {
   _MobileProfileState createState() => _MobileProfileState();
 }
 
-class _MobileProfileState extends State<MobileProfile>
-    with ProvidedState, SingleTickerProviderStateMixin {
+class _MobileProfileState extends State<MobileProfile> with ProvidedState, SingleTickerProviderStateMixin {
   User get _currentUser => widget.user;
 
   TabController _tabController;
-
-  Stream<User> listCurrentUserFollowing() => PaginationHelper(github.github)
-      .objects('GET', '/user/following', (i) => User.fromJson(i), statusCode: 200);
 
   @override
   void initState() {
@@ -100,7 +97,7 @@ class _MobileProfileState extends State<MobileProfile>
       body: StreamBuilder(
         stream: CombineLatestStream.list([
           github.github.repositories.listRepositories().toList().asStream(),
-          listCurrentUserFollowing().toList().asStream(),
+          github.github.users.listUserFollowers(widget.user.login).toList().asStream(),
           github.github.users.listCurrentUserFollowers().toList().asStream(),
           github.github.activity.listStarred().toList().asStream(),
           github.github.activity.listEventsPerformedByUser(_currentUser.login).toList().asStream(),
@@ -145,13 +142,14 @@ class _MobileProfileState extends State<MobileProfile>
                           style: TextStyle(color: context.colorScheme.onBackground),
                         ),
                       ),
-                    if (_currentUser.createdAt != null) ListTile(
-                      leading: Icon(Icons.access_time),
-                      title: Text(
-                        _currentUser.createdAt.asMonthDayYear,
-                        style: TextStyle(color: context.colorScheme.onBackground),
+                    if (_currentUser.createdAt != null)
+                      ListTile(
+                        leading: Icon(Icons.access_time),
+                        title: Text(
+                          _currentUser.createdAt.asMonthDayYear,
+                          style: TextStyle(color: context.colorScheme.onBackground),
+                        ),
                       ),
-                    ),
                     Divider(height: 0),
                     ListTile(
                       title: Text(
@@ -165,10 +163,12 @@ class _MobileProfileState extends State<MobileProfile>
                         ),
                       ),
                       onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => RepositoryList(
-                          user: _currentUser,
-                          repositories: _repositories,
-                        )),
+                        MaterialPageRoute(
+                          builder: (context) => RepositoryList(
+                            user: _currentUser,
+                            repositories: _repositories,
+                          ),
+                        ),
                       ),
                     ),
                     if (widget.user.login != user.login)
@@ -183,7 +183,16 @@ class _MobileProfileState extends State<MobileProfile>
                             color: context.colorScheme.onBackground,
                           ),
                         ),
-                        onTap: () {},
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => Scaffold(
+                              appBar: AppBar(
+                                title: Text('${widget.user.login} follows'),
+                              ),
+                              body: FollowingUsers(users: _following),
+                            ),
+                          ),
+                        ),
                       ),
                     ListTile(
                       title: Text(
