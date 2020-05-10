@@ -1,5 +1,7 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
+import 'package:github_activity_feed/screens/mobile/event_details_screen.dart';
 import 'package:github_activity_feed/screens/widgets/activity_card.dart';
 
 class MobileActivityFeed extends StatefulWidget {
@@ -25,7 +27,16 @@ class _MobileActivityFeedState extends State<MobileActivityFeed> {
         padding: const EdgeInsets.only(left: 8, right: 8),
         itemBuilder: (BuildContext context, int index) {
           final event = events[index];
-          return ActivityCard(event: event);
+          return OpenContainer(
+            closedColor: Theme.of(context).canvasColor,
+            closedBuilder: (context, action) {
+              return ActivityCard(event: event);
+            },
+            openBuilder: (context, action) {
+              return EventDetailsScreen(event: event);
+            },
+          );
+          //return ActivityCard(event: event);
         },
       ),
     );

@@ -9,19 +9,23 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:rxdart/rxdart.dart';
 
 class MobileProfile extends StatefulWidget {
-  MobileProfile({Key key}) : super(key: key);
+  MobileProfile({
+    Key key,
+    @required this.user,
+  }) : super(key: key);
+
+  final User user;
 
   @override
   _MobileProfileState createState() => _MobileProfileState();
 }
 
-class _MobileProfileState extends State<MobileProfile>
-    with ProvidedState, SingleTickerProviderStateMixin {
+class _MobileProfileState extends State<MobileProfile> with ProvidedState, SingleTickerProviderStateMixin {
+  User get _currentUser => widget.user;
+
   TabController _tabController;
 
-  Stream<User> listCurrentUserFollowing() => PaginationHelper(github.github).objects(
-      'GET', '/user/following', (i) => User.fromJson(i),
-      statusCode: 200);
+  Stream<User> listCurrentUserFollowing() => PaginationHelper(github.github).objects('GET', '/user/following', (i) => User.fromJson(i), statusCode: 200);
 
   @override
   void initState() {
@@ -44,7 +48,7 @@ class _MobileProfileState extends State<MobileProfile>
         title: Row(
           children: [
             AvatarBackButton(
-              avatar: user.avatarUrl,
+              avatar: _currentUser.avatarUrl,
               onPressed: () => Navigator.pop(context),
             ),
             SizedBox(width: 16),
@@ -52,22 +56,24 @@ class _MobileProfileState extends State<MobileProfile>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  user.login,
+                  _currentUser.login,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Text(
-                  user.name,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
+                _currentUser.email != null
+                    ? Text(
+                        _currentUser.email,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      )
+                    : Container(),
               ],
             ),
           ],
         ),
         actions: [
-          IconButton(
+          if (_currentUser.login == user.login) IconButton(
             icon: Icon(
               MdiIcons.cogOutline,
               color: context.colorScheme.secondary,
@@ -92,7 +98,7 @@ class _MobileProfileState extends State<MobileProfile>
           listCurrentUserFollowing().toList().asStream(),
           github.github.users.listCurrentUserFollowers().toList().asStream(),
           github.github.activity.listStarred().toList().asStream(),
-          github.github.activity.listEventsPerformedByUser(user.login).toList().asStream(),
+          github.github.activity.listEventsPerformedByUser(_currentUser.login).toList().asStream(),
           github.github.organizations.list().toList().asStream(),
         ]),
         builder: (context, snapshot) {
@@ -114,40 +120,29 @@ class _MobileProfileState extends State<MobileProfile>
               children: [
                 ListView(
                   children: [
-                    ListTile(
-                      title: Text(
-                        user.bio,
-                        style: TextStyle(color: context.colorScheme.onBackground),
+                    if (_currentUser.bio != null)
+                      ListTile(
+                        title: Text(
+                          _currentUser.bio,
+                          style: TextStyle(color: context.colorScheme.onBackground),
+                        ),
                       ),
-                    ),
-                    ListTile(
-                      leading: Icon(MdiIcons.mapMarkerOutline),
-                      title: Text(
-                        user.location,
-                        style: TextStyle(color: context.colorScheme.onBackground),
+                    if (_currentUser.location != null)
+                      ListTile(
+                        leading: Icon(MdiIcons.mapMarkerOutline),
+                        title: Text(
+                          _currentUser.location,
+                          style: TextStyle(color: context.colorScheme.onBackground),
+                        ),
                       ),
-                    ),
-                    ListTile(
-                      leading: Icon(MdiIcons.emailOutline),
-                      title: Text(
-                        user.email,
-                        style: TextStyle(color: context.colorScheme.onBackground),
+                    if (_currentUser.email != null)
+                      ListTile(
+                        leading: Icon(Icons.access_time),
+                        title: Text(
+                          _currentUser.createdAt.toString(),
+                          style: TextStyle(color: context.colorScheme.onBackground),
+                        ),
                       ),
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.link),
-                      title: Text(
-                        user.blog,
-                        style: TextStyle(color: context.colorScheme.onBackground),
-                      ),
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.access_time),
-                      title: Text(
-                        user.createdAt.toString(),
-                        style: TextStyle(color: context.colorScheme.onBackground),
-                      ),
-                    ),
                     Divider(height: 0),
                     ListTile(
                       title: Text(

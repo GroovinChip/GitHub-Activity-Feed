@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/mobile/mobile_profile.dart';
-import 'package:github_activity_feed/screens/widgets/mobile_activity_feed.dart';
 import 'package:github_activity_feed/screens/widgets/following_users.dart';
+import 'package:github_activity_feed/screens/widgets/mobile_activity_feed.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -17,12 +17,10 @@ class _MobileHomeScreenState extends State<MobileHomeScreen> with ProvidedState 
   int _currentIndex = 0;
   PageController _pageController;
 
-  Stream<Event> activityFeed() => PaginationHelper(github.github).objects(
-      'GET', '/users/${user.login}/received_events', (i) => Event.fromJson(i),
-      statusCode: 200);
+  Stream<Event> activityFeed() =>
+      PaginationHelper(github.github).objects('GET', '/users/${user.login}/received_events', (i) => Event.fromJson(i), statusCode: 200);
 
-  Stream<User> listCurrentUserFollowing() => PaginationHelper(github.github)
-      .objects('GET', '/user/following', (i) => User.fromJson(i), statusCode: 200);
+  Stream<User> listCurrentUserFollowing() => PaginationHelper(github.github).objects('GET', '/user/following', (i) => User.fromJson(i), statusCode: 200);
 
   final _navItems = [
     BottomNavigationBarItem(
@@ -63,7 +61,11 @@ class _MobileHomeScreenState extends State<MobileHomeScreen> with ProvidedState 
             ),
           ),
           onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => MobileProfile()),
+            MaterialPageRoute(
+              builder: (context) => MobileProfile(
+                user: user,
+              ),
+            ),
           ),
         ),
         title: Text(

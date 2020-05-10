@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github/hooks.dart';
 import 'package:github_activity_feed/app/provided.dart';
+import 'package:github_activity_feed/screens/mobile/mobile_profile.dart';
 
 class ActivityCard extends StatefulWidget {
   ActivityCard({
@@ -59,22 +60,20 @@ class _ActivityCardState extends State<ActivityCard> with ProvidedState {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(14),
       ),
-      child: InkWell(
-        customBorder: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-        ),
-        onTap: () {},
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(widget.event.actor.avatarUrl),
+      child: ListTile(
+        leading: GestureDetector(
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => MobileProfile(
+                user: widget.event.actor,
               ),
-              title: _eventWidget,
             ),
-          ],
+          ),
+          child: CircleAvatar(
+            backgroundImage: NetworkImage(widget.event.actor.avatarUrl),
+          ),
         ),
+        title: _eventWidget,
       ),
     );
   }
@@ -97,6 +96,7 @@ class _ActivityCardState extends State<ActivityCard> with ProvidedState {
   Widget _buildCreateRepo(Widget _createEventWidget) {
     final _createEventWidget = RichText(
       text: TextSpan(
+        style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
         children: <TextSpan>[
           TextSpan(
             text: '${widget.event.actor.login} ',
@@ -117,6 +117,7 @@ class _ActivityCardState extends State<ActivityCard> with ProvidedState {
   Widget _buildCreateTag(Widget _createEventWidget) {
     final _createEventWidget = RichText(
       text: TextSpan(
+        style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
         children: <TextSpan>[
           TextSpan(
             text: '${widget.event.actor.login} ',
@@ -137,6 +138,7 @@ class _ActivityCardState extends State<ActivityCard> with ProvidedState {
   Widget _buildDeleteEvent() {
     final _deleteEventWidget = RichText(
       text: TextSpan(
+        style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
         children: <TextSpan>[
           TextSpan(
             text: '${widget.event.actor.login}',
@@ -162,6 +164,7 @@ class _ActivityCardState extends State<ActivityCard> with ProvidedState {
   Widget _buildForkEvent() {
     final _forkEventWidget = RichText(
       text: TextSpan(
+        style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
         children: <TextSpan>[
           TextSpan(
             text: '${widget.event.actor.login}',
@@ -194,6 +197,7 @@ class _ActivityCardState extends State<ActivityCard> with ProvidedState {
     }
     final _issueCommentEventWidget = RichText(
       text: TextSpan(
+        style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
         children: <TextSpan>[
           TextSpan(text: '${issueCommentEvent.comment.user.login} '),
           TextSpan(
@@ -213,6 +217,7 @@ class _ActivityCardState extends State<ActivityCard> with ProvidedState {
     IssueEvent issueEvent = IssueEvent.fromJson(widget.event.payload);
     final _issueEventWidget = RichText(
       text: TextSpan(
+        style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
         children: <TextSpan>[
           TextSpan(
             text: '${issueEvent.issue.user.login} ',
@@ -235,6 +240,7 @@ class _ActivityCardState extends State<ActivityCard> with ProvidedState {
     int size = pushEvent['size'];
     final _pushEventWidget = RichText(
       text: TextSpan(
+        style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
         children: <TextSpan>[
           TextSpan(
             text: '${widget.event.actor.login} ',
@@ -254,14 +260,17 @@ class _ActivityCardState extends State<ActivityCard> with ProvidedState {
 
   Widget _buildWatchEvent() {
     final _watchEventWidget = RichText(
-      text: TextSpan(children: <TextSpan>[
-        TextSpan(text: widget.event.actor.login),
-        TextSpan(
-          text: ' starred',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        TextSpan(text: ' starred ${widget.event.repo.name}'),
-      ]),
+      text: TextSpan(
+        style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+        children: <TextSpan>[
+          TextSpan(text: widget.event.actor.login),
+          TextSpan(
+            text: ' starred',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          TextSpan(text: ' starred ${widget.event.repo.name}'),
+        ],
+      ),
     );
     return _watchEventWidget;
   }
