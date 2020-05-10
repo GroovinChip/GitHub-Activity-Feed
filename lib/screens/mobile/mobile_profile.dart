@@ -20,12 +20,14 @@ class MobileProfile extends StatefulWidget {
   _MobileProfileState createState() => _MobileProfileState();
 }
 
-class _MobileProfileState extends State<MobileProfile> with ProvidedState, SingleTickerProviderStateMixin {
+class _MobileProfileState extends State<MobileProfile>
+    with ProvidedState, SingleTickerProviderStateMixin {
   User get _currentUser => widget.user;
 
   TabController _tabController;
 
-  Stream<User> listCurrentUserFollowing() => PaginationHelper(github.github).objects('GET', '/user/following', (i) => User.fromJson(i), statusCode: 200);
+  Stream<User> listCurrentUserFollowing() => PaginationHelper(github.github)
+      .objects('GET', '/user/following', (i) => User.fromJson(i), statusCode: 200);
 
   @override
   void initState() {
@@ -59,29 +61,31 @@ class _MobileProfileState extends State<MobileProfile> with ProvidedState, Singl
                   _currentUser.login,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                _currentUser.email != null
-                    ? Text(
-                        _currentUser.email,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      )
-                    : Container(),
+                if (_currentUser.email != null)
+                  Text(
+                    _currentUser.email,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  )
+                else
+                  Container(),
               ],
             ),
           ],
         ),
         actions: [
-          if (_currentUser.login == user.login) IconButton(
-            icon: Icon(
-              MdiIcons.cogOutline,
-              color: context.colorScheme.secondary,
+          if (_currentUser.login == user.login)
+            IconButton(
+              icon: Icon(
+                MdiIcons.cogOutline,
+                color: context.colorScheme.secondary,
+              ),
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => MobileSettings()),
+              ),
             ),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => MobileSettings()),
-            ),
-          ),
         ],
         bottom: TabBar(
           controller: _tabController,
@@ -140,14 +144,13 @@ class _MobileProfileState extends State<MobileProfile> with ProvidedState, Singl
                           style: TextStyle(color: context.colorScheme.onBackground),
                         ),
                       ),
-                    if (_currentUser.email != null)
-                      ListTile(
-                        leading: Icon(Icons.access_time),
-                        title: Text(
-                          _currentUser.createdAt.toString(),
-                          style: TextStyle(color: context.colorScheme.onBackground),
-                        ),
+                    if (_currentUser.createdAt != null) ListTile(
+                      leading: Icon(Icons.access_time),
+                      title: Text(
+                        _currentUser.createdAt.asMonthDayYear,
+                        style: TextStyle(color: context.colorScheme.onBackground),
                       ),
+                    ),
                     Divider(height: 0),
                     ListTile(
                       title: Text(
@@ -162,19 +165,20 @@ class _MobileProfileState extends State<MobileProfile> with ProvidedState, Singl
                       ),
                       onTap: () {},
                     ),
-                    if (widget.user.login != user.login) ListTile(
-                      title: Text(
-                        'Following',
-                        style: TextStyle(color: context.colorScheme.onBackground),
-                      ),
-                      trailing: Text(
-                        '${_following.length}',
-                        style: TextStyle(
-                          color: context.colorScheme.onBackground,
+                    if (widget.user.login != user.login)
+                      ListTile(
+                        title: Text(
+                          'Following',
+                          style: TextStyle(color: context.colorScheme.onBackground),
                         ),
+                        trailing: Text(
+                          '${_following.length}',
+                          style: TextStyle(
+                            color: context.colorScheme.onBackground,
+                          ),
+                        ),
+                        onTap: () {},
                       ),
-                      onTap: () {},
-                    ),
                     ListTile(
                       title: Text(
                         'Followers',
