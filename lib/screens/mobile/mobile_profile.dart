@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/mobile/mobile_settings.dart';
+import 'package:github_activity_feed/screens/widgets/following_users.dart';
 import 'package:github_activity_feed/screens/widgets/mobile_activity_feed.dart';
 import 'package:github_activity_feed/services/extensions.dart';
 import 'package:groovin_widgets/avatar_back_button.dart';
@@ -73,15 +74,16 @@ class _MobileProfileState extends State<MobileProfile> with ProvidedState, Singl
           ],
         ),
         actions: [
-          if (_currentUser.login == user.login) IconButton(
-            icon: Icon(
-              MdiIcons.cogOutline,
-              color: context.colorScheme.secondary,
+          if (_currentUser.login == user.login)
+            IconButton(
+              icon: Icon(
+                MdiIcons.cogOutline,
+                color: context.colorScheme.secondary,
+              ),
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => MobileSettings()),
+              ),
             ),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => MobileSettings()),
-            ),
-          ),
         ],
         bottom: TabBar(
           controller: _tabController,
@@ -168,7 +170,14 @@ class _MobileProfileState extends State<MobileProfile> with ProvidedState, Singl
                           color: context.colorScheme.onBackground,
                         ),
                       ),
-                      onTap: () {},
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => Scaffold(
+                            appBar: AppBar(),
+                            body: FollowingUsers(users: _following),
+                          ),
+                        ),
+                      ),
                     ),
                     ListTile(
                       title: Text(
