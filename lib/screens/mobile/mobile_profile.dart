@@ -3,6 +3,7 @@ import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/mobile/mobile_settings.dart';
 import 'package:github_activity_feed/screens/mobile/repository_list.dart';
+import 'package:github_activity_feed/screens/mobile/user_follows_screen.dart';
 import 'package:github_activity_feed/screens/widgets/following_users.dart';
 import 'package:github_activity_feed/screens/widgets/mobile_activity_feed.dart';
 import 'package:github_activity_feed/services/extensions.dart';
@@ -26,6 +27,13 @@ class _MobileProfileState extends State<MobileProfile> with ProvidedState, Singl
   User get _currentUser => widget.user;
 
   TabController _tabController;
+
+  Stream<User> listUserFollowing(String user) => PaginationHelper(github.github).objects(
+        'GET',
+        '/users/$user/following',
+        (i) => User.fromJson(i),
+        statusCode: 200,
+      );
 
   @override
   void initState() {
@@ -97,8 +105,8 @@ class _MobileProfileState extends State<MobileProfile> with ProvidedState, Singl
       body: StreamBuilder(
         stream: CombineLatestStream.list([
           github.github.repositories.listRepositories().toList().asStream(),
-          github.github.users.listUserFollowers(widget.user.login).toList().asStream(),
-          github.github.users.listCurrentUserFollowers().toList().asStream(),
+          listUserFollowing(_currentUser.login).toList().asStream(),
+          github.github.users.listUserFollowers(_currentUser.login).toList().asStream(),
           github.github.activity.listStarred().toList().asStream(),
           github.github.activity.listEventsPerformedByUser(_currentUser.login).toList().asStream(),
           github.github.organizations.list().toList().asStream(),
@@ -205,7 +213,9 @@ class _MobileProfileState extends State<MobileProfile> with ProvidedState, Singl
                           color: context.colorScheme.onBackground,
                         ),
                       ),
-                      onTap: () {},
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => UserFollows(user: _currentUser, userFollowers: _followers),
+                      )),
                     ),
                     ListTile(
                       title: Text(
