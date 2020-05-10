@@ -23,17 +23,15 @@ class _FollowingUsersState extends State<FollowingUsers> with ProvidedState {
       itemBuilder: (context, index) {
         return Material(
           child: ListTile(
-            leading: GestureDetector(
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => MobileProfile(
-                    user: widget.users[index],
-                  ),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => MobileProfile(
+                  user: widget.users[index],
                 ),
               ),
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(widget.users[index].avatarUrl),
-              ),
+            ),
+            leading: CircleAvatar(
+              backgroundImage: NetworkImage(widget.users[index].avatarUrl),
             ),
             title: Text(
               widget.users[index].login,
