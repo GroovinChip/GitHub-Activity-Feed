@@ -3,6 +3,7 @@ import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/mobile/mobile_settings.dart';
 import 'package:github_activity_feed/screens/mobile/repository_list.dart';
+import 'package:github_activity_feed/screens/mobile/starred_repositories.dart';
 import 'package:github_activity_feed/screens/mobile/user_follows_screen.dart';
 import 'package:github_activity_feed/screens/widgets/following_users.dart';
 import 'package:github_activity_feed/screens/widgets/mobile_activity_feed.dart';
@@ -226,7 +227,12 @@ class _MobileProfileState extends State<MobileProfile> with ProvidedState, Singl
                         '${_starred.length}',
                         style: TextStyle(color: context.colorScheme.onBackground),
                       ),
-                      onTap: () {},
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => StarredRepositories(
+                          user: _currentUser,
+                          starredRepositories: _starred,
+                        ),
+                      )),
                     ),
                     ListTile(
                       title: Text(
