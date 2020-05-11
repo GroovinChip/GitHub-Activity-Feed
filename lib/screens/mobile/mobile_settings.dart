@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/services/extensions.dart';
+import 'package:wiredash/wiredash.dart';
 
 class MobileSettings extends StatefulWidget {
   MobileSettings({Key key}) : super(key: key);
@@ -82,7 +83,7 @@ class _MobileSettingsState extends State<MobileSettings> with ProvidedState {
             textColor: context.colorScheme.onBackground,
             child: ListTile(
               title: Text('Share feedback'),
-              onTap: () {},
+              onTap: () => Wiredash.of(context).show(),
             ),
           ),
           ListTileTheme(
@@ -117,7 +118,6 @@ class _MobileSettingsState extends State<MobileSettings> with ProvidedState {
                   ],
                 ),
               ),
-              //onTap: () => github.logOut(),
             ),
           ),
         ],

@@ -26,6 +26,7 @@ dependencies:
   flutter_markdown: ^0.3.5
   intl: ^0.16.1
   timeago: ^2.0.26
+  wiredash: ^0.0.1+1
 
 dev_dependencies:
   flutter_test:
