@@ -20,20 +20,22 @@ class FollowingUsers extends StatefulWidget {
 class _FollowingUsersState extends State<FollowingUsers> with ProvidedState {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: widget.users.length,
-      itemBuilder: (context, index) {
-        return OpenContainer(
-          closedColor: Theme.of(context).canvasColor,
-          closedElevation: 0,
-          closedBuilder: (BuildContext context, action) {
-            return UserListTile(user: widget.users[index]);
-          },
-          openBuilder: (BuildContext context, action) {
-            return MobileProfile(user: widget.users[index]);
-          },
-        );
-      },
+    return Scrollbar(
+      child: ListView.builder(
+        itemCount: widget.users.length,
+        itemBuilder: (context, index) {
+          return OpenContainer(
+            closedColor: Theme.of(context).canvasColor,
+            closedElevation: 0,
+            closedBuilder: (BuildContext context, action) {
+              return UserListTile(user: widget.users[index]);
+            },
+            openBuilder: (BuildContext context, action) {
+              return MobileProfile(user: widget.users[index]);
+            },
+          );
+        },
+      ),
     );
   }
 }
