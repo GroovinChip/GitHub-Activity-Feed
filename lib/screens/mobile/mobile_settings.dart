@@ -89,7 +89,35 @@ class _MobileSettingsState extends State<MobileSettings> with ProvidedState {
             textColor: context.colorScheme.onBackground,
             child: ListTile(
               title: Text('Log out'),
-              onTap: () => github.logOut(),
+              onTap: () => showDialog(
+                context: context,
+                builder: (_) => AlertDialog(
+                  title: Text(
+                    'Log out',
+                    style: TextStyle(
+                      color: context.colorScheme.onBackground,
+                    ),
+                  ),
+                  content: Text(
+                    'Would you like to log out?',
+                    style: TextStyle(
+                      color: context.colorScheme.onBackground,
+                    ),
+                  ),
+                  actions: [
+                    FlatButton(
+                      textColor: context.colorScheme.onBackground,
+                      child: Text('Cancel'),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    FlatButton(
+                      child: Text('Yes'),
+                      onPressed: () => github.logOut(),
+                    ),
+                  ],
+                ),
+              ),
+              //onTap: () => github.logOut(),
             ),
           ),
         ],
