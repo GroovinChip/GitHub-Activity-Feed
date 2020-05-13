@@ -20,21 +20,36 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> with ProvidedState {
   User _currentUser;
-  StreamSubscription<User> _userSub;
+  bool _isFollowingUser = false;
 
   @override
   void initState() {
     super.initState();
-    _userSub = github.github.users
-        .getUser(widget.currentUser.login)
-        .asStream()
-        .listen((User u) => setState(() => _currentUser = u));
+    _getUser();
   }
 
   @override
-  void dispose() {
-    _userSub.cancel();
-    super.dispose();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _checkIsFollowingUser();
+  }
+
+  void _getUser() {
+    github.github.users.getUser(widget.currentUser.login).then((User user) {
+      setState(() {
+        _currentUser = user;
+      });
+    });
+  }
+
+  void _checkIsFollowingUser() {
+    if (widget.currentUser.login != user.login) {
+      github.github.users.isFollowingUser(widget.currentUser.login).then((bool isFollowing) {
+        setState(() {
+          _isFollowingUser = isFollowing;
+        });
+      });
+    }
   }
 
   @override
@@ -66,6 +81,23 @@ class _UserProfileState extends State<UserProfile> with ProvidedState {
             ListTile(
               leading: Icon(Icons.access_time),
               title: Text(_currentUser?.createdAt?.asMonthDayYear),
+            ),
+          if (widget.currentUser.login != user.login)
+            Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(!_isFollowingUser ? 'Follow' : 'Unfollow'),
+                      onPressed: () {},
+                    ),
+                  ),
+                ],
+              ),
             ),
           Divider(height: 0),
           _ProfileEntry(
