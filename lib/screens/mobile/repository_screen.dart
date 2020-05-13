@@ -33,6 +33,7 @@ class _RepositoryScreenState extends State<RepositoryScreen>
   TabController _tabController;
   String _userLogin;
   RepositorySlug _repositorySlug;
+  bool _isStarred = false;
 
   final _repoOwner = BehaviorSubject<User>();
   final _repositoryFeed = BehaviorSubject<List<Event>>();
@@ -42,22 +43,42 @@ class _RepositoryScreenState extends State<RepositoryScreen>
   void initState() {
     super.initState();
     _repositorySlug = RepositorySlug.full(widget.event.repo.name);
-    _userLogin = widget.event.repo.name.replaceAfter('/', '').replaceAll('/', '');
-    if (!_repoOwner.hasValue) {
-      github.github.users.getUser(_userLogin).then((User user) => _repoOwner.value = user);
-    }
-    if (!_readme.hasValue) {
-      github.github.repositories
-          .getReadme(_repositorySlug)
-          .then((GitHubFile readme) => _readme.value = readme);
-    }
+    _getRepoOwner();
+    _getReadme();
+    _getRepoActivity();
+    _checkIfStarred();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  void _checkIfStarred() {
+    github.github.activity.isStarred(_repositorySlug).then((bool isStarred) {
+      print(isStarred);
+      setState(() => _isStarred = isStarred);
+    });
+  }
+
+  void _getRepoActivity() {
     if (!_repositoryFeed.hasValue) {
       github.github.activity
           .listRepositoryEvents(_repositorySlug)
           .toList()
           .then((List<Event> repoEvents) => _repositoryFeed.value = repoEvents);
     }
-    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  void _getReadme() {
+    if (!_readme.hasValue) {
+      github.github.repositories
+          .getReadme(_repositorySlug)
+          .then((GitHubFile readme) => _readme.value = readme);
+    }
+  }
+
+  void _getRepoOwner() {
+    _userLogin = widget.event.repo.name.replaceAfter('/', '').replaceAll('/', '');
+    if (!_repoOwner.hasValue) {
+      github.github.users.getUser(_userLogin).then((User user) => _repoOwner.value = user);
+    }
   }
 
   @override
@@ -84,7 +105,7 @@ class _RepositoryScreenState extends State<RepositoryScreen>
                     onPressed: () => Navigator.pop(context),
                   ),
                   SizedBox(width: 16),
-                  Text(widget.event.repo.name.replaceAll('${widget.event.actor.login}/', '')),
+                  Text(_repositorySlug.name),
                 ],
               )
             : Row(
@@ -97,6 +118,20 @@ class _RepositoryScreenState extends State<RepositoryScreen>
                   CircleAvatar(),
                 ],
               ),
+        actions: [
+          IconButton(
+            icon: Icon(!_isStarred ? Icons.star_border : Icons.star),
+            onPressed: () {
+              if (!_isStarred) {
+                github.github.activity.star(_repositorySlug);
+                setState(() => _isStarred = true);
+              } else {
+                github.github.activity.unstar(_repositorySlug);
+                setState(() => _isStarred = false);
+              }
+            },
+          ),
+        ],
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: Theme.of(context).colorScheme.secondary,
