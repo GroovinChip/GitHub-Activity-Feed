@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github/hooks.dart';
 import 'package:github_activity_feed/app/provided.dart';
-import 'package:github_activity_feed/screens/mobile/mobile_profile.dart';
+import 'package:github_activity_feed/screens/mobile/user_overview.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class EventCard extends StatefulWidget {
@@ -61,27 +61,29 @@ class _EventCardState extends State<EventCard> with ProvidedState {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(14),
       ),
-      child: ListTile(
-        leading: GestureDetector(
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => MobileProfile(
-                user: widget.event.actor,
+      child: _eventWidget != null
+          ? ListTile(
+              leading: GestureDetector(
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => UserOverview(
+                      user: widget.event.actor,
+                    ),
+                  ),
+                ),
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(widget.event.actor.avatarUrl),
+                ),
               ),
-            ),
-          ),
-          child: CircleAvatar(
-            backgroundImage: NetworkImage(widget.event.actor.avatarUrl),
-          ),
-        ),
-        title: _eventWidget,
-        subtitle: Text(
-          timeago.format(widget.event.createdAt),
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onBackground,
-          ),
-        ),
-      ),
+              title: _eventWidget,
+              subtitle: Text(
+                timeago.format(widget.event.createdAt),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onBackground,
+                ),
+              ),
+            )
+          : Container(),
     );
   }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
-import 'package:github_activity_feed/screens/mobile/mobile_profile.dart';
+import 'package:github_activity_feed/screens/mobile/user_overview.dart';
 
 class UserListTile extends StatelessWidget {
   const UserListTile({Key key, @required this.user}) : super(key: key);
@@ -13,7 +13,7 @@ class UserListTile extends StatelessWidget {
       child: ListTile(
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => MobileProfile(
+            builder: (context) => UserOverview(
               user: user,
             ),
           ),

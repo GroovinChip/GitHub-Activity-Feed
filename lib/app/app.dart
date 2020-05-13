@@ -72,6 +72,7 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
           navigatorKey: _navigatorKey,
           title: 'GitHub Activity Feed',
           theme: ThemeData(
+            brightness: Brightness.light,
             colorScheme: ColorScheme.light().copyWith(
               primary: Color(0xff2962FF),
               primaryVariant: Color(0xff0039cb),
@@ -81,7 +82,7 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
             // for CircularProgressIndicator and material scroll color
             accentColor: Theme.of(context).colorScheme.secondary,
             textTheme: GoogleFonts.interTextTheme(
-              Theme.of(context).textTheme,
+              ThemeData.light().textTheme,
             ),
             bottomNavigationBarTheme: BottomNavigationBarThemeData(
               selectedItemColor: context.colorScheme.primary,
@@ -89,7 +90,8 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
             ),
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
-          darkTheme: ThemeData.dark().copyWith(
+          darkTheme: ThemeData(
+            brightness: Brightness.dark,
             colorScheme: ColorScheme.dark().copyWith(
               primary: Color(0xff2962FF),
               primaryVariant: Color(0xff0039cb),
@@ -99,7 +101,7 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
             // for CircularProgressIndicator and material scroll color
             accentColor: Theme.of(context).colorScheme.secondary,
             textTheme: GoogleFonts.interTextTheme(
-              Theme.of(context).textTheme,
+              ThemeData.dark().textTheme,
             ),
             bottomNavigationBarTheme: BottomNavigationBarThemeData(
               selectedItemColor: context.colorScheme.primary,

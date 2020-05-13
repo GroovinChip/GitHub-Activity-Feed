@@ -17,3 +17,18 @@ extension ThemeExt on BuildContext {
 extension DateTimeFormattingX on DateTime {
   String get asMonthDayYear => DateFormat.yMMMMd('en_US').format(this);
 }
+
+extension StringCheckX on String {
+  bool get isNullOrEmpty => this == null || this.isEmpty;
+}
+
+extension StringX on String {
+  String replaceAfter(String delimiter, String replacement, [String defaultValue]) {
+    final index = indexOf(delimiter);
+    return (index == -1) ? defaultValue.isNullOrEmpty ? this : defaultValue : replaceRange(index + 1, length, replacement);
+  }
+
+  String capitalize() {
+    return "${this[0].toUpperCase()}${this.substring(1)}";
+  }
+}

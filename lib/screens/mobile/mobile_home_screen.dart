@@ -2,7 +2,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
-import 'package:github_activity_feed/screens/mobile/mobile_profile.dart';
+import 'package:github_activity_feed/screens/mobile/user_overview.dart';
 import 'package:github_activity_feed/screens/widgets/following_users.dart';
 import 'package:github_activity_feed/screens/widgets/mobile_activity_feed.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -15,37 +15,44 @@ class MobileHomeScreen extends StatefulWidget {
 
 class _MobileHomeScreenState extends State<MobileHomeScreen> with ProvidedState {
   int _currentIndex = 0;
-  PageController _pageController;
-
-  Stream<Event> activityFeed() =>
-      PaginationHelper(github.github).objects('GET', '/users/${user.login}/received_events', (i) => Event.fromJson(i), statusCode: 200);
-
-  Stream<User> listCurrentUserFollowing() => PaginationHelper(github.github).objects('GET', '/user/following', (i) => User.fromJson(i), statusCode: 200);
-
-  final _navItems = [
-    BottomNavigationBarItem(
-      icon: Icon(MdiIcons.github),
-      title: Text('Feed'),
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.people_outline),
-      title: Text('Following'),
-    ),
-  ];
-
-  void _handleNavigation(index) {
-    setState(() => _currentIndex = index);
-  }
+  final _activityFeed = BehaviorSubject<List<Event>>();
+  final _userFollowing = BehaviorSubject<List<User>>();
 
   @override
-  void initState() {
-    super.initState();
-    _pageController = PageController(initialPage: _currentIndex, keepPage: true);
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_activityFeed.hasValue) {
+      PaginationHelper(github.github)
+          .objects(
+            'GET',
+            '/users/${user.login}/received_events',
+            (i) => Event.fromJson(i),
+            statusCode: 200,
+          )
+          .toList()
+          .then((data) {
+        _activityFeed.value = data;
+      });
+    }
+    if (!_userFollowing.hasValue) {
+      PaginationHelper(github.github)
+          .objects(
+            'GET',
+            '/user/following',
+            (i) => User.fromJson(i),
+            statusCode: 200,
+          )
+          .toList()
+          .then((data) {
+        _userFollowing.value = data;
+      });
+    }
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
+    _userFollowing.close();
+    _activityFeed.close();
     super.dispose();
   }
 
@@ -60,13 +67,13 @@ class _MobileHomeScreenState extends State<MobileHomeScreen> with ProvidedState 
               backgroundImage: NetworkImage(user.avatarUrl),
             ),
           ),
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => MobileProfile(
-                user: user,
+          onTap: () {
+            return Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => UserOverview(user: user),
               ),
-            ),
-          ),
+            );
+          },
         ),
         title: Text(
           'Activity Feed',
@@ -79,44 +86,124 @@ class _MobileHomeScreenState extends State<MobileHomeScreen> with ProvidedState 
           ),
         ],
       ),
-      body: StreamBuilder(
-          stream: CombineLatestStream.combine2(
-            activityFeed().toList().asStream(),
-            listCurrentUserFollowing().toList().asStream(),
-            (List<Event> activity, List<User> users) => [activity, users],
-          ),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (!snapshot.hasData) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              List<Event> _events = snapshot.data.first;
-              List<User> _users = snapshot.data.last;
-              final _views = <Widget>[
-                MobileActivityFeed(events: _events),
-                FollowingUsers(users: _users),
-              ];
-              return PageTransitionSwitcher(
-                transitionBuilder: (
-                  Widget child,
-                  Animation<double> primaryAnimation,
-                  Animation<double> secondaryAnimation,
-                ) {
-                  return FadeThroughTransition(
-                    animation: primaryAnimation,
-                    secondaryAnimation: secondaryAnimation,
-                    child: child,
-                  );
-                },
-                child: _views[_currentIndex],
-              );
-            }
-          }),
+      body: IndexedStack(
+        index: _currentIndex,
+        children: [
+          MobileActivityFeed(events: _activityFeed),
+          FollowingUsers(users: _userFollowing),
+        ],
+      ),
+      /*body: TwoTabPager(
+        index: _currentIndex,
+        children: [
+          MobileActivityFeed(events: _activityFeed),
+          FollowingUsers(users: _userFollowing),
+        ],
+      ),*/
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        onTap: _handleNavigation,
-        items: _navItems,
+        onTap: (index) {
+          setState(() => _currentIndex = index);
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(MdiIcons.github),
+            title: Text('Feed'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people_outline),
+            title: Text('Following'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class TwoTabPager extends StatefulWidget {
+  const TwoTabPager({
+    Key key,
+    this.index,
+    this.children,
+  })  : assert(children.length == 2),
+        super(key: key);
+
+  final int index;
+  final List<Widget> children;
+
+  @override
+  _TwoTabPagerState createState() => _TwoTabPagerState();
+}
+
+class _TwoTabPagerState extends State<TwoTabPager> with TickerProviderStateMixin {
+  AnimationController tab0PrimaryAnimation;
+  AnimationController tab0SecondaryAnimation;
+  AnimationController tab1PrimaryAnimation;
+  AnimationController tab1SecondaryAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    final duration = const Duration(milliseconds: 300);
+    tab0PrimaryAnimation = AnimationController(
+      value: widget.index == 0 ? 1.0 : 0.0,
+      duration: duration,
+      vsync: this,
+    );
+    tab0SecondaryAnimation = AnimationController(duration: duration, vsync: this);
+    tab1PrimaryAnimation = AnimationController(
+      value: widget.index == 0 ? 0.0 : 1.0,
+      duration: duration,
+      vsync: this,
+    );
+    tab1SecondaryAnimation = AnimationController(duration: duration, vsync: this);
+  }
+
+  @override
+  void didUpdateWidget(TwoTabPager oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.index != widget.index) {
+      if (widget.index == 0) {
+        tab0PrimaryAnimation.forward(from: 0.0);
+        tab1SecondaryAnimation.forward(from: 0.0);
+        tab1PrimaryAnimation.reverse();
+        tab0SecondaryAnimation.reverse();
+      } else {
+        tab1PrimaryAnimation.forward(from: 0.0);
+        tab0SecondaryAnimation.forward(from: 0.0);
+        tab0PrimaryAnimation.reverse();
+        tab1SecondaryAnimation.reverse();
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    tab0SecondaryAnimation.dispose();
+    tab0PrimaryAnimation.dispose();
+    tab1SecondaryAnimation.dispose();
+    tab1PrimaryAnimation.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //PageTransitionSwitcher();
+    return IgnorePointer(
+      ignoring: false,
+      child: Stack(
+        children: [
+          FadeThroughTransition(
+            animation: tab0PrimaryAnimation,
+            secondaryAnimation: tab0SecondaryAnimation,
+            child: widget.children[0],
+          ),
+          FadeThroughTransition(
+            animation: tab1PrimaryAnimation,
+            secondaryAnimation: tab1SecondaryAnimation,
+            child: widget.children[1],
+          ),
+        ],
       ),
     );
   }

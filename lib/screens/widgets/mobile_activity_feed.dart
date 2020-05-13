@@ -1,43 +1,65 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
-import 'package:github_activity_feed/screens/mobile/event_details_screen.dart';
+import 'package:github_activity_feed/screens/mobile/issue_screen.dart';
+import 'package:github_activity_feed/screens/mobile/repository_screen.dart';
 import 'package:github_activity_feed/screens/widgets/event_card.dart';
+import 'package:rxdart/rxdart.dart';
 
-class MobileActivityFeed extends StatefulWidget {
+class MobileActivityFeed extends StatelessWidget {
   MobileActivityFeed({
     Key key,
     @required this.events,
+    this.emptyBuilder,
   }) : super(key: key);
 
-  final List<Event> events;
-
-  @override
-  _MobileActivityFeedState createState() => _MobileActivityFeedState();
-}
-
-class _MobileActivityFeedState extends State<MobileActivityFeed> {
-  List<Event> get events => widget.events;
+  final Stream<List<Event>> events;
+  final WidgetBuilder emptyBuilder;
 
   @override
   Widget build(BuildContext context) {
-    return Scrollbar(
-      child: ListView.builder(
-        itemCount: events.length,
-        padding: const EdgeInsets.only(left: 8, right: 8),
-        itemBuilder: (BuildContext context, int index) {
-          final event = events[index];
-          return OpenContainer(
-            closedColor: Theme.of(context).canvasColor,
-            closedBuilder: (BuildContext context, action) {
-              return EventCard(event: event);
-            },
-            openBuilder: (BuildContext context, action) {
-              return EventDetailsScreen(event: event);
-            },
+    return StreamBuilder<List<Event>>(
+      stream: events,
+      builder: (BuildContext context, AsyncSnapshot<List<Event>> snapshot) {
+        if (snapshot.hasError) {
+          return ErrorWidget(snapshot.error);
+        }
+        else if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(),
           );
-        },
-      ),
+        }
+        else if(snapshot.data.isEmpty && emptyBuilder != null) {
+          return emptyBuilder(context);
+        }
+        return Scrollbar(
+          child: ListView.builder(
+            itemCount: snapshot.data.length,
+            padding: const EdgeInsets.only(left: 8, right: 8, top: 4),
+            itemBuilder: (BuildContext context, int index) {
+              Event event = snapshot.data[index];
+              return OpenContainer(
+                closedColor: Theme.of(context).canvasColor,
+                closedBuilder: (BuildContext context, action) {
+                  return EventCard(event: event);
+                },
+                openBuilder: (BuildContext context, action) {
+                  if (event.type == 'IssuesEvent' || event.type == 'IssueCommentEvent') {
+                    return IssueScreen(
+                      event: event,
+                    );
+                  } else {
+                    return RepositoryScreen(
+                      // todo: pass repo slug in here?
+                      event: event,
+                    );
+                  }
+                },
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
