@@ -52,7 +52,6 @@ class _RepositoryScreenState extends State<RepositoryScreen>
 
   void _checkIfStarred() {
     github.github.activity.isStarred(_repositorySlug).then((bool isStarred) {
-      print(isStarred);
       setState(() => _isStarred = isStarred);
     });
   }

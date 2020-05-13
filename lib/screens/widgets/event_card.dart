@@ -89,9 +89,7 @@ class _EventCardState extends State<EventCard> with ProvidedState {
               title: _eventWidget,
               subtitle: Text(
                 timeago.format(widget.event.createdAt),
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onBackground,
-                ),
+                style: Theme.of(context).textTheme.caption,
               ),
             )
           : Container(),
