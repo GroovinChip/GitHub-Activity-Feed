@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github/hooks.dart';
@@ -37,11 +39,20 @@ class _EventCardState extends State<EventCard> with ProvidedState {
       case 'ForkEvent':
         _eventWidget = _buildForkEvent();
         break;
+      case 'GollumEvent':
+        _eventWidget = _buildGollumEvent();
+        break;
       case 'IssueCommentEvent':
         _eventWidget = _buildIssueCommentEvent();
         break;
       case 'IssuesEvent':
         _eventWidget = _buildIssueEvent();
+        break;
+      case 'PullRequestEvent':
+        _eventWidget = _buildPullRequestEvent();
+        break;
+      case 'PullRequestReviewCommentEvent':
+        _eventWidget = _buildPullRequestReviewCommentEvent();
         break;
       case 'PushEvent':
         _eventWidget = _buildPushEvent();
@@ -90,11 +101,14 @@ class _EventCardState extends State<EventCard> with ProvidedState {
   Widget _buildCreateEvent() {
     Widget _createEventWidget;
     switch (widget.event.payload['ref_type']) {
+      case 'branch':
+        _createEventWidget = _buildCreateBranch();
+        break;
       case 'repository':
-        _createEventWidget = _buildCreateRepo(_createEventWidget);
+        _createEventWidget = _buildCreateRepo();
         break;
       case 'tag':
-        _createEventWidget = _buildCreateTag(_createEventWidget);
+        _createEventWidget = _buildCreateTag();
         break;
       default:
         break;
@@ -102,8 +116,29 @@ class _EventCardState extends State<EventCard> with ProvidedState {
     return _createEventWidget;
   }
 
-  Widget _buildCreateRepo(Widget _createEventWidget) {
-    final _createEventWidget = RichText(
+  Widget _buildCreateBranch() {
+    final _createBranchEventWidget = RichText(
+      text: TextSpan(
+        style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+        children: <TextSpan>[
+          TextSpan(
+            text: '${widget.event.actor.login} ',
+          ),
+          TextSpan(
+            text: 'created ${widget.event.payload['ref_type']} ',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          TextSpan(text: '${widget.event.payload['ref']} at ${widget.event.repo.name}'),
+        ],
+      ),
+    );
+    return _createBranchEventWidget;
+  }
+
+  Widget _buildCreateRepo() {
+    final _createRepoWidget = RichText(
       text: TextSpan(
         style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
         children: <TextSpan>[
@@ -120,11 +155,11 @@ class _EventCardState extends State<EventCard> with ProvidedState {
         ],
       ),
     );
-    return _createEventWidget;
+    return _createRepoWidget;
   }
 
-  Widget _buildCreateTag(Widget _createEventWidget) {
-    final _createEventWidget = RichText(
+  Widget _buildCreateTag() {
+    final _createTagWidget = RichText(
       text: TextSpan(
         style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
         children: <TextSpan>[
@@ -141,7 +176,7 @@ class _EventCardState extends State<EventCard> with ProvidedState {
         ],
       ),
     );
-    return _createEventWidget;
+    return _createTagWidget;
   }
 
   Widget _buildDeleteEvent() {
@@ -193,6 +228,40 @@ class _EventCardState extends State<EventCard> with ProvidedState {
     return _forkEventWidget;
   }
 
+  Widget _buildGollumEvent() {
+    GollumEvent gollumEvent = GollumEvent.fromJson(widget.event.payload);
+    WikiPage wikiPage = WikiPage.fromJson(gollumEvent.pages.first);
+    final _gollumEventWidget = RichText(
+      text: TextSpan(
+        style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+        children: <TextSpan>[
+          TextSpan(
+            text: '${widget.event.actor.login}',
+          ),
+          TextSpan(
+            text: ' ${wikiPage.action} ',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          TextSpan(
+            text: 'wiki page ',
+          ),
+          TextSpan(
+            text: '${wikiPage.pageName} ',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          TextSpan(
+            text: 'at ${widget.event.repo.name}',
+          ),
+        ],
+      ),
+    );
+    return _gollumEventWidget;
+  }
+
   Widget _buildIssueCommentEvent() {
     IssueCommentEvent issueCommentEvent = IssueCommentEvent.fromJson(widget.event.payload);
     String issueCommentAction;
@@ -242,6 +311,78 @@ class _EventCardState extends State<EventCard> with ProvidedState {
       ),
     );
     return _issueEventWidget;
+  }
+
+  Widget _buildPullRequestEvent() {
+    PullRequestEvent pullRequestEvent = PullRequestEvent.fromJson(widget.event.payload);
+    if (pullRequestEvent.action == 'closed' && pullRequestEvent.pullRequest.merged) {}
+    final _pullRequestEventWidget = RichText(
+      text: TextSpan(
+        style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+        children: <TextSpan>[
+          TextSpan(
+            text: '${pullRequestEvent.pullRequest.user.login} ',
+          ),
+          if (pullRequestEvent.action == 'closed' && pullRequestEvent.pullRequest.merged)
+            TextSpan(
+              text: 'merged pull request',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          if (pullRequestEvent.action == 'closed' && !pullRequestEvent.pullRequest.merged)
+            TextSpan(
+              text: 'closed pull request',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          if (pullRequestEvent.action != 'closed')
+            TextSpan(
+              text: '${pullRequestEvent.action} pull request',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          TextSpan(text: ' ${widget.event.repo.name} '),
+          TextSpan(
+            text: ' ${pullRequestEvent.number} ',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+    return _pullRequestEventWidget;
+  }
+
+  Widget _buildPullRequestReviewCommentEvent() {
+    PullRequest pullRequest = PullRequest.fromJson(widget.event.payload['pull_request']);
+    final _pullRequestEventWidget = RichText(
+      text: TextSpan(
+        style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+        children: <TextSpan>[
+          TextSpan(
+            text: '${pullRequest.user.login} ',
+          ),
+          TextSpan(
+            text: 'reviewed pull request',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          TextSpan(text: ' ${widget.event.repo.name}'),
+          TextSpan(
+            text: '#${pullRequest.number}',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+    return _pullRequestEventWidget;
   }
 
   Widget _buildPushEvent() {
