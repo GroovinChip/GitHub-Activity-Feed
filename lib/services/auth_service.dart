@@ -59,7 +59,10 @@ class AuthService {
       scopes: [
         'repo',
         'read:user',
+        'read:org',
         'user:email',
+        'user:follow',
+        'notifications',
       ],
       redirectUri: 'https://github-activity-feed.web.app/auth_redirect',
     );

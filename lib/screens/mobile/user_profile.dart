@@ -88,12 +88,21 @@ class _UserProfileState extends State<UserProfile> with ProvidedState {
               child: Row(
                 children: [
                   Expanded(
-                    child: RaisedButton(
+                    child: RaisedButton.icon(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Text(!_isFollowingUser ? 'Follow' : 'Unfollow'),
-                      onPressed: () {},
+                      icon: Icon(!_isFollowingUser ? MdiIcons.accountPlusOutline : MdiIcons.accountMinusOutline),
+                      label: Text(!_isFollowingUser ? 'Follow' : 'Unfollow'),
+                      onPressed: () {
+                        if (_isFollowingUser) {
+                          github.github.users.unfollowUser(_currentUser.login);
+                          setState(() => _isFollowingUser = false);
+                        } else {
+                          github.github.users.followUser(_currentUser.login);
+                          setState(() => _isFollowingUser = true);
+                        }
+                      },
                     ),
                   ),
                 ],
