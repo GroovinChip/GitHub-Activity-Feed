@@ -70,9 +70,11 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            titleSpacing: 4,
             title: Text(
               '${widget.event.repo.name}',
             ),
+
             bottom: PreferredSize(
               preferredSize: _headerSize,
               child: IssueHeaderBar(
@@ -89,8 +91,9 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
                     padding: const EdgeInsets.all(8),
                     child: Card(
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             ListTile(
                               contentPadding: EdgeInsets.zero,
@@ -112,13 +115,54 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
                       ),
                     ),
                   ),
-                for (IssueComment comment in _issueComments) Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                  child: IssueEntry(comment: comment),
-                )
+                for (IssueComment comment in _issueComments)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                    child: IssueEntry(comment: comment),
+                  )
               ],
             ),
           ),
+          if (_issueComments.isEmpty && _issue.body.isEmpty)
+            SliverList(
+              delegate: SliverChildListDelegate([
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: CircleAvatar(
+                              backgroundImage: NetworkImage(_issue.user.avatarUrl),
+                            ),
+                            title: Text(
+                              _issue.user.login,
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            subtitle: Text(
+                              '${timeago.format(_issue.createdAt, locale: 'en_short').replaceAll(' ', '')} '
+                                  '${_issue.updatedAt != null ? '• edited' : ''}',
+                            ),
+                          ),
+                          Text('No description provided'),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ]),
+            ),
+          if (_issueComments.isEmpty && _issue.body.isEmpty)
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Center(
+                child: Text('No comments'),
+              ),
+            ),
         ],
       ),
     );
