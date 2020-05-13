@@ -25,11 +25,15 @@ class _EventCardState extends State<EventCard> with ProvidedState {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    print(widget.event.type);
     _buildActivityWidgetByType();
   }
 
   void _buildActivityWidgetByType() {
     switch (widget.event.type) {
+      case 'CommitCommentEvent':
+        _eventWidget = _buildCommitCommentEvent();
+        break;
       case 'CreateEvent':
         _eventWidget = _buildCreateEvent();
         break;
@@ -94,6 +98,34 @@ class _EventCardState extends State<EventCard> with ProvidedState {
             )
           : Container(),
     );
+  }
+
+  Widget _buildCommitCommentEvent() {
+    CommitComment commitComment = CommitComment.fromJson(widget.event.payload['comment']);
+    final _commitCommentEventWidget = RichText(
+      text: TextSpan(
+        style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+        children: <TextSpan>[
+          TextSpan(
+            text: '${widget.event.actor.login}',
+          ),
+          TextSpan(
+            text: ' commented on commit ',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          TextSpan(
+            text: '${widget.event.repo.name}'
+          ),
+          TextSpan(
+            text: '@${commitComment.commitId.substring(0, 10)}',
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+          ),
+        ],
+      ),
+    );
+    return _commitCommentEventWidget;
   }
 
   Widget _buildCreateEvent() {
