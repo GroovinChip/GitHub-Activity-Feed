@@ -113,7 +113,7 @@ class _MobileSettingsState extends State<MobileSettings> with ProvidedState {
                     ),
                     FlatButton(
                       child: Text('Yes'),
-                      onPressed: () => github.logOut(),
+                      onPressed: () => githubService.logOut(),
                     ),
                   ],
                 ),

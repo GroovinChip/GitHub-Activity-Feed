@@ -4,7 +4,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
-import 'package:github_activity_feed/screens/mobile_settings.dart';
+import 'package:github_activity_feed/screens/settings.dart';
 import 'package:github_activity_feed/screens/user_profile.dart';
 import 'package:github_activity_feed/screens/widgets/mobile_activity_feed.dart';
 import 'package:github_activity_feed/services/extensions.dart';
@@ -32,7 +32,7 @@ class _UserOverviewState extends State<UserOverview> with ProvidedState {
  @override
   void initState() {
     super.initState();
-    _events = github.github.activity
+    _events = githubService.github.activity
         .listEventsPerformedByUser(_currentUser.login)
         .toList()
         .asStream();

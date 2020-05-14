@@ -33,7 +33,7 @@ class _UserProfileState extends State<UserProfile> with ProvidedState {
   }
 
   void _getUser() {
-    github.github.users.getUser(widget.currentUser.login).then((User user) {
+    githubService.github.users.getUser(widget.currentUser.login).then((User user) {
       setState(() {
         _currentUser = user;
       });
@@ -42,7 +42,7 @@ class _UserProfileState extends State<UserProfile> with ProvidedState {
 
   void _checkIsFollowingUser() {
     if (widget.currentUser.login != user.login) {
-      github.github.users.isFollowingUser(widget.currentUser.login).then((bool isFollowing) {
+      githubService.github.users.isFollowingUser(widget.currentUser.login).then((bool isFollowing) {
         setState(() {
           _isFollowingUser = isFollowing;
         });
@@ -94,10 +94,10 @@ class _UserProfileState extends State<UserProfile> with ProvidedState {
                       label: Text(!_isFollowingUser ? 'Follow' : 'Unfollow'),
                       onPressed: () {
                         if (_isFollowingUser) {
-                          github.github.users.unfollowUser(_currentUser.login);
+                          githubService.github.users.unfollowUser(_currentUser.login);
                           setState(() => _isFollowingUser = false);
                         } else {
-                          github.github.users.followUser(_currentUser.login);
+                          githubService.github.users.followUser(_currentUser.login);
                           setState(() => _isFollowingUser = true);
                         }
                       },

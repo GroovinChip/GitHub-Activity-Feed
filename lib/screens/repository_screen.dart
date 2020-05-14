@@ -52,7 +52,7 @@ class _RepositoryScreenState extends State<RepositoryScreen>
   }
 
   void _checkIfStarred() {
-    github.github.activity.isStarred(_repositorySlug).then((bool isStarred) {
+    githubService.github.activity.isStarred(_repositorySlug).then((bool isStarred) {
       setState(() {
         if (!_repositoryFeed.isClosed) {
           _isStarred = isStarred;
@@ -64,14 +64,14 @@ class _RepositoryScreenState extends State<RepositoryScreen>
   void _getRepoActivity() {
     updateBehaviorSubjectAsync(
       _repositoryFeed,
-      () => github.github.activity.listRepositoryEvents(_repositorySlug).toList(),
+      () => githubService.github.activity.listRepositoryEvents(_repositorySlug).toList(),
     );
   }
 
   void _getReadme() {
     updateBehaviorSubjectAsync(
       _readme,
-      () => github.github.repositories.getReadme(_repositorySlug),
+      () => githubService.github.repositories.getReadme(_repositorySlug),
     );
   }
 
@@ -79,7 +79,7 @@ class _RepositoryScreenState extends State<RepositoryScreen>
     _repoOwnerLogin = widget.event.repo.name.replaceAfter('/', '').replaceAll('/', '');
     updateBehaviorSubjectAsync(
       _repoOwner,
-      () => github.github.users.getUser(_repoOwnerLogin).then((User user) => _repoOwner.value = user),
+      () => githubService.github.users.getUser(_repoOwnerLogin).then((User user) => _repoOwner.value = user),
     );
   }
 
@@ -147,10 +147,10 @@ class _RepositoryScreenState extends State<RepositoryScreen>
             icon: Icon(!_isStarred ? Icons.star_border : Icons.star),
             onPressed: () {
               if (!_isStarred) {
-                github.github.activity.star(_repositorySlug);
+                githubService.github.activity.star(_repositorySlug);
                 setState(() => _isStarred = true);
               } else {
-                github.github.activity.unstar(_repositorySlug);
+                githubService.github.activity.unstar(_repositorySlug);
                 setState(() => _isStarred = false);
               }
             },
