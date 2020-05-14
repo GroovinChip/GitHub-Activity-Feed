@@ -1,10 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github/hooks.dart';
 import 'package:github_activity_feed/app/provided.dart';
-import 'package:github_activity_feed/screens/mobile/user_overview.dart';
+import 'package:github_activity_feed/screens/user_overview.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class EventCard extends StatefulWidget {

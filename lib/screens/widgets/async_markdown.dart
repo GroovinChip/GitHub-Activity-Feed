@@ -5,13 +5,9 @@ import 'package:flutter/foundation.dart' show compute;
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:github_activity_feed/utils/markdown_io.dart';
-import 'package:markdown/markdown.dart' as md;
 
 final _markdownCache = LruMap<String, List<md.Node>>(maximumSize: 25);
 

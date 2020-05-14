@@ -1,12 +1,9 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
-import 'package:github_activity_feed/app/provided.dart';
-import 'package:github_activity_feed/screens/mobile/issue_screen.dart';
-import 'package:github_activity_feed/screens/mobile/repository_screen.dart';
-import 'package:github_activity_feed/screens/widgets/async_markdown.dart';
+import 'package:github_activity_feed/screens/issue_screen.dart';
+import 'package:github_activity_feed/screens/repository_screen.dart';
 import 'package:github_activity_feed/screens/widgets/event_card.dart';
-import 'package:rxdart/rxdart.dart';
 
 class MobileActivityFeed extends StatelessWidget {
   MobileActivityFeed({

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
-import 'package:github_activity_feed/screens/mobile/user_overview.dart';
+import 'package:github_activity_feed/screens/user_overview.dart';
 
 class UserListTile extends StatelessWidget {
   const UserListTile({Key key, @required this.user}) : super(key: key);

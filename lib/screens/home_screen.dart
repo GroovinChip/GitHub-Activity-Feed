@@ -3,19 +3,32 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
-import 'package:github_activity_feed/screens/mobile/user_overview.dart';
+import 'package:github_activity_feed/screens/user_overview.dart';
 import 'package:github_activity_feed/screens/widgets/async_markdown.dart';
 import 'package:github_activity_feed/screens/widgets/following_users.dart';
 import 'package:github_activity_feed/screens/widgets/mobile_activity_feed.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:rxdart/rxdart.dart';
 
-class MobileHomeScreen extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
+  static const routeName = Navigator.defaultRouteName;
+
+  static Route<dynamic> route({
+    RouteSettings settings = const RouteSettings(name: routeName),
+  }) {
+    return MaterialPageRoute(
+      settings: settings,
+      builder: (BuildContext context) {
+        return HomeScreen();
+      },
+    );
+  }
+
   @override
-  _MobileHomeScreenState createState() => _MobileHomeScreenState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _MobileHomeScreenState extends State<MobileHomeScreen> with ProvidedState {
+class _HomeScreenState extends State<HomeScreen> with ProvidedState {
   int _currentIndex = 0;
   final _activityFeed = BehaviorSubject<List<Event>>();
   final _userFollowing = BehaviorSubject<List<User>>();

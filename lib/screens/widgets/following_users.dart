@@ -1,10 +1,8 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
-import 'package:github_activity_feed/app/provided.dart';
-import 'package:github_activity_feed/screens/mobile/user_overview.dart';
+import 'package:github_activity_feed/screens/user_overview.dart';
 import 'package:github_activity_feed/screens/widgets/user_list_tile.dart';
-import 'package:rxdart/rxdart.dart';
 
 class FollowingUsers extends StatelessWidget {
   FollowingUsers({

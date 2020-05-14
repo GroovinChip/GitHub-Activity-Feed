@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/keys.dart';
-import 'package:github_activity_feed/screens/determine_layout.dart';
 import 'package:github_activity_feed/screens/login_page.dart';
+import 'package:github_activity_feed/screens/home_screen.dart';
 import 'package:github_activity_feed/services/auth_service.dart';
 import 'package:github_activity_feed/services/extensions.dart';
 import 'package:github_activity_feed/services/github_service.dart';
@@ -39,7 +39,7 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
       _navigatorKey.currentState.pushAndRemoveUntil(LoginPage.route(), (route) => false);
     } else {
       url_launcher.closeWebView();
-      _navigatorKey.currentState.pushAndRemoveUntil(DetermineLayout.route(), (route) => false);
+      _navigatorKey.currentState.pushAndRemoveUntil(HomeScreen.route(), (route) => false);
     }
   }
 
@@ -110,7 +110,7 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
           themeMode: ThemeMode.system,
-          initialRoute: widget.githubService.currentUser.value == null ? LoginPage.routeName : DetermineLayout.routeName,
+          initialRoute: widget.githubService.currentUser.value == null ? LoginPage.routeName : HomeScreen.routeName,
           onGenerateInitialRoutes: (String initialRoute) => [
             _onGenerateRoute(RouteSettings(name: initialRoute)),
           ],
@@ -123,8 +123,8 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
 
   Route<dynamic> _onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case DetermineLayout.routeName:
-        return DetermineLayout.route(settings: settings);
+      case HomeScreen.routeName:
+        return HomeScreen.route(settings: settings);
       case LoginPage.routeName:
         return LoginPage.route(settings: settings);
       default:

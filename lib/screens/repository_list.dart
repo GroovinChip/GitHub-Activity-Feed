@@ -1,7 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
-import 'package:github_activity_feed/screens/mobile/repository_screen.dart';
+import 'package:github_activity_feed/screens/repository_screen.dart';
 
 class RepositoryList extends StatefulWidget {
   RepositoryList({
