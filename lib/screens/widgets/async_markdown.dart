@@ -1,32 +1,11 @@
-import 'dart:convert';
-import 'package:crypto/crypto.dart' show md5;
-import 'package:quiver/collection.dart' show LruMap;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show compute;
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:markdown/markdown.dart' as md;
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
+import 'package:github_activity_feed/services/repositories/readmes.dart';
 import 'package:github_activity_feed/utils/markdown_io.dart';
-
-final _markdownCache = LruMap<String, List<md.Node>>(maximumSize: 25);
-
-List<md.Node> _parseMarkdownIsolate(String data) {
-  return md.Document(
-    extensionSet: md.ExtensionSet.gitHubFlavored,
-    inlineSyntaxes: [TaskListSyntax()],
-    encodeHtml: false,
-  ).parseLines(LineSplitter.split(data).toList(growable: false));
-}
-
-String _generateHashKey(String data) {
-  return md5.convert(utf8.encode(data)).toString();
-}
-
-Future<void> preCacheMarkdown(String markdown) async {
-  final hash = _generateHashKey(markdown);
-  _markdownCache[hash] = await compute(_parseMarkdownIsolate, markdown);
-}
+import 'package:markdown/markdown.dart' as md;
 
 class AsyncMarkdown extends StatefulWidget {
   /// Creates a widget that parses and displays Markdown.
@@ -155,12 +134,12 @@ class _AsyncMarkdownWidgetState extends State<AsyncMarkdown> implements Markdown
 
     List<md.Node> nodes;
 
-    final hash = _generateHashKey(widget.data);
-    nodes = _markdownCache[hash];
+    final hash = ReadmeRepository.generateHashKey(widget.data);
+    nodes = ReadmeRepository.markdownCache[hash];
     if (nodes == null) {
-      await Future.delayed(Duration(milliseconds: 250));
-      nodes = await compute(_parseMarkdownIsolate, widget.data);
-      _markdownCache[hash] = nodes;
+      //await Future.delayed(Duration(milliseconds: 250));
+      nodes = await compute(ReadmeRepository.parseMarkdownIsolate, widget.data);
+      ReadmeRepository.markdownCache[hash] = nodes;
     }
 
     final MarkdownBuilder builder = MarkdownBuilder(

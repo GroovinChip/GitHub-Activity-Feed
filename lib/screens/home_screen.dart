@@ -1,12 +1,11 @@
-import 'dart:math' as math;
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/user_overview.dart';
-import 'package:github_activity_feed/screens/widgets/async_markdown.dart';
 import 'package:github_activity_feed/screens/widgets/following_users.dart';
 import 'package:github_activity_feed/screens/widgets/mobile_activity_feed.dart';
+import 'package:github_activity_feed/services/repositories/readmes.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -37,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!_activityFeed.hasValue) {
-      PaginationHelper(github.github)
+      PaginationHelper(githubService.github)
           .objects(
             'GET',
             '/users/${user.login}/received_events',
@@ -47,11 +46,11 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
           .toList()
           .then((data) {
         _activityFeed.value = data;
-        precacheReadmes(data);
+        ReadmeRepository.preCacheReadmes(githubService.github, data);
       });
     }
     if (!_userFollowing.hasValue) {
-      PaginationHelper(github.github)
+      PaginationHelper(githubService.github)
           .objects(
             'GET',
             '/user/following',
@@ -63,23 +62,6 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
         _userFollowing.value = data;
       });
     }
-  }
-
-  /// HACKY - DO NOT DO THIS IN THE UI
-  Future<void> precacheReadmes(List<Event> events) async {
-    final futureFiles = <Future<GitHubFile>>[];
-    for(int i = 0; i < math.min(events.length, 25); i++) {
-      final event = events[i];
-      final slug = RepositorySlug.full(event.repo.name);
-      futureFiles.add(github.github.repositories.getReadme(slug));
-    }
-    final files = await Future.wait(futureFiles);
-    final futureCaches = <Future<void>>[];
-    for(final file in files) {
-      futureCaches.add(preCacheMarkdown(file.content));
-    }
-    await Future.wait(futureCaches);
-    print('all done');
   }
 
   @override

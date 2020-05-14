@@ -14,10 +14,10 @@ import 'package:quiver/collection.dart' show LruMap;
 /// - generate unique id's for readmes for referencing through the app
 class ReadmeRepository {
   /// Readme cache
-  final _markdownCache = LruMap<String, List<md.Node>>(maximumSize: 25);
+  static final markdownCache = LruMap<String, List<md.Node>>(maximumSize: 25);
 
   /// Parse the markdown for a readme
-  List<md.Node> _parseMarkdownIsolate(String data) {
+  static List<md.Node> parseMarkdownIsolate(String data) {
     return md.Document(
       extensionSet: md.ExtensionSet.gitHubFlavored,
       inlineSyntaxes: [TaskListSyntax()],
@@ -26,18 +26,18 @@ class ReadmeRepository {
   }
 
   /// Generate a unique key for a readme
-  String _generateHashKey(String data) {
+  static String generateHashKey(String data) {
     return md5.convert(utf8.encode(data)).toString();
   }
 
   /// Pre-cache the markdown for a readme
-  Future<void> preCacheMarkdown(String markdown) async {
-    final hash = _generateHashKey(markdown);
-    _markdownCache[hash] = await compute(_parseMarkdownIsolate, markdown);
+  static Future<void> preCacheMarkdown(String markdown) async {
+    final hash = generateHashKey(markdown);
+    markdownCache[hash] = await compute(parseMarkdownIsolate, markdown);
   }
 
   ///
-  Future<void> preCacheReadmes(GitHub gitHub, List<Event> events) async {
+  static Future<void> preCacheReadmes(GitHub gitHub, List<Event> events) async {
     final futureFiles = <Future<GitHubFile>>[];
     for(int i = 0; i < math.min(events.length, 25); i++) {
       final event = events[i];
