@@ -49,6 +49,7 @@ class _RepositoryListState extends State<RepositoryList> {
               },
               openBuilder: (BuildContext context, action) {
                 return RepositoryScreen(
+                  key: Key('repo-${repository.id}'),
                   repository: repository,
                 );
               },

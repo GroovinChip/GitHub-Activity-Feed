@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
+import 'package:github_activity_feed/screens/widgets/async_markdown.dart';
+import 'package:github_activity_feed/screens/widgets/custom_stream_builder.dart';
 import 'package:github_activity_feed/screens/widgets/mobile_activity_feed.dart';
 import 'package:github_activity_feed/services/extensions.dart';
+import 'package:github_activity_feed/utils/stream_helpers.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:groovin_widgets/avatar_back_button.dart';
 import 'package:rxdart/rxdart.dart';
@@ -31,7 +34,7 @@ class RepositoryScreen extends StatefulWidget {
 class _RepositoryScreenState extends State<RepositoryScreen>
     with SingleTickerProviderStateMixin, ProvidedState {
   TabController _tabController;
-  String _userLogin;
+  String _repoOwnerLogin;
   RepositorySlug _repositorySlug;
   bool _isStarred = false;
 
@@ -52,32 +55,34 @@ class _RepositoryScreenState extends State<RepositoryScreen>
 
   void _checkIfStarred() {
     github.github.activity.isStarred(_repositorySlug).then((bool isStarred) {
-      setState(() => _isStarred = isStarred);
+      setState(() {
+        if (!_repositoryFeed.isClosed) {
+          _isStarred = isStarred;
+        }
+      });
     });
   }
 
   void _getRepoActivity() {
-    if (!_repositoryFeed.hasValue) {
-      github.github.activity
-          .listRepositoryEvents(_repositorySlug)
-          .toList()
-          .then((List<Event> repoEvents) => _repositoryFeed.value = repoEvents);
-    }
+    updateBehaviorSubjectAsync(
+      _repositoryFeed,
+      () => github.github.activity.listRepositoryEvents(_repositorySlug).toList(),
+    );
   }
 
   void _getReadme() {
-    if (!_readme.hasValue) {
-      github.github.repositories
-          .getReadme(_repositorySlug)
-          .then((GitHubFile readme) => _readme.value = readme);
-    }
+    updateBehaviorSubjectAsync(
+      _readme,
+      () => github.github.repositories.getReadme(_repositorySlug),
+    );
   }
 
   void _getRepoOwner() {
-    _userLogin = widget.event.repo.name.replaceAfter('/', '').replaceAll('/', '');
-    if (!_repoOwner.hasValue) {
-      github.github.users.getUser(_userLogin).then((User user) => _repoOwner.value = user);
-    }
+    _repoOwnerLogin = widget.event.repo.name.replaceAfter('/', '').replaceAll('/', '');
+    updateBehaviorSubjectAsync(
+      _repoOwner,
+      () => github.github.users.getUser(_repoOwnerLogin).then((User user) => _repoOwner.value = user),
+    );
   }
 
   @override
@@ -95,28 +100,50 @@ class _RepositoryScreenState extends State<RepositoryScreen>
       appBar: AppBar(
         titleSpacing: 8,
         automaticallyImplyLeading: false,
-        title: _repoOwner.value != null
-            ? Row(
+        title: SubjectStreamBuilder(
+          subject: _repoOwner,
+          builder: (BuildContext context, User owner) {
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AvatarBackButton(
+                  avatar: owner.avatarUrl,
+                  onPressed: () => Navigator.pop(context),
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: Text(_repositorySlug.name),
+                  ),
+                ),
+              ],
+            );
+          },
+          loadingBuilder: (BuildContext context) {
+            return InkWell(
+              onTap: () => Navigator.pop(context),
+              customBorder: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  AvatarBackButton(
-                    avatar: _repoOwner.value?.avatarUrl,
-                    onPressed: () => Navigator.pop(context),
+                  Icon(Icons.arrow_back),
+                  CircleAvatar(
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                      ),
+                    ),
                   ),
-                  SizedBox(width: 16),
-                  Text(_repositorySlug.name),
-                ],
-              )
-            : Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                  CircleAvatar(),
                 ],
               ),
+            );
+          },
+        ),
         actions: [
           IconButton(
             icon: Icon(!_isStarred ? Icons.star_border : Icons.star),
@@ -135,58 +162,57 @@ class _RepositoryScreenState extends State<RepositoryScreen>
           controller: _tabController,
           indicatorColor: Theme.of(context).colorScheme.secondary,
           tabs: [
-            Tab(
-              text: 'Readme',
-            ),
-            Tab(
-              text: 'Activity',
-            ),
+            Tab(text: 'Readme'),
+            Tab(text: 'Activity'),
           ],
         ),
       ),
       body: TabBarView(
         controller: _tabController,
         children: [
-          _readme.value != null
-              ? Markdown(
-                  data: _readme.value?.text,
-                  styleSheet: MarkdownStyleSheet(
-                    h1: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    h2: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    h3: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    h4: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    p: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground,
-                    ),
-                    listBullet: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground,
-                    ),
-                    code: GoogleFonts.firaCode(
-                      color: Theme.of(context).colorScheme.onBackground,
-                    ),
+          SubjectStreamBuilder(
+            subject: _readme,
+            builder: (BuildContext context, GitHubFile readme) {
+              return AsyncMarkdown(
+                data: readme.text,
+                styleSheet: MarkdownStyleSheet(
+                  h1: TextStyle(
+                    color: Theme.of(context).colorScheme.onBackground,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
-                )
-              : Center(
-                  child: Text(
-                    'No readme',
-                    style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+                  h2: TextStyle(
+                    color: Theme.of(context).colorScheme.onBackground,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  h3: TextStyle(
+                    color: Theme.of(context).colorScheme.onBackground,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  h4: TextStyle(
+                    color: Theme.of(context).colorScheme.onBackground,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  p: TextStyle(
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
+                  listBullet: TextStyle(
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
+                  code: GoogleFonts.firaCode(
+                    color: Theme.of(context).colorScheme.onBackground,
                   ),
                 ),
+              );
+            },
+            errorBuilder: (context, error) {
+              return Center(
+                child: Text('$error'),
+              );
+            },
+          ),
           MobileActivityFeed(
             events: _repositoryFeed,
             emptyBuilder: (BuildContext context) {

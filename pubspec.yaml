@@ -19,6 +19,7 @@ dependencies:
   provider: ^4.1.1
   uuid: ^2.0.4
   path_provider: ^1.6.7
+  crypto: any
   cloud_firestore: ^0.13.5
   material_design_icons_flutter: ^4.0.5145
   rxdart: ^0.24.0
