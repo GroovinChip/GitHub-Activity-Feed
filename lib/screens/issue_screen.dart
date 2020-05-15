@@ -117,9 +117,26 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
                                 _issue.user.login,
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                              subtitle: Text(
-                                '${timeago.format(_issue.createdAt, locale: 'en_short').replaceAll(' ', '')} '
-                                '${_issue.updatedAt != null ? '• edited' : ''}',
+                              subtitle: RichText(
+                                text: TextSpan(
+                                  style: Theme.of(context).textTheme.caption.copyWith(
+                                    fontSize: 12,
+                                  ),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: 'commented ',
+                                    ),
+                                    TextSpan(
+                                      text: '${timeago.format(_issue.createdAt, locale: 'en_short')}',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: ' ago',
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             MarkdownBody(
