@@ -5,8 +5,8 @@ import 'package:github_activity_feed/screens/issue_screen.dart';
 import 'package:github_activity_feed/screens/repository_screen.dart';
 import 'package:github_activity_feed/screens/widgets/event_card.dart';
 
-class MobileActivityFeed extends StatelessWidget {
-  MobileActivityFeed({
+class ActivityFeed extends StatelessWidget {
+  ActivityFeed({
     Key key,
     @required this.events,
     this.emptyBuilder,
@@ -35,6 +35,7 @@ class MobileActivityFeed extends StatelessWidget {
             padding: const EdgeInsets.only(left: 8, right: 8, top: 4),
             itemBuilder: (BuildContext context, int index) {
               Event event = snapshot.data[index];
+              print(event.type);
               return GestureDetector(
                 onTap: () {
                   if (event.type == 'IssuesEvent' || event.type == 'IssueCommentEvent') {

@@ -6,7 +6,7 @@ import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/settings.dart';
 import 'package:github_activity_feed/screens/user_profile.dart';
-import 'package:github_activity_feed/screens/widgets/mobile_activity_feed.dart';
+import 'package:github_activity_feed/screens/widgets/activity_feed.dart';
 import 'package:github_activity_feed/services/extensions.dart';
 import 'package:groovin_widgets/avatar_back_button.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -81,7 +81,7 @@ class _UserOverviewState extends State<UserOverview> with ProvidedState {
       body: IndexedStack(
         index: _currentIndex,
         children: [
-          MobileActivityFeed(events: _events),
+          ActivityFeed(events: _events),
           UserProfile(currentUser: _currentUser),
         ],
       ),

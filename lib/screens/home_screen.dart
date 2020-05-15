@@ -4,7 +4,7 @@ import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/user_overview.dart';
 import 'package:github_activity_feed/screens/widgets/following_users.dart';
-import 'package:github_activity_feed/screens/widgets/mobile_activity_feed.dart';
+import 'package:github_activity_feed/screens/widgets/activity_feed.dart';
 import 'package:github_activity_feed/services/repositories/readmes.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:rxdart/rxdart.dart';
@@ -104,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
       body: IndexedStack(
         index: _currentIndex,
         children: [
-          MobileActivityFeed(events: _activityFeed),
+          ActivityFeed(events: _activityFeed),
           FollowingUsers(users: _userFollowing),
         ],
       ),

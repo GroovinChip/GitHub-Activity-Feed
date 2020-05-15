@@ -5,7 +5,7 @@ import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/widgets/async_markdown.dart';
 import 'package:github_activity_feed/screens/widgets/custom_stream_builder.dart';
-import 'package:github_activity_feed/screens/widgets/mobile_activity_feed.dart';
+import 'package:github_activity_feed/screens/widgets/activity_feed.dart';
 import 'package:github_activity_feed/services/extensions.dart';
 import 'package:github_activity_feed/utils/stream_helpers.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -211,7 +211,7 @@ class _RepositoryScreenState extends State<RepositoryScreen>
               );
             },
           ),
-          MobileActivityFeed(
+          ActivityFeed(
             events: _repositoryFeed,
             emptyBuilder: (BuildContext context) {
               return Center(
