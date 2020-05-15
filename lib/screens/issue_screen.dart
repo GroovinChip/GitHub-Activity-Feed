@@ -120,14 +120,15 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
                               subtitle: RichText(
                                 text: TextSpan(
                                   style: Theme.of(context).textTheme.caption.copyWith(
-                                    fontSize: 12,
-                                  ),
+                                        fontSize: 12,
+                                      ),
                                   children: <TextSpan>[
                                     TextSpan(
                                       text: 'commented ',
                                     ),
                                     TextSpan(
-                                      text: '${timeago.format(_issue.createdAt, locale: 'en_short')}',
+                                      text:
+                                          '${timeago.format(_issue.createdAt, locale: 'en_short')}',
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -194,8 +195,8 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
                             subtitle: RichText(
                               text: TextSpan(
                                 style: Theme.of(context).textTheme.caption.copyWith(
-                                  fontSize: 12,
-                                ),
+                                      fontSize: 12,
+                                    ),
                                 children: <TextSpan>[
                                   TextSpan(
                                     text: 'commented ',
@@ -329,8 +330,8 @@ class IssueEntry extends StatelessWidget {
               subtitle: RichText(
                 text: TextSpan(
                   style: Theme.of(context).textTheme.caption.copyWith(
-                    fontSize: 12,
-                  ),
+                        fontSize: 12,
+                      ),
                   children: <TextSpan>[
                     TextSpan(
                       text: 'commented ',
@@ -358,9 +359,16 @@ class IssueEntry extends StatelessWidget {
                       : Theme.of(context).canvasColor,
                 ),
                 code: GoogleFonts.firaCode(
-                  backgroundColor: Theme.of(context).brightness == Brightness.light
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.black
+                      : Colors.white,
+                ),
+                blockquoteDecoration: BoxDecoration(
+                  color: Theme.of(context).brightness == Brightness.light
                       ? Colors.grey[300]
                       : Theme.of(context).canvasColor,
+                ),
+                blockquote: TextStyle(
                   color: Theme.of(context).brightness == Brightness.light
                       ? Colors.black
                       : Colors.white,
