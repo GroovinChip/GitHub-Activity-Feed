@@ -1,10 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:github/github.dart';
 import 'package:github/hooks.dart';
 import 'package:github_activity_feed/app/provided.dart';
+import 'package:github_activity_feed/screens/widgets/async_markdown.dart';
 import 'package:github_activity_feed/services/extensions.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:http/http.dart' as http;
 
@@ -21,8 +25,8 @@ class IssueScreen extends StatefulWidget {
 }
 
 class _IssueScreenState extends State<IssueScreen> with ProvidedState {
-  final _headerKey = GlobalKey<_IssueHeaderBarState>();
-  Size _headerSize;
+  final _headerKey = GlobalKey();
+  double _headerSize;
   IssueEvent _issueEvent;
   IssueCommentEvent _issueCommentEvent;
   Issue _issue;
@@ -52,6 +56,7 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
   void _getIssueComments() async {
     final response = await http.get(_issue.commentsUrl);
     final data = jsonDecode(response.body);
+    //print(data);
     setState(() {
       for (Map i in data) {
         _issueComments.add(IssueComment.fromJson(i));
@@ -61,7 +66,7 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
 
   void _getHeaderSize(_) {
     final RenderBox headerBox = _headerKey.currentContext.findRenderObject();
-    _headerSize = headerBox.size;
+    setState(() => _headerSize = headerBox.getMaxIntrinsicHeight(headerBox.size.width));
   }
 
   @override
@@ -70,16 +75,24 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            titleSpacing: 4,
-            title: Text(
-              '${widget.event.repo.name}',
+            snap: true,
+            floating: true,
+            expandedHeight: _headerSize ?? 0.0,
+            title: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                '${widget.event.repo.name}',
+              ),
             ),
-
             bottom: PreferredSize(
-              preferredSize: _headerSize,
-              child: IssueHeaderBar(
-                key: _headerKey,
-                issue: _issue,
+              preferredSize: Size.fromHeight(_headerSize ?? 0.0),
+              child: Container(
+                alignment: Alignment.centerLeft,
+                child: IssueHeaderBar(
+                  key: _headerKey,
+                  issue: _issue,
+                ),
               ),
             ),
           ),
@@ -109,7 +122,25 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
                                 '${_issue.updatedAt != null ? '• edited' : ''}',
                               ),
                             ),
-                            Text(_issue.body),
+                            MarkdownBody(
+                              data: _issue.body,
+                              styleSheet: MarkdownStyleSheet(
+                                codeblockDecoration: BoxDecoration(
+                                  color: Theme.of(context).brightness == Brightness.light
+                                      ? Colors.grey[300]
+                                      : Theme.of(context).canvasColor,
+                                ),
+                                code: GoogleFonts.firaCode(
+                                  backgroundColor: Theme.of(context).brightness == Brightness.light
+                                      ? Colors.grey[300]
+                                      : Theme.of(context).canvasColor,
+                                  color: Theme.of(context).brightness == Brightness.light
+                                      ? Colors.black
+                                      : Colors.white,
+                                ),
+                              ),
+                            ),
+                            /*Text(_issue.body.trim()),*/
                           ],
                         ),
                       ),
@@ -143,10 +174,27 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
                               _issue.user.login,
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            subtitle: Text(
-                              '${timeago.format(_issue.createdAt, locale: 'en_short').replaceAll(' ', '')} '
-                                  '${_issue.updatedAt != null ? '• edited' : ''}',
+                            subtitle: RichText(
+                              text: TextSpan(
+                                style: Theme.of(context).textTheme.caption.copyWith(
+                                  fontSize: 12,
+                                ),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: 'commented ',
+                                  ),
+                                  TextSpan(
+                                    text: '${timeago.format(_issue.createdAt, locale: 'en')}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
+                            /*subtitle: Text(
+                              'commented ${timeago.format(_issue.createdAt, locale: 'en_short').replaceAll(' ', '').replaceAll('~', '')} ago'
+                            ),*/
                           ),
                           Text('No description provided'),
                         ],
@@ -196,14 +244,14 @@ class _IssueHeaderBarState extends State<IssueHeaderBar> {
                 TextSpan(
                   text: '${widget.issue.title} ',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 TextSpan(
                   text: '#${widget.issue.number}',
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 16,
                     color: Colors.grey,
                   ),
                 ),
@@ -248,8 +296,9 @@ class IssueEntry extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ListTile(
               contentPadding: EdgeInsets.zero,
@@ -260,12 +309,47 @@ class IssueEntry extends StatelessWidget {
                 comment.user.login,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              subtitle: Text(
+              subtitle: RichText(
+                text: TextSpan(
+                  style: Theme.of(context).textTheme.caption.copyWith(
+                    fontSize: 12,
+                  ),
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: 'commented ',
+                    ),
+                    TextSpan(
+                      text: '${timeago.format(comment.createdAt, locale: 'en')}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              /*subtitle: Text(
                 '${timeago.format(comment.createdAt, locale: 'en_short').replaceAll(' ', '')} '
                 '${comment.updatedAt != null ? '• edited' : ''}',
+              ),*/
+            ),
+            MarkdownBody(
+              data: comment.body,
+              styleSheet: MarkdownStyleSheet(
+                codeblockDecoration: BoxDecoration(
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.grey[300]
+                      : Theme.of(context).canvasColor,
+                ),
+                code: GoogleFonts.firaCode(
+                  backgroundColor: Theme.of(context).brightness == Brightness.light
+                      ? Colors.grey[300]
+                      : Theme.of(context).canvasColor,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.black
+                      : Colors.white,
+                ),
               ),
             ),
-            Text(comment.body),
           ],
         ),
       ),
