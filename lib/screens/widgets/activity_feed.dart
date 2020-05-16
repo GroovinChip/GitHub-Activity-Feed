@@ -47,12 +47,12 @@ class ActivityFeed extends StatelessWidget {
                       ),
                     );
                   } else if (event.type == 'PullRequestEvent') {
-                    PullRequestEvent _event = PullRequestEvent.fromJson(event.payload);
+                    PullRequestEvent _prEvent = PullRequestEvent.fromJson(event.payload);
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => PullRequestScreen(
-                          repoName: event.repo.name,
-                          event: _event,
+                          event: event,
+                          pullRequestEvent: _prEvent,
                         ),
                       ),
                     );

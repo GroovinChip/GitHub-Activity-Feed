@@ -10,12 +10,12 @@ import 'package:rxdart/rxdart.dart';
 class PullRequestScreen extends StatefulWidget {
   PullRequestScreen({
     Key key,
-    this.repoName,
     this.event,
+    this.pullRequestEvent,
   }) : super(key: key);
 
-  final String repoName;
-  final PullRequestEvent event;
+  final Event event;
+  final PullRequestEvent pullRequestEvent;
 
   @override
   _PullRequestScreenState createState() => _PullRequestScreenState();
@@ -49,7 +49,7 @@ class _PullRequestScreenState extends State<PullRequestScreen> with ProvidedStat
               fit: BoxFit.scaleDown,
               alignment: Alignment.centerLeft,
               child: Text(
-                '${widget.event.pullRequest.title}',
+                '${widget.event.repo.name}',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
@@ -61,18 +61,11 @@ class _PullRequestScreenState extends State<PullRequestScreen> with ProvidedStat
                 alignment: Alignment.centerLeft,
                 child: PullRequestHeaderBar(
                   key: _headerKey,
-                  pullRequest: widget.event.pullRequest,
-                  action: widget.event.action,
+                  pullRequest: widget.pullRequestEvent.pullRequest,
+                  action: widget.pullRequestEvent.action,
                 ),
               ),
             ),
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate([
-              Center(
-                child: Text('AAAA'),
-              ),
-            ]),
           ),
         ],
       ),
@@ -92,11 +85,29 @@ class PullRequestHeaderBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(pullRequest.toJson());
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 16, bottom: 8),
+          child: RichText(
+            text: TextSpan(
+              children: <TextSpan>[
+                TextSpan(
+                  text: '${pullRequest.title}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                  ),
+                ),
+                TextSpan(
+                  text: ' #${pullRequest.number}'
+                ),
+              ],
+            ),
+          ),
+        ),
         Row(
           children: [
             SizedBox(width: 16),
