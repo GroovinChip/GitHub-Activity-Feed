@@ -74,27 +74,25 @@ class _EventCardState extends State<EventCard> with ProvidedState {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(14),
       ),
-      child: _eventWidget != null
-          ? ListTile(
-              leading: GestureDetector(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => UserOverview(
-                      user: widget.event.actor,
-                    ),
-                  ),
-                ),
-                child: CircleAvatar(
-                  backgroundImage: NetworkImage(widget.event.actor.avatarUrl),
-                ),
+      child: ListTile(
+        leading: GestureDetector(
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => UserOverview(
+                user: widget.event.actor,
               ),
-              title: _eventWidget,
-              subtitle: Text(
-                timeago.format(widget.event.createdAt),
-                style: Theme.of(context).textTheme.caption,
-              ),
-            )
-          : Container(),
+            ),
+          ),
+          child: CircleAvatar(
+            backgroundImage: NetworkImage(widget.event.actor.avatarUrl),
+          ),
+        ),
+        title: _eventWidget,
+        subtitle: Text(
+          timeago.format(widget.event.createdAt),
+          style: Theme.of(context).textTheme.caption,
+        ),
+      ),
     );
   }
 
@@ -113,9 +111,7 @@ class _EventCardState extends State<EventCard> with ProvidedState {
               fontWeight: FontWeight.bold,
             ),
           ),
-          TextSpan(
-            text: '${widget.event.repo.name}'
-          ),
+          TextSpan(text: '${widget.event.repo.name}'),
           TextSpan(
             text: '@${commitComment.commitId.substring(0, 10)}',
             style: TextStyle(color: Theme.of(context).colorScheme.secondary),

@@ -52,7 +52,7 @@ class ActivityFeed extends StatelessWidget {
                     );
                   }
                 },
-                child: EventCard(event: event),
+                child: event.type != 'MemberEvent' ? EventCard(event: event) : Container(),
               );
               return OpenContainer(
                 closedColor: Theme.of(context).canvasColor,
