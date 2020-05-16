@@ -1,7 +1,9 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
+import 'package:github/hooks.dart';
 import 'package:github_activity_feed/screens/issue_screen.dart';
+import 'package:github_activity_feed/screens/pull_request_screen.dart';
 import 'package:github_activity_feed/screens/repository_screen.dart';
 import 'package:github_activity_feed/screens/widgets/event_card.dart';
 
@@ -42,6 +44,16 @@ class ActivityFeed extends StatelessWidget {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => IssueScreen(event: event),
+                      ),
+                    );
+                  } else if (event.type == 'PullRequestEvent') {
+                    PullRequestEvent _event = PullRequestEvent.fromJson(event.payload);
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => PullRequestScreen(
+                          repoName: event.repo.name,
+                          event: _event,
+                        ),
                       ),
                     );
                   } else {
