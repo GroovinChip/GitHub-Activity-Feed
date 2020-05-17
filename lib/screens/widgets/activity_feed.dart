@@ -4,7 +4,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github/hooks.dart';
-import 'package:github_activity_feed/screens/commit_screen.dart';
+import 'package:github_activity_feed/screens/commit_list_screen.dart';
 import 'package:github_activity_feed/screens/issue_screen.dart';
 import 'package:github_activity_feed/screens/pull_request_screen.dart';
 import 'package:github_activity_feed/screens/repository_screen.dart';
@@ -63,12 +63,11 @@ class ActivityFeed extends StatelessWidget {
                   } else if (event.type == 'PushEvent') {
                     List<GitCommit> commits = [];
                     for (dynamic commit in event.payload['commits']) {
-                      printPrettyJson(commit);
                       commits.add(GitCommit.fromJson(commit));
                     }
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => CommitScreen(
+                        builder: (context) => CommitListScreen(
                           committedBy: event.actor,
                           repoName: event.repo.name,
                           commits: commits,

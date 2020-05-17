@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
-import 'package:groovin_widgets/groovin_expansion_tile.dart';
+import 'package:github_activity_feed/services/extensions.dart';
+import 'package:github_activity_feed/utils/prettyJson.dart';
 import 'package:groovin_widgets/groovin_widgets.dart';
 
-class CommitScreen extends StatefulWidget {
-  CommitScreen({
+class CommitListScreen extends StatefulWidget {
+  CommitListScreen({
     Key key,
     @required this.committedBy,
     this.repoName,
@@ -18,10 +18,10 @@ class CommitScreen extends StatefulWidget {
   final List<dynamic> commits;
 
   @override
-  _CommitScreenState createState() => _CommitScreenState();
+  _CommitListScreenState createState() => _CommitListScreenState();
 }
 
-class _CommitScreenState extends State<CommitScreen> with ProvidedState {
+class _CommitListScreenState extends State<CommitListScreen> with ProvidedState {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,12 +35,22 @@ class _CommitScreenState extends State<CommitScreen> with ProvidedState {
               onPressed: () => Navigator.pop(context),
             ),
             SizedBox(width: 16),
-            Text('Commits by ${widget.committedBy.login}'),
+            DefaultTextStyle(
+              style: Theme.of(context).textTheme.bodyText1,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Commits by ${widget.committedBy.login}'),
+                  Text('to ${widget.repoName}'),
+                ],
+              ),
+            ),
           ],
         ),
       ),
       body: ListView.builder(
         itemCount: widget.commits.length,
+        padding: const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
         itemBuilder: (BuildContext context, int index) {
           final _repoSlug = RepositorySlug.full(widget.repoName);
           return CommitCard(
@@ -69,36 +79,25 @@ class CommitCard extends StatefulWidget {
 class _CommitCardState extends State<CommitCard> with ProvidedState {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<RepositoryCommit>(
-      future: githubService.github.repositories.getCommit(
-        widget.repositorySlug,
-        widget.commit.sha,
+    return Card(
+      child: ListTile(
+        title: RichText(
+          text: TextSpan(
+            children: <TextSpan>[
+              TextSpan(
+                text: '${widget.commit.sha.substring(0, 7)}',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.secondary,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+              TextSpan(
+                text: ' ${widget.commit.message.replaceAfter('\n', '')}',
+              ),
+            ],
+          ),
+        ),
       ),
-      builder: (BuildContext context, AsyncSnapshot<RepositoryCommit> snapshot) {
-        if (!snapshot.hasData) {
-          return Center(child: CircularProgressIndicator());
-        } else {
-          final repoCommit = snapshot.data;
-          return Card(
-            child: Column(
-              children: [
-                ListTile(
-                  title: Text(repoCommit.files.first.name),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text('${repoCommit.files.first.changes} Changes'),
-                    Text('${repoCommit.files.first.additions} Additions'),
-                    Text('${repoCommit.files.first.deletions} Deletions'),
-                  ],
-                ),
-                SizedBox(height: 8),
-              ],
-            ),
-          );
-        }
-      },
     );
   }
 }
