@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/services/extensions.dart';
-import 'package:github_activity_feed/utils/prettyJson.dart';
 import 'package:groovin_widgets/groovin_widgets.dart';
 
 class CommitListScreen extends StatefulWidget {
@@ -35,17 +34,26 @@ class _CommitListScreenState extends State<CommitListScreen> with ProvidedState 
               onPressed: () => Navigator.pop(context),
             ),
             SizedBox(width: 16),
-            DefaultTextStyle(
-              style: Theme.of(context).textTheme.bodyText1,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Commits by ${widget.committedBy.login}'),
-                  Text('to ${widget.repoName}'),
-                ],
-              ),
-            ),
+            Text('Commits by ${widget.committedBy.login}'),
           ],
+        ),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(25),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 4),
+            child: Row(
+              children: [
+                FittedBox(
+                  alignment: Alignment.centerLeft,
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    '${widget.repoName}',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
       body: ListView.builder(
