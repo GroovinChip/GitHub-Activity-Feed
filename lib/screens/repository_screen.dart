@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
+import 'package:github_activity_feed/screens/widgets/activity_feed.dart';
 import 'package:github_activity_feed/screens/widgets/async_markdown.dart';
 import 'package:github_activity_feed/screens/widgets/custom_stream_builder.dart';
-import 'package:github_activity_feed/screens/widgets/activity_feed.dart';
 import 'package:github_activity_feed/services/extensions.dart';
 import 'package:github_activity_feed/utils/stream_helpers.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -30,8 +30,7 @@ class RepositoryScreen extends StatefulWidget {
   _RepositoryScreenState createState() => _RepositoryScreenState();
 }
 
-class _RepositoryScreenState extends State<RepositoryScreen>
-    with SingleTickerProviderStateMixin, ProvidedState {
+class _RepositoryScreenState extends State<RepositoryScreen> with SingleTickerProviderStateMixin, ProvidedState {
   TabController _tabController;
   String _repoOwnerLogin;
   RepositorySlug _repositorySlug;
@@ -82,9 +81,7 @@ class _RepositoryScreenState extends State<RepositoryScreen>
     _repoOwnerLogin = widget.event.repo.name.replaceAfter('/', '').replaceAll('/', '');
     updateBehaviorSubjectAsync(
       _repoOwner,
-      () => githubService.github.users
-          .getUser(_repoOwnerLogin)
-          .then((User user) => _repoOwner.value = user),
+      () => githubService.github.users.getUser(_repoOwnerLogin).then((User user) => _repoOwner.value = user),
     );
   }
 
@@ -98,6 +95,7 @@ class _RepositoryScreenState extends State<RepositoryScreen>
   @override
   void dispose() {
     _repoOwner.close();
+    _repository.close();
     _repositoryFeed.close();
     _readme.close();
     _tabController.dispose();
