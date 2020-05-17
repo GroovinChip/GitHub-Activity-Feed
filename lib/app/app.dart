@@ -80,7 +80,7 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
               secondaryVariant: Color(0xff007ecb),
             ),
             // for CircularProgressIndicator and material scroll color
-            accentColor: Theme.of(context).colorScheme.secondary,
+            accentColor: Color(0xff3BACFF),
             textTheme: GoogleFonts.interTextTheme(
               ThemeData.light().textTheme,
             ),
@@ -99,7 +99,7 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
               secondaryVariant: Color(0xff007ecb),
             ),
             // for CircularProgressIndicator and material scroll color
-            accentColor: Theme.of(context).colorScheme.secondary,
+            accentColor: Color(0xff3BACFF),
             textTheme: GoogleFonts.interTextTheme(
               ThemeData.dark().textTheme,
             ),

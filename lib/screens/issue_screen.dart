@@ -34,6 +34,7 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
   IssueCommentEvent _issueCommentEvent;
   Issue _issue;
   final _issueSubject = BehaviorSubject<Issue>();
+  //final _issueEvents = BehaviorSubject<List<IssueEvent>>();
   Repository _repo;
   RepositorySlug _repositorySlug;
   List<IssueComment> _issueComments = [];
@@ -42,7 +43,6 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
   @override
   void initState() {
     super.initState();
-    //WidgetsBinding.instance.addPostFrameCallback(_getHeaderSize);
     _repositorySlug = RepositorySlug.full(widget.event.repo.name);
     if (widget.event.type == 'IssuesEvent') {
       _issueEvent = IssueEvent.fromJson(widget.event.payload);
@@ -51,6 +51,12 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
         _issueSubject,
         () => githubService.github.issues.get(_repositorySlug, _issue.number),
       );
+      /*updateBehaviorSubjectAsync(
+        _issueEvents,
+        () => githubService.github.activity
+            .listIssueEvents(widget.event.actor.login, _repositorySlug, _issue.number)
+            .toList(),
+      );*/
       _repo = _issueEvent.repository;
       _getIssueComments();
     } else if (widget.event.type == 'IssueCommentEvent') {
@@ -86,42 +92,118 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SubjectStreamBuilder(
-        subject: _issueSubject,
-        errorBuilder: (BuildContext context, error) {
-          return Center(
-            child: Text('$error'),
-          );
-        },
-        builder: (BuildContext context, Issue issue) {
-          WidgetsBinding.instance.addPostFrameCallback(_getHeaderSize);
-          return CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                snap: true,
-                floating: true,
-                expandedHeight: _headerSize ?? 100.0,
-                title: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    '${widget.event.repo.name}',
-                  ),
-                ),
-                bottom: PreferredSize(
-                  preferredSize: Size.fromHeight(_headerSize ?? 100.0),
-                  child: Container(
+          subject: _issueSubject,
+          errorBuilder: (BuildContext context, error) {
+            return Center(
+              child: Text('$error'),
+            );
+          },
+          builder: (BuildContext context, Issue issue) {
+            WidgetsBinding.instance.addPostFrameCallback(_getHeaderSize);
+            return CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  snap: true,
+                  floating: true,
+                  expandedHeight: _headerSize ?? 100.0,
+                  title: FittedBox(
+                    fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,
-                    child: IssueHeaderBar(
-                      key: _headerKey,
-                      issue: issue,
+                    child: Text(
+                      '${widget.event.repo.name}',
+                    ),
+                  ),
+                  bottom: PreferredSize(
+                    preferredSize: Size.fromHeight(_headerSize ?? 100.0),
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      child: IssueHeaderBar(
+                        key: _headerKey,
+                        issue: issue,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  [
-                    if (_issue.body.isNotEmpty)
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      if (issue.body.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ListTile(
+                                    contentPadding: EdgeInsets.zero,
+                                    leading: CircleAvatar(
+                                      backgroundImage: NetworkImage(issue.user.avatarUrl),
+                                    ),
+                                    title: Text(
+                                      issue.user.login,
+                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                    ),
+                                    subtitle: RichText(
+                                      text: TextSpan(
+                                        style: Theme.of(context).textTheme.caption.copyWith(
+                                              fontSize: 12,
+                                            ),
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                            text: 'commented ',
+                                          ),
+                                          TextSpan(
+                                            text:
+                                                '${timeago.format(issue.createdAt, locale: 'en_short')}',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: ' ago',
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  MarkdownBody(
+                                    data: issue.body,
+                                    styleSheet: MarkdownStyleSheet(
+                                      codeblockDecoration: BoxDecoration(
+                                        color: Theme.of(context).brightness == Brightness.light
+                                            ? Colors.grey[300]
+                                            : Theme.of(context).canvasColor,
+                                      ),
+                                      code: GoogleFonts.firaCode(
+                                        backgroundColor:
+                                            Theme.of(context).brightness == Brightness.light
+                                                ? Colors.grey[300]
+                                                : Theme.of(context).canvasColor,
+                                        color: Theme.of(context).brightness == Brightness.light
+                                            ? Colors.black
+                                            : Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  /*Text(_issue.body.trim()),*/
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      for (IssueComment comment in _issueComments)
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                          child: IssueEntry(comment: comment),
+                        )
+                    ],
+                  ),
+                ),
+                if (_issueComments.isEmpty && _issue.body.isEmpty)
+                  SliverList(
+                    delegate: SliverChildListDelegate([
                       Padding(
                         padding: const EdgeInsets.all(8),
                         child: Card(
@@ -133,10 +215,10 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
                                 ListTile(
                                   contentPadding: EdgeInsets.zero,
                                   leading: CircleAvatar(
-                                    backgroundImage: NetworkImage(_issue.user.avatarUrl),
+                                    backgroundImage: NetworkImage(issue.user.avatarUrl),
                                   ),
                                   title: Text(
-                                    _issue.user.login,
+                                    issue.user.login,
                                     style: TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   subtitle: RichText(
@@ -149,112 +231,36 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
                                           text: 'commented ',
                                         ),
                                         TextSpan(
-                                          text:
-                                              '${timeago.format(_issue.createdAt, locale: 'en_short')}',
+                                          text: '${timeago.format(issue.createdAt, locale: 'en')}',
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        TextSpan(
-                                          text: ' ago',
-                                        ),
                                       ],
                                     ),
                                   ),
+                                  /*subtitle: Text(
+                                  'commented ${timeago.format(_issue.createdAt, locale: 'en_short').replaceAll(' ', '').replaceAll('~', '')} ago'
+                                ),*/
                                 ),
-                                MarkdownBody(
-                                  data: _issue.body,
-                                  styleSheet: MarkdownStyleSheet(
-                                    codeblockDecoration: BoxDecoration(
-                                      color: Theme.of(context).brightness == Brightness.light
-                                          ? Colors.grey[300]
-                                          : Theme.of(context).canvasColor,
-                                    ),
-                                    code: GoogleFonts.firaCode(
-                                      backgroundColor: Theme.of(context).brightness == Brightness.light
-                                          ? Colors.grey[300]
-                                          : Theme.of(context).canvasColor,
-                                      color: Theme.of(context).brightness == Brightness.light
-                                          ? Colors.black
-                                          : Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                /*Text(_issue.body.trim()),*/
+                                Text('No description provided'),
                               ],
                             ),
                           ),
                         ),
                       ),
-                    for (IssueComment comment in _issueComments)
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                        child: IssueEntry(comment: comment),
-                      )
-                  ],
-                ),
-              ),
-              if (_issueComments.isEmpty && _issue.body.isEmpty)
-                SliverList(
-                  delegate: SliverChildListDelegate([
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                leading: CircleAvatar(
-                                  backgroundImage: NetworkImage(_issue.user.avatarUrl),
-                                ),
-                                title: Text(
-                                  _issue.user.login,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                subtitle: RichText(
-                                  text: TextSpan(
-                                    style: Theme.of(context).textTheme.caption.copyWith(
-                                          fontSize: 12,
-                                        ),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                        text: 'commented ',
-                                      ),
-                                      TextSpan(
-                                        text: '${timeago.format(_issue.createdAt, locale: 'en')}',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                /*subtitle: Text(
-                                  'commented ${timeago.format(_issue.createdAt, locale: 'en_short').replaceAll(' ', '').replaceAll('~', '')} ago'
-                                ),*/
-                              ),
-                              Text('No description provided'),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ]),
-                ),
-              if (_issueComments.isEmpty && _issue.body.isEmpty)
-                SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: Center(
-                    child: Text('No comments'),
+                    ]),
                   ),
-                ),
-            ],
-          );
-        }
-      ),
+                if (_issueComments.isEmpty && issue.body.isEmpty)
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Center(
+                      child: Text('No comments'),
+                    ),
+                  ),
+              ],
+            );
+          }),
     );
   }
 }

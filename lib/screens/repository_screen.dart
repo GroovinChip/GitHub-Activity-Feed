@@ -10,6 +10,7 @@ import 'package:github_activity_feed/services/extensions.dart';
 import 'package:github_activity_feed/utils/stream_helpers.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:groovin_widgets/avatar_back_button.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:rxdart/rxdart.dart';
 
 class RepositoryScreen extends StatefulWidget {
@@ -38,6 +39,7 @@ class _RepositoryScreenState extends State<RepositoryScreen>
 
   final _repoOwner = BehaviorSubject<User>();
   final _repositoryFeed = BehaviorSubject<List<Event>>();
+  final _repository = BehaviorSubject<Repository>();
   final _readme = BehaviorSubject<GitHubFile>();
 
   @override
@@ -45,6 +47,7 @@ class _RepositoryScreenState extends State<RepositoryScreen>
     super.initState();
     _repositorySlug = RepositorySlug.full(widget.event.repo.name);
     _getRepoOwner();
+    _getRepo();
     _getReadme();
     _getRepoActivity();
     _checkIfStarred();
@@ -79,7 +82,16 @@ class _RepositoryScreenState extends State<RepositoryScreen>
     _repoOwnerLogin = widget.event.repo.name.replaceAfter('/', '').replaceAll('/', '');
     updateBehaviorSubjectAsync(
       _repoOwner,
-      () => githubService.github.users.getUser(_repoOwnerLogin).then((User user) => _repoOwner.value = user),
+      () => githubService.github.users
+          .getUser(_repoOwnerLogin)
+          .then((User user) => _repoOwner.value = user),
+    );
+  }
+
+  void _getRepo() {
+    updateBehaviorSubjectAsync(
+      _repository,
+      () => githubService.github.repositories.getRepository(_repositorySlug),
     );
   }
 
@@ -156,13 +168,59 @@ class _RepositoryScreenState extends State<RepositoryScreen>
             },
           ),
         ],
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: Theme.of(context).colorScheme.secondary,
-          tabs: [
-            Tab(text: 'Readme'),
-            Tab(text: 'Activity'),
-          ],
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(115),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SubjectStreamBuilder(
+                subject: _repository,
+                builder: (BuildContext context, Repository repository) {
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Wrap(
+                          children: [
+                            Text(repository.description ?? 'no description'),
+                          ],
+                        ),
+                        SizedBox(height: 4),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.primary.withOpacity(.50),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(4),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(MdiIcons.sourceBranch, size: 14),
+                                SizedBox(width: 8),
+                                Text(repository.defaultBranch, style: GoogleFonts.firaCode()),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+              TabBar(
+                controller: _tabController,
+                indicatorColor: Theme.of(context).colorScheme.secondary,
+                tabs: [
+                  Tab(text: 'Readme'),
+                  Tab(text: 'Activity'),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       body: TabBarView(
