@@ -75,24 +75,24 @@ class _EventCardState extends State<EventCard> with ProvidedState {
         borderRadius: BorderRadius.circular(14),
       ),
       child: ListTile(
-        leading: GestureDetector(
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => UserOverview(
-                user: widget.event.actor,
+            leading: GestureDetector(
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => UserOverview(
+                    user: widget.event.actor,
+                  ),
+                ),
+              ),
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(widget.event.actor.avatarUrl),
               ),
             ),
+            title: _eventWidget,
+            subtitle: Text(
+              timeago.format(widget.event.createdAt),
+              style: Theme.of(context).textTheme.caption,
+            ),
           ),
-          child: CircleAvatar(
-            backgroundImage: NetworkImage(widget.event.actor.avatarUrl),
-          ),
-        ),
-        title: _eventWidget,
-        subtitle: Text(
-          timeago.format(widget.event.createdAt),
-          style: Theme.of(context).textTheme.caption,
-        ),
-      ),
     );
   }
 
@@ -442,7 +442,7 @@ class _EventCardState extends State<EventCard> with ProvidedState {
             text: ' starred',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          TextSpan(text: ' starred ${widget.event.repo.name}'),
+          TextSpan(text: ' ${widget.event.repo.name}'),
         ],
       ),
     );
