@@ -68,14 +68,6 @@ class _UserOverviewState extends State<UserOverview> with ProvidedState {
                 MaterialPageRoute(builder: (context) => MobileSettings()),
               ),
             ),
-          PopupMenuButton(
-            icon: Icon(Icons.more_vert),
-            itemBuilder: (_) => [
-              PopupMenuItem(
-                child: Text('Placeholder'),
-              ),
-            ],
-          ),
         ],
       ),
       body: IndexedStack(
