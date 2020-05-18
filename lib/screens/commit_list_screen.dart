@@ -71,7 +71,7 @@ class _CommitListScreenState extends State<CommitListScreen> with ProvidedState 
   }
 }
 
-class CommitCard extends StatefulWidget {
+class CommitCard extends StatelessWidget {
   const CommitCard({
     Key key,
     @required this.commit,
@@ -79,12 +79,6 @@ class CommitCard extends StatefulWidget {
   }) : super(key: key);
   final GitCommit commit;
   final RepositorySlug repositorySlug;
-
-  @override
-  _CommitCardState createState() => _CommitCardState();
-}
-
-class _CommitCardState extends State<CommitCard> with ProvidedState {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -93,14 +87,14 @@ class _CommitCardState extends State<CommitCard> with ProvidedState {
           text: TextSpan(
             children: <TextSpan>[
               TextSpan(
-                text: '${widget.commit.sha.substring(0, 7)}',
+                text: '${commit.sha.substring(0, 7)}',
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.secondary,
                   decoration: TextDecoration.underline,
                 ),
               ),
               TextSpan(
-                text: ' ${widget.commit.message.replaceAfter('\n', '')}',
+                text: ' ${commit.message.replaceAfter('\n', '')}',
               ),
             ],
           ),
