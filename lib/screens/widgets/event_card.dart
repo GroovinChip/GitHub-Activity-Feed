@@ -50,6 +50,7 @@ class _EventCardState extends State<EventCard> with ProvidedState {
       case 'IssuesEvent':
         _eventWidget = _buildIssueEvent();
         break;
+      // todo: PublicEvent
       case 'PullRequestEvent':
         _eventWidget = _buildPullRequestEvent();
         break;
