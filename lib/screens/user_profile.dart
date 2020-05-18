@@ -3,6 +3,7 @@ import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/services/extensions.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:github_activity_feed/utils/prettyJson.dart';
 
 class UserProfile extends StatefulWidget {
   final User currentUser;
@@ -17,27 +18,12 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> with ProvidedState {
-  User _currentUser;
   bool _isFollowingUser = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _getUser();
-  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _checkIsFollowingUser();
-  }
-
-  void _getUser() {
-    githubService.github.users.getUser(widget.currentUser.login).then((User user) {
-      setState(() {
-        _currentUser = user;
-      });
-    });
   }
 
   void _checkIsFollowingUser() {
@@ -54,77 +40,94 @@ class _UserProfileState extends State<UserProfile> with ProvidedState {
   Widget build(BuildContext context) {
     return DefaultTextStyle.merge(
       style: Theme.of(context).textTheme.subtitle1,
-      child: Column(
-        children: [
-          if (_currentUser?.bio != null)
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                child: ListTile(
-                  title: Text(_currentUser?.bio),
-                ),
-              ),
-            ),
-          if (_currentUser?.location != null)
-            ListTile(
-              leading: Icon(MdiIcons.mapMarkerOutline),
-              title: Text(_currentUser?.location),
-            ),
-          if (_currentUser?.blog != null)
-            ListTile(
-              leading: Icon(MdiIcons.link),
-              title: Text(_currentUser?.blog),
-            ),
-          if (_currentUser?.createdAt != null)
-            ListTile(
-              leading: Icon(Icons.access_time),
-              title: Text(_currentUser?.createdAt?.asMonthDayYear),
-            ),
-          if (widget.currentUser.login != user.login)
-            Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: RaisedButton.icon(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+      child: FutureBuilder<User>(
+        future: githubService.github.users.getUser(widget.currentUser.login),
+        builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            printPrettyJson(snapshot.data.toJson());
+            return Column(
+              children: [
+                if (snapshot.data.bio != null)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      child: ListTile(
+                        title: Text(snapshot.data.bio),
                       ),
-                      icon: Icon(!_isFollowingUser ? MdiIcons.accountPlusOutline : MdiIcons.accountMinusOutline),
-                      label: Text(!_isFollowingUser ? 'Follow' : 'Unfollow'),
-                      onPressed: () {
-                        if (_isFollowingUser) {
-                          githubService.github.users.unfollowUser(_currentUser.login);
-                          setState(() => _isFollowingUser = false);
-                        } else {
-                          githubService.github.users.followUser(_currentUser.login);
-                          setState(() => _isFollowingUser = true);
-                        }
-                      },
                     ),
                   ),
-                ],
-              ),
-            ),
-          Divider(height: 0),
-          _ProfileEntry(
-            name: 'Repositories',
-            count: _currentUser?.login == user.login
-                ? user.publicReposCount + user.privateReposCount
-                : _currentUser?.publicReposCount,
-          ),
-          if (_currentUser?.login != user.login)
-            _ProfileEntry(
-              name: 'Following',
-              count: _currentUser?.followingCount,
-            ),
-          _ProfileEntry(
-            name: 'Followers',
-            count: _currentUser?.followersCount,
-          ),
-          // todo: starred repo count?
-          // todo: organizations count?
-        ],
+                if (!snapshot.data.company.isNullOrEmpty)
+                  ListTile(
+                    leading: Icon(MdiIcons.officeBuilding),
+                    title: Text(snapshot.data.company),
+                  ),
+                if (snapshot.data.location.isNotEmpty)
+                  ListTile(
+                    leading: Icon(MdiIcons.mapMarkerOutline),
+                    title: Text(snapshot.data.location),
+                  ),
+                if (snapshot.data.blog.isNotEmpty)
+                  ListTile(
+                    leading: Icon(MdiIcons.link),
+                    title: Text(snapshot.data.blog ?? 'AAAA'),
+                  ),
+                if (snapshot.data.createdAt != null)
+                  ListTile(
+                    leading: Icon(Icons.access_time),
+                    title: Text(snapshot.data.createdAt?.asMonthDayYear),
+                  ),
+                if (widget.currentUser.login != user.login)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16, right: 16),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: RaisedButton.icon(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            icon: Icon(!_isFollowingUser ? MdiIcons.accountPlusOutline : MdiIcons.accountMinusOutline),
+                            label: Text(!_isFollowingUser ? 'Follow' : 'Unfollow'),
+                            onPressed: () {
+                              if (_isFollowingUser) {
+                                githubService.github.users.unfollowUser(snapshot.data.login);
+                                setState(() => _isFollowingUser = false);
+                              } else {
+                                githubService.github.users.followUser(snapshot.data.login);
+                                setState(() => _isFollowingUser = true);
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                Divider(height: 0),
+                _ProfileEntry(
+                  name: 'Repositories',
+                  count: snapshot.data.login == user.login
+                      ? user.publicReposCount + user.privateReposCount
+                      : snapshot.data.publicReposCount,
+                ),
+                if (snapshot.data.login != user.login)
+                  _ProfileEntry(
+                    name: 'Following',
+                    count: snapshot.data.followingCount,
+                  ),
+                _ProfileEntry(
+                  name: 'Followers',
+                  count: snapshot.data.followersCount,
+                ),
+                // todo: starred repo count?
+                // todo: organizations count?
+              ],
+            );
+          }
+        }
       ),
     );
   }
