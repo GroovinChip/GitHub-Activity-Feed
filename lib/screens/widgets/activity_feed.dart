@@ -41,45 +41,48 @@ class ActivityFeed extends StatelessWidget {
             padding: const EdgeInsets.only(left: 8, right: 8, top: 4),
             itemBuilder: (BuildContext context, int index) {
               Event event = snapshot.data[index];
-              print(event.type);
+              //print(event.type);
               return GestureDetector(
                 onTap: () {
-                  if (event.type == 'IssuesEvent' || event.type == 'IssueCommentEvent') {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => IssueScreen(event: event),
-                      ),
-                    );
-                  } else if (event.type == 'PullRequestEvent') {
-                    PullRequestEvent _prEvent = PullRequestEvent.fromJson(event.payload);
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => PullRequestScreen(
-                          event: event,
-                          pullRequestEvent: _prEvent,
-                        ),
-                      ),
-                    );
-                  } else if (event.type == 'PushEvent') {
-                    List<GitCommit> commits = [];
-                    for (dynamic commit in event.payload['commits']) {
-                      commits.add(GitCommit.fromJson(commit));
-                    }
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => CommitListScreen(
-                          committedBy: event.actor,
-                          repoName: event.repo.name,
-                          commits: commits,
-                        ),
-                      ),
-                    );
-                  } else {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => RepositoryScreen(event: event),
-                      ),
-                    );
+                  print(event.type);
+                  switch (event.type) {
+                    case 'CommitCommentEvent':
+                      _navigateToCommits(event, context);
+                      break;
+                    case 'CreateEvent':
+                      _navigateToRepo(context, event);
+                      break;
+                    case 'DeleteEvent':
+                      _navigateToRepo(context, event);
+                      break;
+                    case 'ForkEvent':
+                      _navigateToRepo(context, event);
+                      break;
+                    case 'GollumEvent':
+                      //todo: nav to wiki instead
+                      _navigateToRepo(context, event);
+                      break;
+                    case 'IssueCommentEvent':
+                      _navigateToIssue(context, event);
+                      break;
+                    case 'IssuesEvent':
+                      _navigateToIssue(context, event);
+                      break;
+                    // todo: PublicEvent
+                    case 'PullRequestEvent':
+                      _navigateToPullRequest(event, context);
+                      break;
+                    case 'PullRequestReviewCommentEvent':
+                      _navigateToPullRequest(event, context);
+                      break;
+                    case 'PushEvent':
+                      _navigateToCommits(event, context);
+                      break;
+                    case 'WatchEvent':
+                      _navigateToRepo(context, event);
+                      break;
+                    default:
+                      break;
                   }
                 },
                 child: event.type != 'MemberEvent' ? EventCard(event: event) : Container(),
@@ -106,6 +109,50 @@ class ActivityFeed extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  void _navigateToIssue(BuildContext context, Event event) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => IssueScreen(event: event),
+      ),
+    );
+  }
+
+  void _navigateToPullRequest(Event event, BuildContext context) {
+    PullRequestEvent _prEvent = PullRequestEvent.fromJson(event.payload);
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => PullRequestScreen(
+          event: event,
+          pullRequestEvent: _prEvent,
+        ),
+      ),
+    );
+  }
+
+  void _navigateToCommits(Event event, BuildContext context) {
+    List<GitCommit> commits = [];
+    for (dynamic commit in event.payload['commits']) {
+      commits.add(GitCommit.fromJson(commit));
+    }
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => CommitListScreen(
+          committedBy: event.actor,
+          repoName: event.repo.name,
+          commits: commits,
+        ),
+      ),
+    );
+  }
+
+  void _navigateToRepo(BuildContext context, Event event) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => RepositoryScreen(event: event),
+      ),
     );
   }
 }

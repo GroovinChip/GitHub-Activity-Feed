@@ -48,7 +48,6 @@ class _UserProfileState extends State<UserProfile> with ProvidedState {
               child: CircularProgressIndicator(),
             );
           } else {
-            printPrettyJson(snapshot.data.toJson());
             return Column(
               children: [
                 if (snapshot.data.bio != null)

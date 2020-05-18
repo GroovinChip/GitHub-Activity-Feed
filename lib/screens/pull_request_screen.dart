@@ -1,11 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github/hooks.dart';
 import 'package:github_activity_feed/app/provided.dart';
-import 'package:github_activity_feed/screens/widgets/custom_stream_builder.dart';
-import 'package:github_activity_feed/utils/stream_helpers.dart';
+import 'package:groovin_widgets/groovin_widgets.dart';
+import 'package:http/http.dart' as http;
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:rxdart/rxdart.dart';
 
 class PullRequestScreen extends StatefulWidget {
   PullRequestScreen({
@@ -39,49 +40,82 @@ class _PullRequestScreenState extends State<PullRequestScreen> with ProvidedStat
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            snap: true,
-            floating: true,
-            expandedHeight: headerSize ?? 0.0,
-            title: FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: Alignment.centerLeft,
-              child: Text(
-                '${widget.event.repo.name}',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
+      body: FutureBuilder<PullRequest>(
+        initialData: widget.pullRequestEvent.pullRequest,
+        future: githubService.github.pullRequests.get(
+          RepositorySlug.full(widget.event.repo.name),
+          widget.pullRequestEvent.pullRequest.number,
+        ),
+        builder: (BuildContext context, AsyncSnapshot<PullRequest> snapshot) {
+          PullRequest pullRequest = snapshot.data;
+          return CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                automaticallyImplyLeading: false,
+                snap: true,
+                floating: true,
+                expandedHeight: headerSize ?? 0.0,
+                title: Row(
+                  children: [
+                    AvatarBackButton(
+                      avatar: pullRequest.user.avatarUrl,
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    SizedBox(width: 16),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        '${pullRequest.head.repo.fullName}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                bottom: PreferredSize(
+                  preferredSize: Size.fromHeight(headerSize ?? 0.0),
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    child: PullRequestHeaderBar(
+                      key: _headerKey,
+                      pullRequest: pullRequest,
+                      action: widget.pullRequestEvent.action,
+                      commitsUrl: widget.event.payload['pull_request']['commits_url'],
+                    ),
+                  ),
                 ),
               ),
-            ),
-            bottom: PreferredSize(
-              preferredSize: Size.fromHeight(headerSize ?? 0.0),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: PullRequestHeaderBar(
-                  key: _headerKey,
-                  pullRequest: widget.pullRequestEvent.pullRequest,
-                  action: widget.pullRequestEvent.action,
-                ),
-              ),
-            ),
-          ),
-        ],
+            ],
+          );
+        },
       ),
     );
   }
 }
 
-class PullRequestHeaderBar extends StatelessWidget {
+class PullRequestHeaderBar extends StatefulWidget {
   const PullRequestHeaderBar({
     Key key,
     this.pullRequest,
     this.action,
+    this.commitsUrl,
   }) : super(key: key);
 
   final PullRequest pullRequest;
   final String action;
+  final String commitsUrl;
+
+  @override
+  _PullRequestHeaderBarState createState() => _PullRequestHeaderBarState();
+}
+
+class _PullRequestHeaderBarState extends State<PullRequestHeaderBar> with ProvidedState {
+  Future<List<dynamic>> _getCommitsFromNetwork() async {
+    final response = await http.get(widget.commitsUrl);
+    return jsonDecode(response.body);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,15 +129,13 @@ class PullRequestHeaderBar extends StatelessWidget {
             text: TextSpan(
               children: <TextSpan>[
                 TextSpan(
-                  text: '${pullRequest.title}',
+                  text: '${widget.pullRequest.title}',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 22,
                   ),
                 ),
-                TextSpan(
-                  text: ' #${pullRequest.number}'
-                ),
+                TextSpan(text: ' #${widget.pullRequest.number}'),
               ],
             ),
           ),
@@ -121,7 +153,7 @@ class PullRequestHeaderBar extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(pullRequest.head.ref),
+                    Text(widget.pullRequest.head.ref),
                   ],
                 ),
               ),
@@ -143,7 +175,7 @@ class PullRequestHeaderBar extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(6, 2, 6, 2),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: [Text(pullRequest.base.ref)],
+                  children: [Text(widget.pullRequest.base.ref)],
                 ),
               ),
             ),
@@ -164,7 +196,7 @@ class PullRequestHeaderBar extends StatelessWidget {
                   children: [
                     Icon(MdiIcons.sourcePull, size: 20),
                     SizedBox(width: 4),
-                    Text(action),
+                    Text(widget.action),
                   ],
                 ),
               ),
@@ -176,7 +208,19 @@ class PullRequestHeaderBar extends StatelessWidget {
             angle: 4.7,
             child: Icon(MdiIcons.sourceCommit),
           ),
-          title: Text('X commits'),
+          title: FutureBuilder<List<dynamic>>(
+              future: _getCommitsFromNetwork(),
+              builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+                if (!snapshot.hasData) {
+                  return Text('...');
+                } else {
+                  return Text(
+                    snapshot.data.length > 1
+                        ? '${snapshot.data.length} commits'
+                        : '${snapshot.data.length} commit',
+                  );
+                }
+              }),
         ),
       ],
     );
