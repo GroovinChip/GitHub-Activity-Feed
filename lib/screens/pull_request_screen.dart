@@ -54,19 +54,33 @@ class _PullRequestScreenState extends State<PullRequestScreen> with ProvidedStat
         ),
         builder: (BuildContext context, AsyncSnapshot<PullRequest> snapshot) {
           PullRequest pullRequest = snapshot.data;
-          List<Widget> labels = [];
-          for (int i = 0; i > pullRequest.labels.length; i++) {
-            IssueLabel label = pullRequest.labels[i];
-            labels.add(
+          List<Widget> labelWidgets = [];
+          for (int i = 0; i < pullRequest.labels.length; i++) {
+            Color backgroundColor = HexColor(pullRequest.labels[i].color);
+            Color foregroundColor =
+                backgroundColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+            labelWidgets.add(
               Container(
-                color: hexToColor(label.color),
-                child: Text(label.name),
+                decoration: BoxDecoration(
+                  color: backgroundColor,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                padding: EdgeInsets.fromLTRB(4, 2, 4, 2),
+                child: Text(
+                  pullRequest.labels[i].name,
+                  style: TextStyle(color: foregroundColor),
+                ),
               ),
             );
+            if (i != pullRequest.labels.length) {
+              labelWidgets.add(
+                SizedBox(width: 4),
+              );
+            }
           }
           return CustomScrollView(
             slivers: [
-              /// header
+              /// PR header
               SliverAppBar(
                 automaticallyImplyLeading: false,
                 snap: true,
@@ -122,10 +136,18 @@ class _PullRequestScreenState extends State<PullRequestScreen> with ProvidedStat
                       ],
                     ),
                   ),
-                  Row(
-                    children: [
-                      ...labels,
-                    ],
+
+                  /// PR labels
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 8, bottom: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ...labelWidgets,
+                        ],
+                      ),
+                    ),
                   ),
                 ]),
               ),
