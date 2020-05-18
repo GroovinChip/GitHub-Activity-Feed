@@ -143,6 +143,7 @@ class ActivityFeed extends StatelessWidget {
           committedBy: event.actor,
           repoName: event.repo.name,
           commits: commits,
+          fromEventType: event.type,
         ),
       ),
     );

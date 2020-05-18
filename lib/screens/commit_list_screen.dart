@@ -2,19 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/services/extensions.dart';
+import 'package:github_activity_feed/utils/prettyJson.dart';
 import 'package:groovin_widgets/groovin_widgets.dart';
 
 class CommitListScreen extends StatefulWidget {
   CommitListScreen({
     Key key,
     @required this.committedBy,
-    this.repoName,
+    @required this.repoName,
     @required this.commits,
+    @required this.fromEventType,
   }) : super(key: key);
 
   final User committedBy;
   final String repoName;
   final List<dynamic> commits;
+  final String fromEventType;
 
   @override
   _CommitListScreenState createState() => _CommitListScreenState();
@@ -64,6 +67,7 @@ class _CommitListScreenState extends State<CommitListScreen> with ProvidedState 
           return CommitCard(
             commit: widget.commits[index],
             repositorySlug: _repoSlug,
+            type: widget.fromEventType,
           );
         },
       ),
@@ -71,14 +75,47 @@ class _CommitListScreenState extends State<CommitListScreen> with ProvidedState 
   }
 }
 
-class CommitCard extends StatelessWidget {
+class CommitCard extends StatefulWidget {
   const CommitCard({
     Key key,
     @required this.commit,
     @required this.repositorySlug,
+    @required this.type,
   }) : super(key: key);
-  final GitCommit commit;
+
+  final dynamic commit;
   final RepositorySlug repositorySlug;
+  final String type;
+
+  @override
+  _CommitCardState createState() => _CommitCardState();
+}
+
+class _CommitCardState extends State<CommitCard> {
+  String commitMessage = '';
+  GitCommit gitCommit;
+  RepositoryCommit repositoryCommit;
+  String sha;
+
+  @override
+  void initState() {
+    super.initState();
+    //printPrettyJson(widget.commit);
+    if (widget.type == 'PullRequest') {
+      setState(() {
+        repositoryCommit = RepositoryCommit.fromJson(widget.commit);
+        commitMessage = repositoryCommit.commit.message;
+        sha = repositoryCommit.sha;
+      });
+    } else {
+      setState(() {
+        gitCommit = widget.commit;
+        commitMessage = gitCommit.message;
+        sha = gitCommit.sha;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -87,14 +124,14 @@ class CommitCard extends StatelessWidget {
           text: TextSpan(
             children: <TextSpan>[
               TextSpan(
-                text: '${commit.sha.substring(0, 7)}',
+                text: sha.substring(0, 7),
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.secondary,
                   decoration: TextDecoration.underline,
                 ),
               ),
               TextSpan(
-                text: ' ${commit.message.replaceAfter('\n', '')}',
+                text: ' $commitMessage',
               ),
             ],
           ),
