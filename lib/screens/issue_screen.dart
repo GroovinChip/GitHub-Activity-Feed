@@ -5,6 +5,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:github/github.dart';
 import 'package:github/hooks.dart';
 import 'package:github_activity_feed/app/provided.dart';
+import 'package:github_activity_feed/screens/user_overview.dart';
 import 'package:github_activity_feed/screens/widgets/custom_stream_builder.dart';
 import 'package:github_activity_feed/services/extensions.dart';
 import 'package:github_activity_feed/utils/stream_helpers.dart';
@@ -344,8 +345,13 @@ class IssueEntry extends StatelessWidget {
           children: [
             ListTile(
               contentPadding: EdgeInsets.zero,
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(comment.user.avatarUrl),
+              leading: GestureDetector(
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => UserOverview(user: comment.user)),
+                ),
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(comment.user.avatarUrl),
+                ),
               ),
               title: Text(
                 comment.user.login,
