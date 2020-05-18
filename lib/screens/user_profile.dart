@@ -73,12 +73,12 @@ class _UserProfileState extends State<UserProfile> with ProvidedState {
                 if (snapshot.data.blog.isNotEmpty)
                   ListTile(
                     leading: Icon(MdiIcons.link),
-                    title: Text(snapshot.data.blog ?? 'AAAA'),
+                    title: Text(snapshot.data.blog),
                   ),
                 if (snapshot.data.createdAt != null)
                   ListTile(
                     leading: Icon(Icons.access_time),
-                    title: Text(snapshot.data.createdAt?.asMonthDayYear),
+                    title: Text(snapshot.data.createdAt.asMonthDayYear),
                   ),
                 if (widget.currentUser.login != user.login)
                   Padding(
