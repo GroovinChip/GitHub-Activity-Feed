@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
-import 'package:github_activity_feed/services/extensions.dart';
-import 'package:github_activity_feed/utils/prettyJson.dart';
 import 'package:groovin_widgets/groovin_widgets.dart';
 
 class CommitListScreen extends StatefulWidget {
@@ -44,17 +42,13 @@ class _CommitListScreenState extends State<CommitListScreen> with ProvidedState 
           preferredSize: Size.fromHeight(25),
           child: Padding(
             padding: const EdgeInsets.only(left: 16, right: 16, bottom: 4),
-            child: Row(
-              children: [
-                FittedBox(
-                  alignment: Alignment.centerLeft,
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    '${widget.repoName}',
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                ),
-              ],
+            child: FittedBox(
+              alignment: Alignment.centerLeft,
+              fit: BoxFit.scaleDown,
+              child: Text(
+                '${widget.repoName}',
+                style: Theme.of(context).textTheme.headline6,
+              ),
             ),
           ),
         ),
