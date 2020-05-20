@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/screens/user_overview.dart';
+import 'package:github_activity_feed/screens/widgets/feedback_on_error.dart';
 import 'package:github_activity_feed/utils/navigation_util.dart';
 import 'package:groovin_widgets/groovin_expansion_tile.dart';
 import 'package:http/http.dart' as http;
@@ -30,8 +31,9 @@ class _CommitScreenState extends State<CommitScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final SyntaxHighlighterStyle style =
-        Theme.of(context).brightness == Brightness.dark ? SyntaxHighlighterStyle.darkThemeStyle() : SyntaxHighlighterStyle.lightThemeStyle();
+    final SyntaxHighlighterStyle style = Theme.of(context).brightness == Brightness.dark
+        ? SyntaxHighlighterStyle.darkThemeStyle()
+        : SyntaxHighlighterStyle.lightThemeStyle();
     return Scaffold(
       appBar: AppBar(
         title: Text('Commit'),
@@ -44,6 +46,11 @@ class _CommitScreenState extends State<CommitScreen> {
               child: CircularProgressIndicator(),
             );
           } else {
+            if (snapshot.data.author == null || snapshot.data.commit == null) {
+              return FeedbackOnError(
+                message: 'Error: No commit data found',
+              );
+            }
             return CustomScrollView(
               slivers: [
                 SliverList(
@@ -73,13 +80,15 @@ class _CommitScreenState extends State<CommitScreen> {
                       return Card(
                         child: GroovinExpansionTile(
                           title: Text(snapshot.data.files[index].name),
-                          subtitle: Text('${snapshot.data.files[index].additions} additions, ${snapshot.data.files[index].deletions} deletions'),
+                          subtitle: Text(
+                              '${snapshot.data.files[index].additions} additions, ${snapshot.data.files[index].deletions} deletions'),
                           children: [
                             RichText(
                               text: TextSpan(
                                 style: const TextStyle(fontFamily: 'monospace', fontSize: 10.0),
                                 children: <TextSpan>[
-                                  DartSyntaxHighlighter(style).format(snapshot.data.files[index].patch),
+                                  DartSyntaxHighlighter(style)
+                                      .format(snapshot.data.files[index].patch),
                                 ],
                               ),
                             ),
