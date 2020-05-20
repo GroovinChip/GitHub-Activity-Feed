@@ -18,21 +18,12 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> with ProvidedState {
-  bool _isFollowingUser = false;
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _checkIsFollowingUser();
-  }
-
-  void _checkIsFollowingUser() {
+  Future<bool> _checkIsFollowingUser() async {
     if (widget.currentUser.login != user.login) {
-      githubService.github.users.isFollowingUser(widget.currentUser.login).then((bool isFollowing) {
-        setState(() {
-          _isFollowingUser = isFollowing;
-        });
-      });
+      return githubService.github.users.isFollowingUser(widget.currentUser.login);
+    } else {
+      return false;
     }
   }
 
@@ -48,36 +39,37 @@ class _UserProfileState extends State<UserProfile> with ProvidedState {
               child: CircularProgressIndicator(),
             );
           } else {
+            final _user = snapshot.data;
             return Column(
               children: [
-                if (snapshot.data.bio != null)
+                if (_user.bio != null)
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Card(
                       child: ListTile(
-                        title: Text(snapshot.data.bio),
+                        title: Text(_user.bio),
                       ),
                     ),
                   ),
-                if (!snapshot.data.company.isNullOrEmpty)
+                if (!_user.company.isNullOrEmpty)
                   ListTile(
                     leading: Icon(MdiIcons.officeBuilding),
-                    title: Text(snapshot.data.company),
+                    title: Text(_user.company),
                   ),
-                if (snapshot.data.location.isNotEmpty)
+                if (!_user.location.isNullOrEmpty)
                   ListTile(
                     leading: Icon(MdiIcons.mapMarkerOutline),
-                    title: Text(snapshot.data.location),
+                    title: Text(_user.location),
                   ),
-                if (snapshot.data.blog.isNotEmpty)
+                if (_user.blog.isNotEmpty)
                   ListTile(
                     leading: Icon(MdiIcons.link),
-                    title: Text(snapshot.data.blog),
+                    title: Text(_user.blog),
                   ),
-                if (snapshot.data.createdAt != null)
+                if (_user.createdAt != null)
                   ListTile(
                     leading: Icon(Icons.access_time),
-                    title: Text(snapshot.data.createdAt.asMonthDayYear),
+                    title: Text(_user.createdAt.asMonthDayYear),
                   ),
                 if (widget.currentUser.login != user.login)
                   Padding(
@@ -85,21 +77,35 @@ class _UserProfileState extends State<UserProfile> with ProvidedState {
                     child: Row(
                       children: [
                         Expanded(
-                          child: RaisedButton.icon(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            icon: Icon(!_isFollowingUser ? MdiIcons.accountPlusOutline : MdiIcons.accountMinusOutline),
-                            label: Text(!_isFollowingUser ? 'Follow' : 'Unfollow'),
-                            onPressed: () {
-                              if (_isFollowingUser) {
-                                githubService.github.users.unfollowUser(snapshot.data.login);
-                                setState(() => _isFollowingUser = false);
+                          child: FutureBuilder<bool>(
+                            future: _checkIsFollowingUser(),
+                            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                              if (!snapshot.hasData) {
+                                return IgnorePointer(
+                                  child: RaisedButton(
+                                    child: Text('...'),
+                                    onPressed: () {},
+                                  ),
+                                );
                               } else {
-                                githubService.github.users.followUser(snapshot.data.login);
-                                setState(() => _isFollowingUser = true);
+                                return RaisedButton.icon(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  icon: Icon(!snapshot.data ? MdiIcons.accountPlusOutline : MdiIcons.accountMinusOutline),
+                                  label: Text(!snapshot.data ? 'Follow' : 'Unfollow'),
+                                  onPressed: () {
+                                    if (snapshot.data) {
+                                      githubService.github.users.unfollowUser(_user.login);
+                                      setState(() {});
+                                    } else {
+                                      githubService.github.users.followUser(_user.login);
+                                      setState(() {});
+                                    }
+                                  },
+                                );
                               }
-                            },
+                            }
                           ),
                         ),
                       ],
@@ -108,18 +114,18 @@ class _UserProfileState extends State<UserProfile> with ProvidedState {
                 Divider(height: 0),
                 _ProfileEntry(
                   name: 'Repositories',
-                  count: snapshot.data.login == user.login
+                  count: _user.login == user.login
                       ? user.publicReposCount + user.privateReposCount
-                      : snapshot.data.publicReposCount,
+                      : _user.publicReposCount,
                 ),
-                if (snapshot.data.login != user.login)
+                if (_user.login != user.login)
                   _ProfileEntry(
                     name: 'Following',
-                    count: snapshot.data.followingCount,
+                    count: _user.followingCount,
                   ),
                 _ProfileEntry(
                   name: 'Followers',
-                  count: snapshot.data.followersCount,
+                  count: _user.followersCount,
                 ),
                 // todo: starred repo count?
                 // todo: organizations count?
