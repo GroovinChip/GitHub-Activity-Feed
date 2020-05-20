@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
+import 'package:github_activity_feed/screens/commit_screen.dart';
+import 'package:github_activity_feed/utils/navigation_util.dart';
 
 class CommitCard extends StatefulWidget {
   const CommitCard({
@@ -22,6 +24,7 @@ class _CommitCardState extends State<CommitCard> {
   GitCommit gitCommit;
   RepositoryCommit repositoryCommit;
   String sha;
+  String url;
 
   @override
   void initState() {
@@ -31,12 +34,14 @@ class _CommitCardState extends State<CommitCard> {
         repositoryCommit = RepositoryCommit.fromJson(widget.commit);
         commitMessage = repositoryCommit.commit.message;
         sha = repositoryCommit.sha;
+        url = repositoryCommit.url;
       });
     } else {
       setState(() {
         gitCommit = widget.commit;
         commitMessage = gitCommit.message;
         sha = gitCommit.sha;
+        url = gitCommit.url;
       });
     }
   }
@@ -59,6 +64,12 @@ class _CommitCardState extends State<CommitCard> {
                 text: ' $commitMessage',
               ),
             ],
+          ),
+        ),
+        onTap: () => navigateToScreen(
+          context,
+          CommitScreen(
+            url: url,
           ),
         ),
       ),

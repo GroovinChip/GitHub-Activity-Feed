@@ -43,12 +43,15 @@ class _CommitListScreenState extends State<CommitListScreen> with ProvidedState 
           preferredSize: Size.fromHeight(25),
           child: Padding(
             padding: const EdgeInsets.only(left: 16, right: 16, bottom: 4),
-            child: FittedBox(
+            child: Container(
               alignment: Alignment.centerLeft,
-              fit: BoxFit.scaleDown,
-              child: Text(
-                '${widget.repoName}',
-                style: Theme.of(context).textTheme.headline6,
+              child: FittedBox(
+                alignment: Alignment.centerLeft,
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  '${widget.repoName}',
+                  style: Theme.of(context).textTheme.headline6,
+                ),
               ),
             ),
           ),
