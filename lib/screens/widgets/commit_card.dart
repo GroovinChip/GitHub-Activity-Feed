@@ -51,6 +51,7 @@ class _CommitCardState extends State<CommitCard> {
     return Card(
       child: ListTile(
         title: RichText(
+          maxLines: 2,
           text: TextSpan(
             children: <TextSpan>[
               TextSpan(

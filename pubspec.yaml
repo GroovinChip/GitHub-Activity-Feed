@@ -30,6 +30,7 @@ dependencies:
   timeago: ^2.0.26
   wiredash: ^0.0.1+1
   states_rebuilder: ^1.15.0
+  syntax_highlighter: ^0.1.0
 
 dev_dependencies:
   flutter_test:

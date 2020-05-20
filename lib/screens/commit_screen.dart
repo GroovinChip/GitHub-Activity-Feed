@@ -1,11 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/screens/user_overview.dart';
 import 'package:github_activity_feed/utils/navigation_util.dart';
 import 'package:groovin_widgets/groovin_expansion_tile.dart';
 import 'package:http/http.dart' as http;
+import 'package:syntax_highlighter/syntax_highlighter.dart';
 
 /// This widget displays the contents of either a GitCommit or
 /// a RepositoryCommit.
@@ -28,6 +30,8 @@ class _CommitScreenState extends State<CommitScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final SyntaxHighlighterStyle style =
+        Theme.of(context).brightness == Brightness.dark ? SyntaxHighlighterStyle.darkThemeStyle() : SyntaxHighlighterStyle.lightThemeStyle();
     return Scaffold(
       appBar: AppBar(
         title: Text('Commit'),
@@ -51,12 +55,7 @@ class _CommitScreenState extends State<CommitScreen> {
                           _UserTile(user: snapshot.data.author),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                            child: Text(
-                              '${snapshot.data.commit.message}',
-                              style: TextStyle(
-                                fontSize: 16,
-                              ),
-                            ),
+                            child: MarkdownBody(data: snapshot.data.commit.message),
                           ),
                         ],
                       ),
@@ -76,14 +75,14 @@ class _CommitScreenState extends State<CommitScreen> {
                           title: Text(snapshot.data.files[index].name),
                           subtitle: Text('${snapshot.data.files[index].additions} additions, ${snapshot.data.files[index].deletions} deletions'),
                           children: [
-                            /*Padding(
-                              padding: const EdgeInsets.only(right: 16, left: 16, bottom: 8),
-                              child: Row(
-                                children: [
-                                  Text(snapshot.data.files[index].patch),
+                            RichText(
+                              text: TextSpan(
+                                style: const TextStyle(fontFamily: 'monospace', fontSize: 10.0),
+                                children: <TextSpan>[
+                                  DartSyntaxHighlighter(style).format(snapshot.data.files[index].patch),
                                 ],
                               ),
-                            ),*/
+                            ),
                           ],
                         ),
                       );
