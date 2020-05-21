@@ -1,17 +1,13 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github/hooks.dart';
 import 'package:github_activity_feed/app/provided.dart';
-import 'package:github_activity_feed/screens/commit_list_screen.dart';
-import 'package:github_activity_feed/screens/user_overview.dart';
 import 'package:github_activity_feed/utils/color_from_string.dart';
-import 'package:github_activity_feed/widgets/github_markdown.dart';
+import 'package:github_activity_feed/widgets/issue_comment_card.dart';
+import 'package:github_activity_feed/widgets/pr_header_bar.dart';
+import 'package:github_activity_feed/widgets/pull_request_card.dart';
 import 'package:github_activity_feed/widgets/view_in_browser_button.dart';
 import 'package:groovin_widgets/groovin_widgets.dart';
-import 'package:http/http.dart' as http;
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class PullRequestScreen extends StatefulWidget {
   PullRequestScreen({
@@ -91,17 +87,6 @@ class _PullRequestScreenState extends State<PullRequestScreen> with ProvidedStat
                       avatar: pullRequest.user.avatarUrl,
                       onPressed: () => Navigator.pop(context),
                     ),
-                    SizedBox(width: 16),
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        '${pullRequest.head.repo.fullName}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
                   ],
                 ),
                 actions: [
@@ -124,34 +109,22 @@ class _PullRequestScreenState extends State<PullRequestScreen> with ProvidedStat
               /// PR body
               SliverList(
                 delegate: SliverChildListDelegate([
-                  Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _UserTile(user: pullRequest.user),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                          child: GitHubMarkdown(
-                            markdown: pullRequest.body,
-                            useScrollable: false,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  PullRequestCard(pullRequest: pullRequest),
 
                   /// PR labels
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 8, bottom: 8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ...labelWidgets,
-                        ],
-                      ),
-                    ),
-                  ),
+                  labelWidgets.isNotEmpty
+                      ? Card(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 8, bottom: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ...labelWidgets,
+                              ],
+                            ),
+                          ),
+                        )
+                      : Container(),
                 ]),
               ),
 
@@ -175,19 +148,8 @@ class _PullRequestScreenState extends State<PullRequestScreen> with ProvidedStat
                     return SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
-                          return Card(
-                            child: Column(
-                              children: [
-                                _UserTile(user: snapshot.data[index].user),
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                                  child: GitHubMarkdown(
-                                    markdown: snapshot.data[index].body,
-                                    useScrollable: false,
-                                  ),
-                                ),
-                              ],
-                            ),
+                          return IssueCommentCard(
+                            comment: snapshot.data[index],
                           );
                         },
                         childCount: snapshot.data.length,
@@ -207,181 +169,6 @@ class _PullRequestScreenState extends State<PullRequestScreen> with ProvidedStat
           );
         },
       ),
-    );
-  }
-}
-
-class _UserTile extends StatelessWidget {
-  const _UserTile({
-    Key key,
-    @required this.user,
-  }) : super(key: key);
-
-  final User user;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => UserOverview(
-            user: user,
-          ),
-        ),
-      ),
-      leading: CircleAvatar(
-        backgroundImage: NetworkImage(user.avatarUrl),
-      ),
-      title: Text(
-        user.login,
-        style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
-      ),
-    );
-  }
-}
-
-class PullRequestHeaderBar extends StatefulWidget {
-  const PullRequestHeaderBar({
-    Key key,
-    this.pullRequest,
-    this.action,
-    this.commitsUrl,
-  }) : super(key: key);
-
-  final PullRequest pullRequest;
-  final String action;
-  final String commitsUrl;
-
-  @override
-  _PullRequestHeaderBarState createState() => _PullRequestHeaderBarState();
-}
-
-class _PullRequestHeaderBarState extends State<PullRequestHeaderBar> with ProvidedState {
-  List<dynamic> _prCommits = [];
-
-  Future<List<dynamic>> _getCommitsFromNetwork() async {
-    final response = await http.get(widget.commitsUrl);
-    return jsonDecode(response.body);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 16, bottom: 8),
-          child: RichText(
-            text: TextSpan(
-              children: <TextSpan>[
-                TextSpan(
-                  text: '${widget.pullRequest.title}',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22,
-                  ),
-                ),
-                TextSpan(text: ' #${widget.pullRequest.number}'),
-              ],
-            ),
-          ),
-        ),
-        Row(
-          children: [
-            SizedBox(width: 16),
-            Material(
-              color: Colors.blue[800],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(6, 2, 6, 2),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(widget.pullRequest.head.ref),
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 4, right: 4),
-              child: Icon(
-                Icons.arrow_forward,
-                size: 20,
-                color: Colors.grey,
-              ),
-            ),
-            Material(
-              color: Colors.blue[800],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(6, 2, 6, 2),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [Text(widget.pullRequest.base.ref)],
-                ),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 8),
-        Row(
-          children: [
-            SizedBox(width: 16),
-            Material(
-              color: Colors.deepPurple[700],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(6, 2, 6, 2),
-                child: Row(
-                  children: [
-                    Icon(MdiIcons.sourcePull, size: 20),
-                    SizedBox(width: 4),
-                    Text(widget.action),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-        ListTile(
-          leading: Transform.rotate(
-            angle: 4.7,
-            child: Icon(MdiIcons.sourceCommit),
-          ),
-          title: FutureBuilder<List<dynamic>>(
-            future: _getCommitsFromNetwork(),
-            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-              if (!snapshot.hasData) {
-                return Text('...');
-              } else {
-                _prCommits = snapshot.data;
-                return Text(
-                  snapshot.data.length > 1
-                      ? '${_prCommits.length} commits'
-                      : '${_prCommits.length} commit',
-                );
-              }
-            },
-          ),
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => CommitListScreen(
-                repoName: widget.pullRequest.head.repo.fullName,
-                committedBy: widget.pullRequest.user,
-                commits: _prCommits,
-                fromEventType: 'PullRequest',
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
