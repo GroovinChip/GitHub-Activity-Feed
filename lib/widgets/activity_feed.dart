@@ -6,6 +6,7 @@ import 'package:github_activity_feed/screens/issue_screen.dart';
 import 'package:github_activity_feed/screens/pull_request_screen.dart';
 import 'package:github_activity_feed/screens/repository_screen.dart';
 import 'package:github_activity_feed/widgets/event_card.dart';
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 class ActivityFeed extends StatelessWidget {
   ActivityFeed({
@@ -64,7 +65,9 @@ class ActivityFeed extends StatelessWidget {
                     case 'IssuesEvent':
                       _navigateToIssue(context, event);
                       break;
-                    // todo: PublicEvent
+                    case 'PublicEvent':
+                      _navigateToRepo(context, event);
+                      break;
                     case 'PullRequestEvent':
                       _navigateToPullRequest(event, context);
                       break;
@@ -74,6 +77,10 @@ class ActivityFeed extends StatelessWidget {
                       break;
                     case 'PushEvent':
                       _navigateToCommits(event, context);
+                      break;
+                    case 'ReleaseEvent':
+                      String releaseUrl = Release.fromJson(event.payload['release']).htmlUrl;
+                      url_launcher.launch(releaseUrl);
                       break;
                     case 'WatchEvent':
                       _navigateToRepo(context, event);

@@ -52,7 +52,9 @@ class _EventCardState extends State<EventCard> with ProvidedState {
       case 'IssuesEvent':
         _eventWidget = _buildIssueEvent();
         break;
-      // todo: PublicEvent
+      case 'PublicEvent':
+        _eventWidget = _buildPublicEvent();
+        break;
       case 'PullRequestEvent':
         _eventWidget = _buildPullRequestEvent();
         break;
@@ -61,6 +63,9 @@ class _EventCardState extends State<EventCard> with ProvidedState {
         break;
       case 'PushEvent':
         _eventWidget = _buildPushEvent();
+        break;
+      case 'ReleaseEvent':
+        _eventWidget = _buildReleaseEvent();
         break;
       case 'WatchEvent':
         _eventWidget = _buildWatchEvent();
@@ -520,6 +525,49 @@ class _EventCardState extends State<EventCard> with ProvidedState {
     );
   }
 
+  Widget _buildPublicEvent() {
+    return ListTile(
+      leading: GestureDetector(
+        onTap: () => navigateToScreen(
+          context,
+          UserOverview(
+            user: widget.event.actor,
+          ),
+        ),
+        child: CircleAvatar(
+          backgroundImage: NetworkImage(widget.event.actor.avatarUrl),
+        ),
+      ),
+      title: RichText(
+        text: TextSpan(
+          style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+          children: <TextSpan>[
+            TextSpan(
+              text: '${widget.event.actor.login} made ',
+            ),
+            TextSpan(
+              text: '${widget.event.repo.name}',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            TextSpan(text: ' public'),
+          ],
+        ),
+      ),
+      subtitle: Row(
+        children: [
+          Icon(MdiIcons.partyPopper, size: 16),
+          SizedBox(width: 8),
+          Text(
+            timeago.format(widget.event.createdAt),
+            style: Theme.of(context).textTheme.caption,
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildPullRequestEvent() {
     PullRequestEvent pullRequestEvent = PullRequestEvent.fromJson(widget.event.payload);
     if (pullRequestEvent.action == 'closed' && pullRequestEvent.pullRequest.merged) {}
@@ -671,6 +719,51 @@ class _EventCardState extends State<EventCard> with ProvidedState {
       subtitle: Row(
         children: [
           Icon(MdiIcons.sourceCommit, size: 16),
+          SizedBox(width: 8),
+          Text(
+            timeago.format(widget.event.createdAt),
+            style: Theme.of(context).textTheme.caption,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildReleaseEvent() {
+    Release release = Release.fromJson(widget.event.payload['release']);
+    return ListTile(
+      leading: GestureDetector(
+        onTap: () => navigateToScreen(
+          context,
+          UserOverview(
+            user: widget.event.actor,
+          ),
+        ),
+        child: CircleAvatar(
+          backgroundImage: NetworkImage(widget.event.actor.avatarUrl),
+        ),
+      ),
+      title: RichText(
+        text: TextSpan(
+          style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+          children: <TextSpan>[
+            TextSpan(text: widget.event.actor.login),
+            TextSpan(
+              text: ' released',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            TextSpan(text: ' ${release.name}'),
+            TextSpan(
+              text: ' at ',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            TextSpan(text: ' ${widget.event.repo.name}'),
+          ],
+        ),
+      ),
+      subtitle: Row(
+        children: [
+          Icon(MdiIcons.application, size: 16),
           SizedBox(width: 8),
           Text(
             timeago.format(widget.event.createdAt),
