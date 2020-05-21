@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wiredash/wiredash.dart';
+import 'package:github_activity_feed/widgets/report_bug_button.dart';
 
 class FeedbackOnError extends StatelessWidget {
   const FeedbackOnError({
@@ -16,10 +16,7 @@ class FeedbackOnError extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(message),
-          RaisedButton(
-            child: Text('Report to developer'),
-            onPressed: () => Wiredash.of(context).show(),
-          ),
+          ReportBugButton(),
         ],
       ),
     );

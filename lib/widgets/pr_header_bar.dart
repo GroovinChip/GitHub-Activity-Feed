@@ -6,9 +6,11 @@ import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/commit_list_screen.dart';
 import 'package:github_activity_feed/utils/navigation_util.dart';
 import 'package:github_activity_feed/widgets/pr_status_label.dart';
+import 'package:github_activity_feed/widgets/report_bug_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:wiredash/wiredash.dart';
 
 class PullRequestHeaderBar extends StatefulWidget {
   const PullRequestHeaderBar({
@@ -28,10 +30,17 @@ class PullRequestHeaderBar extends StatefulWidget {
 
 class _PullRequestHeaderBarState extends State<PullRequestHeaderBar> with ProvidedState {
   List<dynamic> _prCommits = [];
+  Future _getCommits;
 
   Future<List<dynamic>> _getCommitsFromNetwork() async {
     final response = await http.get(widget.commitsUrl);
     return jsonDecode(response.body);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getCommits = _getCommitsFromNetwork();
   }
 
   @override
@@ -120,7 +129,7 @@ class _PullRequestHeaderBarState extends State<PullRequestHeaderBar> with Provid
           ],
         ),
         FutureBuilder<List<dynamic>>(
-          future: _getCommitsFromNetwork(),
+          future: _getCommits,
           builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
             if (!snapshot.hasData && snapshot.connectionState == ConnectionState.waiting) {
               return ListTile(
@@ -147,6 +156,7 @@ class _PullRequestHeaderBarState extends State<PullRequestHeaderBar> with Provid
                   child: Icon(MdiIcons.sourceCommit),
                 ),
                 title: Text('Unable to get commit count'),
+                trailing: ReportBugButton(),
               );
             } else {
               _prCommits = snapshot.data;
