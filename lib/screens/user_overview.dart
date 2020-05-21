@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/settings.dart';
-import 'file:///C:/Users/groov/Flutter_Projects/github_activity_feed/lib/widgets/user_profile.dart';
 import 'package:github_activity_feed/services/extensions.dart';
 import 'package:github_activity_feed/widgets/activity_feed.dart';
+import 'package:github_activity_feed/widgets/user_profile.dart';
+import 'package:github_activity_feed/widgets/view_in_browser_button.dart';
 import 'package:groovin_widgets/avatar_back_button.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -57,6 +58,7 @@ class _UserOverviewState extends State<UserOverview> with ProvidedState {
           ],
         ),
         actions: [
+          ViewInBrowserButton(url: 'https://github.com/${_currentUser.login}'),
           if (_currentUser.login == user.login)
             IconButton(
               icon: Icon(
