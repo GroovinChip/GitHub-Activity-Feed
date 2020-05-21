@@ -5,7 +5,7 @@ import 'package:github/github.dart';
 import 'package:github/hooks.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/utils/stream_helpers.dart';
-import 'package:github_activity_feed/widgets/custom_stream_builder.dart';
+import 'package:github_activity_feed/widgets/subject_stream_builder.dart';
 import 'package:github_activity_feed/widgets/feedback_on_error.dart';
 import 'package:github_activity_feed/widgets/issue_card.dart';
 import 'package:github_activity_feed/widgets/issue_comment_card.dart';
@@ -82,6 +82,7 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
 
   void _getHeaderSize(_) {
     final RenderBox headerBox = _headerKey.currentContext.findRenderObject();
+    print(headerBox.getMaxIntrinsicHeight(headerBox.size.width));
     setState(() => _headerSize = headerBox.getMaxIntrinsicHeight(headerBox.size.width));
   }
 
@@ -106,7 +107,7 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
                 SliverAppBar(
                   snap: true,
                   floating: true,
-                  expandedHeight: _headerSize ?? 100.0,
+                  //expandedHeight: _headerSize ?? 100.0,
                   title: FittedBox(
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,

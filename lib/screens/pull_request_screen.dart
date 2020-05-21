@@ -9,6 +9,7 @@ import 'package:github_activity_feed/screens/commit_list_screen.dart';
 import 'package:github_activity_feed/screens/user_overview.dart';
 import 'package:github_activity_feed/utils/color_from_string.dart';
 import 'package:github_activity_feed/utils/prettyJson.dart';
+import 'package:github_activity_feed/widgets/view_in_browser_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:groovin_widgets/groovin_widgets.dart';
 import 'package:http/http.dart' as http;
@@ -105,6 +106,9 @@ class _PullRequestScreenState extends State<PullRequestScreen> with ProvidedStat
                     ),
                   ],
                 ),
+                actions: [
+                  ViewInBrowserButton(url: pullRequest.htmlUrl),
+                ],
                 bottom: PreferredSize(
                   preferredSize: Size.fromHeight(headerSize ?? 0.0),
                   child: Container(
