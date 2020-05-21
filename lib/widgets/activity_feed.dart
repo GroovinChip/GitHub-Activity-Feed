@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github/hooks.dart';
@@ -8,8 +5,7 @@ import 'package:github_activity_feed/screens/commit_list_screen.dart';
 import 'package:github_activity_feed/screens/issue_screen.dart';
 import 'package:github_activity_feed/screens/pull_request_screen.dart';
 import 'package:github_activity_feed/screens/repository_screen.dart';
-import 'package:github_activity_feed/screens/widgets/event_card.dart';
-import 'package:github_activity_feed/utils/prettyJson.dart';
+import 'package:github_activity_feed/widgets/event_card.dart';
 
 class ActivityFeed extends StatelessWidget {
   ActivityFeed({
@@ -86,24 +82,6 @@ class ActivityFeed extends StatelessWidget {
                   }
                 },
                 child: event.type != 'MemberEvent' ? EventCard(event: event) : Container(),
-              );
-              return OpenContainer(
-                closedColor: Theme.of(context).canvasColor,
-                closedBuilder: (BuildContext context, action) {
-                  return EventCard(event: event);
-                },
-                openBuilder: (BuildContext context, action) {
-                  if (event.type == 'IssuesEvent' || event.type == 'IssueCommentEvent') {
-                    return IssueScreen(
-                      event: event,
-                    );
-                  } else {
-                    return RepositoryScreen(
-                      // todo: pass repo slug in here?
-                      event: event,
-                    );
-                  }
-                },
               );
             },
           ),

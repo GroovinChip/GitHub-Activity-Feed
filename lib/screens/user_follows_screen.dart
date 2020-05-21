@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
-import 'package:github_activity_feed/screens/widgets/user_list_tile.dart';
+import 'package:github_activity_feed/widgets/user_list_tile.dart';
 
 class UserFollows extends StatefulWidget {
   UserFollows({

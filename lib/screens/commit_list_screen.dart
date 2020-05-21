@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
-import 'package:github_activity_feed/screens/widgets/commit_card.dart';
+import 'package:github_activity_feed/widgets/commit_card.dart';
 import 'package:groovin_widgets/groovin_widgets.dart';
 
 class CommitListScreen extends StatefulWidget {
