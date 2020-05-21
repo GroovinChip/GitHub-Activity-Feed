@@ -1,18 +1,18 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:github/github.dart';
 import 'package:github/hooks.dart';
 import 'package:github_activity_feed/app/provided.dart';
-import 'package:github_activity_feed/screens/user_overview.dart';
 import 'package:github_activity_feed/screens/widgets/custom_stream_builder.dart';
-import 'package:github_activity_feed/services/extensions.dart';
+import 'package:github_activity_feed/screens/widgets/feedback_on_error.dart';
+import 'package:github_activity_feed/screens/widgets/issue_card.dart';
+import 'package:github_activity_feed/screens/widgets/issue_comment_card.dart';
+import 'package:github_activity_feed/screens/widgets/issue_header_bar.dart';
+import 'package:github_activity_feed/screens/widgets/view_in_browser_button.dart';
 import 'package:github_activity_feed/utils/stream_helpers.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:rxdart/rxdart.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 class IssueScreen extends StatefulWidget {
   IssueScreen({
@@ -97,9 +97,7 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
       body: SubjectStreamBuilder(
           subject: _issueSubject,
           errorBuilder: (BuildContext context, error) {
-            return Center(
-              child: Text('$error'),
-            );
+            return FeedbackOnError(message: 'Error');
           },
           builder: (BuildContext context, Issue issue) {
             WidgetsBinding.instance.addPostFrameCallback(_getHeaderSize);
@@ -116,6 +114,9 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
                       '${widget.event.repo.name}',
                     ),
                   ),
+                  actions: [
+                    ViewInBrowserButton(url: issue.htmlUrl),
+                  ],
                   bottom: PreferredSize(
                     preferredSize: Size.fromHeight(_headerSize ?? 100.0),
                     child: Container(
@@ -133,65 +134,15 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
                       if (issue.body.isNotEmpty)
                         Padding(
                           padding: const EdgeInsets.all(8),
-                          child: Card(
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ListTile(
-                                    contentPadding: EdgeInsets.zero,
-                                    leading: CircleAvatar(
-                                      backgroundImage: NetworkImage(issue.user.avatarUrl),
-                                    ),
-                                    title: Text(
-                                      issue.user.login,
-                                      style: TextStyle(fontWeight: FontWeight.bold),
-                                    ),
-                                    subtitle: RichText(
-                                      text: TextSpan(
-                                        style: Theme.of(context).textTheme.caption.copyWith(
-                                              fontSize: 12,
-                                            ),
-                                        children: <TextSpan>[
-                                          TextSpan(
-                                            text: 'commented ',
-                                          ),
-                                          TextSpan(
-                                            text: '${timeago.format(issue.createdAt, locale: 'en_short')}',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: ' ago',
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  MarkdownBody(
-                                    data: issue.body,
-                                    styleSheet: MarkdownStyleSheet(
-                                      codeblockDecoration: BoxDecoration(
-                                        color: Theme.of(context).brightness == Brightness.light ? Colors.grey[300] : Theme.of(context).canvasColor,
-                                      ),
-                                      code: GoogleFonts.firaCode(
-                                        backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.grey[300] : Theme.of(context).canvasColor,
-                                        color: Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                  /*Text(_issue.body.trim()),*/
-                                ],
-                              ),
-                            ),
+                          child: IssueCard(
+                            issue: issue,
+                            hasDescription: true,
                           ),
                         ),
                       for (IssueComment comment in _issueComments)
                         Padding(
                           padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                          child: IssueEntry(comment: comment),
+                          child: IssueCommentCard(comment: comment),
                         )
                     ],
                   ),
@@ -201,48 +152,7 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
                     delegate: SliverChildListDelegate([
                       Padding(
                         padding: const EdgeInsets.all(8),
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ListTile(
-                                  contentPadding: EdgeInsets.zero,
-                                  leading: CircleAvatar(
-                                    backgroundImage: NetworkImage(issue.user.avatarUrl),
-                                  ),
-                                  title: Text(
-                                    issue.user.login,
-                                    style: TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  subtitle: RichText(
-                                    text: TextSpan(
-                                      style: Theme.of(context).textTheme.caption.copyWith(
-                                            fontSize: 12,
-                                          ),
-                                      children: <TextSpan>[
-                                        TextSpan(
-                                          text: 'commented ',
-                                        ),
-                                        TextSpan(
-                                          text: '${timeago.format(issue.createdAt, locale: 'en')}',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  /*subtitle: Text(
-                                  'commented ${timeago.format(_issue.createdAt, locale: 'en_short').replaceAll(' ', '').replaceAll('~', '')} ago'
-                                ),*/
-                                ),
-                                Text('No description provided'),
-                              ],
-                            ),
-                          ),
-                        ),
+                        child: IssueCard(issue: issue, hasDescription: false),
                       ),
                     ]),
                   ),
@@ -256,150 +166,6 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
               ],
             );
           }),
-    );
-  }
-}
-
-class IssueHeaderBar extends StatefulWidget {
-  final Issue issue;
-
-  const IssueHeaderBar({
-    Key key,
-    this.issue,
-  }) : super(key: key);
-
-  @override
-  _IssueHeaderBarState createState() => _IssueHeaderBarState();
-}
-
-class _IssueHeaderBarState extends State<IssueHeaderBar> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 12, bottom: 8, right: 12),
-          child: RichText(
-            text: TextSpan(
-              children: <TextSpan>[
-                TextSpan(
-                  text: '${widget.issue.title} ',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                TextSpan(
-                  text: '#${widget.issue.number}',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 12, bottom: 12, right: 12),
-          child: Material(
-            color: widget.issue.state == 'open' ? Colors.green : Colors.red,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(6, 2, 6, 2),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.info_outline),
-                  SizedBox(width: 2),
-                  Text(widget.issue.state.capitalize()),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class IssueEntry extends StatelessWidget {
-  final IssueComment comment;
-
-  const IssueEntry({
-    Key key,
-    this.comment,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: GestureDetector(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => UserOverview(user: comment.user)),
-                ),
-                child: CircleAvatar(
-                  backgroundImage: NetworkImage(comment.user.avatarUrl),
-                ),
-              ),
-              title: Text(
-                comment.user.login,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              subtitle: RichText(
-                text: TextSpan(
-                  style: Theme.of(context).textTheme.caption.copyWith(
-                        fontSize: 12,
-                      ),
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: 'commented ',
-                    ),
-                    TextSpan(
-                      text: '${timeago.format(comment.createdAt, locale: 'en')}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              /*subtitle: Text(
-                '${timeago.format(comment.createdAt, locale: 'en_short').replaceAll(' ', '')} '
-                '${comment.updatedAt != null ? '• edited' : ''}',
-              ),*/
-            ),
-            MarkdownBody(
-              data: comment.body,
-              styleSheet: MarkdownStyleSheet(
-                codeblockDecoration: BoxDecoration(
-                  color: Theme.of(context).brightness == Brightness.light ? Colors.grey[300] : Theme.of(context).canvasColor,
-                ),
-                code: GoogleFonts.firaCode(
-                  color: Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white,
-                ),
-                blockquoteDecoration: BoxDecoration(
-                  color: Theme.of(context).brightness == Brightness.light ? Colors.grey[300] : Theme.of(context).canvasColor,
-                ),
-                blockquote: TextStyle(
-                  color: Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
