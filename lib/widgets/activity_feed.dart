@@ -69,6 +69,7 @@ class ActivityFeed extends StatelessWidget {
                       _navigateToPullRequest(event, context);
                       break;
                     case 'PullRequestReviewCommentEvent':
+                      // todo: navigate to PR Reviews screen?
                       _navigateToPullRequest(event, context);
                       break;
                     case 'PushEvent':

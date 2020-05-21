@@ -1,13 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github/hooks.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/utils/color_from_string.dart';
+import 'package:github_activity_feed/utils/prettyJson.dart';
 import 'package:github_activity_feed/widgets/issue_comment_card.dart';
 import 'package:github_activity_feed/widgets/pr_header_bar.dart';
 import 'package:github_activity_feed/widgets/pull_request_card.dart';
 import 'package:github_activity_feed/widgets/view_in_browser_button.dart';
 import 'package:groovin_widgets/groovin_widgets.dart';
+import 'package:http/http.dart' as http;
 
 class PullRequestScreen extends StatefulWidget {
   PullRequestScreen({
@@ -26,16 +30,24 @@ class PullRequestScreen extends StatefulWidget {
 class _PullRequestScreenState extends State<PullRequestScreen> with ProvidedState {
   final _headerKey = GlobalKey();
   double headerSize;
+  Future _reviewComments;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback(_getHeaderSize);
+    _reviewComments = _getReviewComments();
   }
 
   void _getHeaderSize(_) {
     final RenderBox headerBox = _headerKey.currentContext.findRenderObject();
     setState(() => headerSize = headerBox.getMaxIntrinsicHeight(headerBox.size.width));
+  }
+
+  Future<dynamic> _getReviewComments() async {
+    final response = await http.get(
+        'https://api.github.com/repos/${widget.event.repo.name}/pulls/${widget.pullRequestEvent.pullRequest.number}/comments');
+    return jsonDecode(response.body);
   }
 
   @override
@@ -135,6 +147,28 @@ class _PullRequestScreenState extends State<PullRequestScreen> with ProvidedStat
                           ),
                         )
                       : Container(),
+
+                  /// Review comments
+                  /*FutureBuilder(
+                    future: _reviewComments,
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (!snapshot.hasData) {
+                        return Container();
+                      } else if (snapshot.data.length > 0) {
+                        return Card(
+                          child: ListTile(
+                            title: Text('Reviews'),
+                            trailing: Icon(Icons.chevron_right),
+                            onTap: () {
+                              // todo: nav to PR Reviews screen
+                            },
+                          ),
+                        );
+                      } else {
+                        return Container();
+                      }
+                    },
+                  ),*/
                 ]),
               ),
 
