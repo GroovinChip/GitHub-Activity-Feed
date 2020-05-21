@@ -1,16 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/services/extensions.dart';
 import 'package:github_activity_feed/utils/stream_helpers.dart';
 import 'package:github_activity_feed/widgets/activity_feed.dart';
-import 'package:github_activity_feed/widgets/async_markdown.dart';
 import 'package:github_activity_feed/widgets/feedback_on_error.dart';
+import 'package:github_activity_feed/widgets/github_markdown.dart';
 import 'package:github_activity_feed/widgets/repository_header_bar.dart';
 import 'package:github_activity_feed/widgets/view_in_browser_button.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:groovin_widgets/avatar_back_button.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -133,9 +131,11 @@ class _RepositoryScreenState extends State<RepositoryScreen>
           } else if (!snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
             return FeedbackOnError(message: 'Error');
           } else {
-            final owner = snapshot.data[0];
-            final repository = snapshot.data[1];
-            final readme = snapshot.data[2];
+            final User owner = snapshot.data[0];
+            final Repository repository = snapshot.data[1];
+            final GitHubFile readme = snapshot.data[2];
+
+            /// Calling this here doesn't seem right, but doing it in initState doesn't return the size
             WidgetsBinding.instance.addPostFrameCallback(_getHeaderSize);
             return CustomScrollView(
               slivers: [
@@ -190,48 +190,9 @@ class _RepositoryScreenState extends State<RepositoryScreen>
                     controller: _tabController,
                     children: [
                       /// Readme
-                      AsyncMarkdown(
-                        data: readme.text,
-                        styleSheet: MarkdownStyleSheet(
-                          h1: TextStyle(
-                            color: Theme.of(context).colorScheme.onBackground,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          h2: TextStyle(
-                            color: Theme.of(context).colorScheme.onBackground,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          h3: TextStyle(
-                            color: Theme.of(context).colorScheme.onBackground,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          h4: TextStyle(
-                            color: Theme.of(context).colorScheme.onBackground,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          p: TextStyle(
-                            color: Theme.of(context).colorScheme.onBackground,
-                          ),
-                          listBullet: TextStyle(
-                            color: Theme.of(context).colorScheme.onBackground,
-                          ),
-                          code: GoogleFonts.firaCode(
-                            color: Theme.of(context).colorScheme.onBackground,
-                          ),
-                          blockquoteDecoration: BoxDecoration(
-                            color: Theme.of(context).brightness == Brightness.light
-                                ? Colors.grey[300]
-                                : Colors.grey[900],
-                          ),
-                          blockquote: TextStyle(
-                            color: Theme.of(context).brightness == Brightness.light
-                                ? Colors.black
-                                : Colors.white,
-                          ),
-                        ),
+                      GitHubMarkdown(
+                        markdown: readme.text,
+                        useScrollable: true,
                       ),
 
                       /// Feed

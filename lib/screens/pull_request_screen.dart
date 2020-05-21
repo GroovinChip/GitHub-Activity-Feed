@@ -1,16 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:github/github.dart';
 import 'package:github/hooks.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/commit_list_screen.dart';
 import 'package:github_activity_feed/screens/user_overview.dart';
 import 'package:github_activity_feed/utils/color_from_string.dart';
-import 'package:github_activity_feed/utils/prettyJson.dart';
+import 'package:github_activity_feed/widgets/github_markdown.dart';
 import 'package:github_activity_feed/widgets/view_in_browser_button.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:groovin_widgets/groovin_widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -133,8 +131,9 @@ class _PullRequestScreenState extends State<PullRequestScreen> with ProvidedStat
                         _UserTile(user: pullRequest.user),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                          child: MarkdownBody(
-                            data: pullRequest.body,
+                          child: GitHubMarkdown(
+                            markdown: pullRequest.body,
+                            useScrollable: false,
                           ),
                         ),
                       ],
@@ -182,30 +181,9 @@ class _PullRequestScreenState extends State<PullRequestScreen> with ProvidedStat
                                 _UserTile(user: snapshot.data[index].user),
                                 Padding(
                                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                                  child: MarkdownBody(
-                                    data: snapshot.data[index].body,
-                                    styleSheet: MarkdownStyleSheet(
-                                      codeblockDecoration: BoxDecoration(
-                                        color: Theme.of(context).brightness == Brightness.light
-                                            ? Colors.grey[300]
-                                            : Theme.of(context).canvasColor,
-                                      ),
-                                      code: GoogleFonts.firaCode(
-                                        color: Theme.of(context).brightness == Brightness.light
-                                            ? Colors.black
-                                            : Colors.white,
-                                      ),
-                                      blockquoteDecoration: BoxDecoration(
-                                        color: Theme.of(context).brightness == Brightness.light
-                                            ? Colors.grey[300]
-                                            : Theme.of(context).canvasColor,
-                                      ),
-                                      blockquote: TextStyle(
-                                        color: Theme.of(context).brightness == Brightness.light
-                                            ? Colors.black
-                                            : Colors.white,
-                                      ),
-                                    ),
+                                  child: GitHubMarkdown(
+                                    markdown: snapshot.data[index].body,
+                                    useScrollable: false,
                                   ),
                                 ),
                               ],

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/screens/user_overview.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:github_activity_feed/widgets/github_markdown.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 /// A comment on an isse
@@ -59,30 +58,9 @@ class IssueCommentCard extends StatelessWidget {
                 '${comment.updatedAt != null ? '• edited' : ''}',
               ),*/
             ),
-            MarkdownBody(
-              data: comment.body,
-              styleSheet: MarkdownStyleSheet(
-                codeblockDecoration: BoxDecoration(
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? Colors.grey[300]
-                      : Theme.of(context).canvasColor,
-                ),
-                code: GoogleFonts.firaCode(
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? Colors.black
-                      : Colors.white,
-                ),
-                blockquoteDecoration: BoxDecoration(
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? Colors.grey[300]
-                      : Theme.of(context).canvasColor,
-                ),
-                blockquote: TextStyle(
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? Colors.black
-                      : Colors.white,
-                ),
-              ),
+            GitHubMarkdown(
+              markdown: comment.body,
+              useScrollable: false,
             ),
           ],
         ),

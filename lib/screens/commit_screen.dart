@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/screens/user_overview.dart';
 import 'package:github_activity_feed/utils/navigation_util.dart';
 import 'package:github_activity_feed/widgets/feedback_on_error.dart';
+import 'package:github_activity_feed/widgets/github_markdown.dart';
 import 'package:github_activity_feed/widgets/view_in_browser_button.dart';
 import 'package:groovin_widgets/groovin_expansion_tile.dart';
 import 'package:http/http.dart' as http;
@@ -67,7 +67,10 @@ class _CommitScreenState extends State<CommitScreen> {
                           _UserTile(user: snapshot.data.author),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                            child: MarkdownBody(data: snapshot.data.commit.message),
+                            child: GitHubMarkdown(
+                              markdown: snapshot.data.commit.message,
+                              useScrollable: false,
+                            ),
                           ),
                         ],
                       ),

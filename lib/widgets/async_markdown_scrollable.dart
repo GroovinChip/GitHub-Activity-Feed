@@ -7,6 +7,7 @@ import 'package:github_activity_feed/services/repositories/readmes.dart';
 import 'package:github_activity_feed/utils/markdown_io.dart';
 import 'package:markdown/markdown.dart' as md;
 
+/// Not meant to be used directly - use GitHubMarkdown
 class AsyncMarkdown extends StatefulWidget {
   /// Creates a widget that parses and displays Markdown.
   ///
@@ -14,6 +15,7 @@ class AsyncMarkdown extends StatefulWidget {
   const AsyncMarkdown({
     Key key,
     @required this.data,
+    @required this.useScrollable,
     this.selectable = false,
     this.styleSheet,
     this.styleSheetTheme = MarkdownStyleSheetBaseTheme.material,
@@ -31,6 +33,8 @@ class AsyncMarkdown extends StatefulWidget {
   })  : assert(data != null),
         assert(selectable != null),
         super(key: key);
+
+  final bool useScrollable;
 
   /// The amount of space by which to inset the children.
   final EdgeInsets padding;
@@ -183,15 +187,25 @@ class _AsyncMarkdownWidgetState extends State<AsyncMarkdown> implements Markdown
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: widget.padding,
-      controller: widget.controller,
-      physics: widget.physics,
-      shrinkWrap: widget.shrinkWrap,
-      itemCount: _children?.length ?? 0,
-      itemBuilder: (BuildContext context, int index) {
-        return _children[index];
-      },
-    );
+    if (widget.useScrollable) {
+      return ListView.builder(
+        padding: widget.padding,
+        controller: widget.controller,
+        physics: widget.physics,
+        shrinkWrap: widget.shrinkWrap,
+        itemCount: _children?.length ?? 0,
+        itemBuilder: (BuildContext context, int index) {
+          return _children[index];
+        },
+      );
+    } else {
+      if (_children?.length == 1) return _children.single;
+      return Column(
+        mainAxisSize: widget.shrinkWrap ? MainAxisSize.min : MainAxisSize.max,
+        crossAxisAlignment:
+            widget.fitContent ? CrossAxisAlignment.start : CrossAxisAlignment.stretch,
+        children: _children ?? [],
+      );
+    }
   }
 }
