@@ -82,7 +82,6 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
 
   void _getHeaderSize(_) {
     final RenderBox headerBox = _headerKey.currentContext.findRenderObject();
-    print(headerBox.getMaxIntrinsicHeight(headerBox.size.width));
     setState(() => _headerSize = headerBox.getMaxIntrinsicHeight(headerBox.size.width));
   }
 
