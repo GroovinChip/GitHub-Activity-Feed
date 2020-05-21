@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github/hooks.dart';
 import 'package:github_activity_feed/app/provided.dart';
+import 'package:github_activity_feed/utils/color_from_string.dart';
 import 'package:github_activity_feed/utils/stream_helpers.dart';
 import 'package:github_activity_feed/widgets/subject_stream_builder.dart';
 import 'package:github_activity_feed/widgets/feedback_on_error.dart';
@@ -11,6 +13,7 @@ import 'package:github_activity_feed/widgets/issue_card.dart';
 import 'package:github_activity_feed/widgets/issue_comment_card.dart';
 import 'package:github_activity_feed/widgets/issue_header_bar.dart';
 import 'package:github_activity_feed/widgets/view_in_browser_button.dart';
+import 'package:groovin_widgets/groovin_widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:rxdart/rxdart.dart';
 
@@ -101,8 +104,28 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
           },
           builder: (BuildContext context, Issue issue) {
             WidgetsBinding.instance.addPostFrameCallback(_getHeaderSize);
+            List<Widget> labelWidgets = [];
+            for (int i = 0; i < issue.labels.length; i++) {
+              Color backgroundColor = HexColor(issue.labels[i].color);
+              Color foregroundColor =
+                  backgroundColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+              labelWidgets.add(
+                Container(
+                  decoration: BoxDecoration(
+                    color: backgroundColor,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  padding: EdgeInsets.fromLTRB(4, 2, 4, 2),
+                  child: Text(
+                    issue.labels[i].name,
+                    style: TextStyle(color: foregroundColor),
+                  ),
+                ),
+              );
+            }
             return CustomScrollView(
               slivers: [
+                /// Issue header
                 SliverAppBar(
                   snap: true,
                   floating: true,
@@ -128,25 +151,59 @@ class _IssueScreenState extends State<IssueScreen> with ProvidedState {
                     ),
                   ),
                 ),
+
+                /// Issue body
                 SliverList(
                   delegate: SliverChildListDelegate(
                     [
                       if (issue.body.isNotEmpty)
                         Padding(
-                          padding: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
                           child: IssueCard(
                             issue: issue,
                             hasDescription: true,
                           ),
                         ),
+
+                      /// Issue labels
+                      labelWidgets.isNotEmpty
+                          ? Padding(
+                            padding: const EdgeInsets.only(right: 8, left: 8),
+                            child: Card(
+                                child: GroovinExpansionTile(
+                                  title: Text('Labels'),
+                                  initiallyExpanded: true,
+                                  children: [
+                                    Container(
+                                      alignment: Alignment.centerLeft,
+                                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                                      child: Wrap(
+                                        crossAxisAlignment: WrapCrossAlignment.center,
+                                        alignment: WrapAlignment.start,
+                                        spacing: 6,
+                                        runSpacing: 6,
+                                        children: [
+                                          ...labelWidgets,
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                          )
+                          : Container(),
+
+                      /// Issue comments
                       for (IssueComment comment in _issueComments)
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                          padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                           child: IssueCommentCard(comment: comment),
                         )
                     ],
                   ),
                 ),
+
+                /// If no issue comments and no issue body
                 if (_issueComments.isEmpty && _issue.body.isEmpty)
                   SliverList(
                     delegate: SliverChildListDelegate([

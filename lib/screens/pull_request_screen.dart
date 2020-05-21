@@ -114,14 +114,24 @@ class _PullRequestScreenState extends State<PullRequestScreen> with ProvidedStat
                   /// PR labels
                   labelWidgets.isNotEmpty
                       ? Card(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 8, bottom: 8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ...labelWidgets,
-                              ],
-                            ),
+                          child: GroovinExpansionTile(
+                            title: Text('Labels'),
+                            initiallyExpanded: true,
+                            children: [
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                                child: Wrap(
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  alignment: WrapAlignment.start,
+                                  spacing: 6,
+                                  runSpacing: 6,
+                                  children: [
+                                    ...labelWidgets,
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         )
                       : Container(),
