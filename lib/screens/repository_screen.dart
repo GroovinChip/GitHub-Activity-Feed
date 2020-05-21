@@ -39,7 +39,7 @@ class _RepositoryScreenState extends State<RepositoryScreen>
   bool _isStarred = false;
 
   final _headerKey = GlobalKey();
-  double _headerSize;
+  Size _headerSize;
 
   final _repoOwner = BehaviorSubject<User>();
   final _repositoryFeed = BehaviorSubject<List<Event>>();
@@ -50,6 +50,8 @@ class _RepositoryScreenState extends State<RepositoryScreen>
   void initState() {
     super.initState();
     _repositorySlug = RepositorySlug.full(widget.event.repo.name);
+
+    //todo: refactor all this out into a service (or something)
     _getRepoOwner();
     _getRepo();
     _getReadme();
@@ -101,8 +103,7 @@ class _RepositoryScreenState extends State<RepositoryScreen>
 
   void _getHeaderSize(_) {
     final RenderBox headerBox = _headerKey.currentContext.findRenderObject();
-    print('Header height: ${headerBox.getMaxIntrinsicHeight(headerBox.size.width)}');
-    setState(() => _headerSize = headerBox.getMaxIntrinsicHeight(headerBox.size.width));
+    setState(() => _headerSize = headerBox.size);
   }
 
   @override
@@ -174,9 +175,9 @@ class _RepositoryScreenState extends State<RepositoryScreen>
                     ),
                     ViewInBrowserButton(url: repository.htmlUrl),
                   ],
-                  expandedHeight: _headerSize ?? 150,
+                  expandedHeight: _headerSize?.height ?? 150,
                   bottom: PreferredSize(
-                    preferredSize: Size.fromHeight(_headerSize ?? 150),
+                    preferredSize: Size.fromHeight(_headerSize?.height ?? 150),
                     child: RepositoryHeaderBar(
                       key: _headerKey,
                       repository: repository,
