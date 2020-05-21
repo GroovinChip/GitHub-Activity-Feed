@@ -119,16 +119,16 @@ class _PullRequestHeaderBarState extends State<PullRequestHeaderBar> with Provid
             ),
           ],
         ),
-        ListTile(
-          leading: Transform.rotate(
-            angle: 4.7,
-            child: Icon(MdiIcons.sourceCommit),
-          ),
-          title: FutureBuilder<List<dynamic>>(
-            future: _getCommitsFromNetwork(),
-            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-              if (!snapshot.hasData && snapshot.connectionState == ConnectionState.waiting) {
-                return Row(
+        FutureBuilder<List<dynamic>>(
+          future: _getCommitsFromNetwork(),
+          builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+            if (!snapshot.hasData && snapshot.connectionState == ConnectionState.waiting) {
+              return ListTile(
+                leading: Transform.rotate(
+                  angle: 4.7,
+                  child: Icon(MdiIcons.sourceCommit),
+                ),
+                title: Row(
                   children: [
                     Container(
                       height: 15,
@@ -138,29 +138,41 @@ class _PullRequestHeaderBarState extends State<PullRequestHeaderBar> with Provid
                       ),
                     ),
                   ],
-                );
-              } else if (!snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
-                return Text('Unable to get commit count');
-              } else {
-                _prCommits = snapshot.data;
-                return Text(
+                ),
+              );
+            } else if (!snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
+              return ListTile(
+                leading: Transform.rotate(
+                  angle: 4.7,
+                  child: Icon(MdiIcons.sourceCommit),
+                ),
+                title: Text('Unable to get commit count'),
+              );
+            } else {
+              _prCommits = snapshot.data;
+              return ListTile(
+                leading: Transform.rotate(
+                  angle: 4.7,
+                  child: Icon(MdiIcons.sourceCommit),
+                ),
+                title: Text(
                   snapshot.data.length > 1
                       ? '${_prCommits.length} commits'
                       : '${_prCommits.length} commit',
-                );
-              }
-            },
-          ),
-          enabled: _prCommits.isNotEmpty ? true : false,
-          onTap: () => navigateToScreen(
-            context,
-            CommitListScreen(
-              repoName: widget.pullRequest.head.repo.fullName,
-              committedBy: widget.pullRequest.user,
-              commits: _prCommits,
-              fromEventType: 'PullRequest',
-            ),
-          ),
+                ),
+                enabled: _prCommits.isNotEmpty,
+                onTap: () => navigateToScreen(
+                  context,
+                  CommitListScreen(
+                    repoName: widget.pullRequest.head.repo.fullName,
+                    committedBy: widget.pullRequest.user,
+                    commits: _prCommits,
+                    fromEventType: 'PullRequest',
+                  ),
+                ),
+              );
+            }
+          },
         ),
       ],
     );
