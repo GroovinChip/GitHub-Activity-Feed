@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/settings.dart';
-import 'package:github_activity_feed/screens/user_profile.dart';
+import 'file:///C:/Users/groov/Flutter_Projects/github_activity_feed/lib/widgets/user_profile.dart';
 import 'package:github_activity_feed/services/extensions.dart';
 import 'package:github_activity_feed/widgets/activity_feed.dart';
 import 'package:groovin_widgets/avatar_back_button.dart';
