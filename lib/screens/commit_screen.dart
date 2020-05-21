@@ -6,6 +6,7 @@ import 'package:github/github.dart';
 import 'package:github_activity_feed/screens/user_overview.dart';
 import 'package:github_activity_feed/utils/navigation_util.dart';
 import 'package:github_activity_feed/widgets/feedback_on_error.dart';
+import 'package:github_activity_feed/widgets/view_in_browser_button.dart';
 import 'package:groovin_widgets/groovin_expansion_tile.dart';
 import 'package:http/http.dart' as http;
 import 'package:syntax_highlighter/syntax_highlighter.dart';
@@ -35,9 +36,6 @@ class _CommitScreenState extends State<CommitScreen> {
         ? SyntaxHighlighterStyle.darkThemeStyle()
         : SyntaxHighlighterStyle.lightThemeStyle();
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Commit'),
-      ),
       body: FutureBuilder<RepositoryCommit>(
         future: _getFullCommit(),
         builder: (BuildContext context, AsyncSnapshot<RepositoryCommit> snapshot) {
@@ -53,6 +51,13 @@ class _CommitScreenState extends State<CommitScreen> {
             }
             return CustomScrollView(
               slivers: [
+                SliverAppBar(
+                  title: Text('Commit'),
+                  pinned: true,
+                  actions: [
+                    ViewInBrowserButton(url: snapshot.data.htmlUrl),
+                  ],
+                ),
                 SliverList(
                   delegate: SliverChildListDelegate([
                     Card(
