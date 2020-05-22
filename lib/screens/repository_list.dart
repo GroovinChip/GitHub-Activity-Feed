@@ -24,8 +24,8 @@ class _RepositoryListState extends State<RepositoryList> with ProvidedState {
   List<Repository> repositories;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     //todo: get all this into state management
     if (widget.starredList) {
       githubService.github.activity
@@ -34,7 +34,16 @@ class _RepositoryListState extends State<RepositoryList> with ProvidedState {
           .then((List<Repository> starred) {
         setState(() => repositories = starred);
       });
+    } else if (widget.user.login == user.login) {
+      /// Get authenticated user repos in order to include private repos
+      githubService.github.repositories
+          .listRepositories()
+          .toList()
+          .then((List<Repository> repos) {
+        setState(() => repositories = repos);
+      });
     } else {
+      /// Get user repos
       githubService.github.repositories
           .listUserRepositories(widget.user.login)
           .toList()
