@@ -113,6 +113,8 @@ class _PullRequestScreenState extends State<PullRequestScreen> with ProvidedStat
                       pullRequest: pullRequest,
                       action: widget.pullRequestEvent.action,
                       commitsUrl: widget.event.payload['pull_request']['commits_url'],
+                      state: pullRequest.state,
+                      merged: pullRequest.merged ?? false,
                     ),
                   ),
                 ),

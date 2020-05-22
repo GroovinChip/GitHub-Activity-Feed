@@ -5,6 +5,7 @@ import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/commit_list_screen.dart';
 import 'package:github_activity_feed/utils/navigation_util.dart';
+import 'package:github_activity_feed/utils/prettyJson.dart';
 import 'package:github_activity_feed/widgets/pr_status_label.dart';
 import 'package:github_activity_feed/widgets/report_bug_button.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,14 +16,18 @@ import 'package:wiredash/wiredash.dart';
 class PullRequestHeaderBar extends StatefulWidget {
   const PullRequestHeaderBar({
     Key key,
-    this.pullRequest,
-    this.action,
-    this.commitsUrl,
+    @required this.pullRequest,
+    @required this.action,
+    @required this.commitsUrl,
+    @required this.state,
+    @required this.merged,
   }) : super(key: key);
 
   final PullRequest pullRequest;
   final String action;
   final String commitsUrl;
+  final String state;
+  final bool merged;
 
   @override
   _PullRequestHeaderBarState createState() => _PullRequestHeaderBarState();
@@ -34,6 +39,9 @@ class _PullRequestHeaderBarState extends State<PullRequestHeaderBar> with Provid
 
   Future<List<dynamic>> _getCommitsFromNetwork() async {
     final response = await http.get(widget.commitsUrl);
+    if (response.reasonPhrase == 'rate limit exceeded') {
+      // todo: pass the reasonPhrase into ReportBugButton
+    }
     return jsonDecode(response.body);
   }
 
@@ -124,7 +132,9 @@ class _PullRequestHeaderBarState extends State<PullRequestHeaderBar> with Provid
           children: [
             SizedBox(width: 16),
             PullRequestStatusLabel(
-              pullRequest: widget.pullRequest,
+              state: widget.state,
+              merged: widget.merged,
+              draft: widget.pullRequest.draft,
             ),
           ],
         ),

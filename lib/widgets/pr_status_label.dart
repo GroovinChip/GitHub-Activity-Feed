@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
+import 'package:github_activity_feed/utils/prettyJson.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class PullRequestStatusLabel extends StatefulWidget {
   const PullRequestStatusLabel({
     Key key,
-    @required this.pullRequest,
+    @required this.state,
+    @required this.merged,
+    @required this.draft,
   }) : super(key: key);
 
-  final PullRequest pullRequest;
+  final String state;
+  final bool merged;
+  final bool draft;
 
   @override
   _PullRequestStatusLabelState createState() => _PullRequestStatusLabelState();
@@ -18,17 +23,16 @@ class PullRequestStatusLabel extends StatefulWidget {
 class _PullRequestStatusLabelState extends State<PullRequestStatusLabel> {
   Color labelColor;
   String label;
-  bool isMerged;
 
   @override
   void initState() {
     super.initState();
-    isMerged = widget.pullRequest.merged ?? false;
-    if (widget.pullRequest.draft) {
+    //printPrettyJson(widget.pullRequest.toJson());
+    if (widget.draft) {
       labelColor = Colors.grey.withOpacity(0.5);
       label = 'Draft';
-    } else if (!isMerged) {
-      switch (widget.pullRequest.state) {
+    } else if (!widget.merged) {
+      switch (widget.state) {
         case 'open':
           labelColor = Colors.green;
           label = 'Open';
@@ -40,7 +44,7 @@ class _PullRequestStatusLabelState extends State<PullRequestStatusLabel> {
         default:
           break;
       }
-    } else if (isMerged) {
+    } else if (widget.merged) {
       labelColor = Colors.deepPurple[700];
       label = 'Merged';
     } else {
