@@ -31,7 +31,10 @@ class _UserProfileState extends State<UserProfile> with ProvidedState {
   }
 
   void _getStarredCount() {
-    githubService.github.activity.listStarredByUser(widget.currentUser.login).toList().then((List<Repository> starred) {
+    githubService.github.activity
+        .listStarredByUser(widget.currentUser.login)
+        .toList()
+        .then((List<Repository> starred) {
       setState(() => _starredCount = starred.length);
     });
   }
@@ -47,15 +50,16 @@ class _UserProfileState extends State<UserProfile> with ProvidedState {
     return DefaultTextStyle.merge(
       style: Theme.of(context).textTheme.subtitle1,
       child: FutureBuilder<User>(
-          future: githubService.github.users.getUser(widget.currentUser.login),
-          builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-            if (!snapshot.hasData) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              final _user = snapshot.data;
-              return Column(
+        future: githubService.github.users.getUser(widget.currentUser.login),
+        builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            final _user = snapshot.data;
+            return SingleChildScrollView(
+              child: Column(
                 children: [
                   if (_user.bio != null)
                     Padding(
@@ -169,9 +173,11 @@ class _UserProfileState extends State<UserProfile> with ProvidedState {
                   // todo: starred repo count?
                   // todo: organizations count?
                 ],
-              );
-            }
-          }),
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 }
@@ -194,7 +200,7 @@ class _ProfileEntry extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(name),
-          Text('$count'),
+          count == null ? Text('...') : Text('$count'),
         ],
       ),
     );
