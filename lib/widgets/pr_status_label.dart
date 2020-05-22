@@ -18,14 +18,16 @@ class PullRequestStatusLabel extends StatefulWidget {
 class _PullRequestStatusLabelState extends State<PullRequestStatusLabel> {
   Color labelColor;
   String label;
+  bool isMerged;
 
   @override
   void initState() {
     super.initState();
+    isMerged = widget.pullRequest.merged ?? false;
     if (widget.pullRequest.draft) {
       labelColor = Colors.grey.withOpacity(0.5);
       label = 'Draft';
-    } else if (!widget.pullRequest.merged) {
+    } else if (!isMerged) {
       switch (widget.pullRequest.state) {
         case 'open':
           labelColor = Colors.green;
@@ -38,7 +40,7 @@ class _PullRequestStatusLabelState extends State<PullRequestStatusLabel> {
         default:
           break;
       }
-    } else if (widget.pullRequest.merged) {
+    } else if (isMerged) {
       labelColor = Colors.deepPurple[700];
       label = 'Merged';
     } else {
