@@ -40,10 +40,12 @@ class _LoginPageState extends State<LoginPage> with ProvidedState {
           children: [
             Text(
               'GitHub Activity Feed',
-              style: TextStyle(
-                color: context.colorScheme.onBackground,
+              style: Theme.of(context).textTheme.headline4.copyWith(
+                color: Theme.of(context).colorScheme.onBackground,
+                fontWeight: FontWeight.bold,
               ),
             ),
+            SizedBox(height: 52),
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 350),
               child: _loading
@@ -51,7 +53,7 @@ class _LoginPageState extends State<LoginPage> with ProvidedState {
                   : RaisedButton.icon(
                       color: context.isDarkTheme ? Colors.white : Colors.black,
                       textColor: context.colorScheme.onPrimary,
-                      label: Text('Login with GitHub'),
+                      label: Text('Sign in with GitHub'),
                       icon: Icon(MdiIcons.github),
                       onPressed: () {
                         setState(() => _loading = true);
