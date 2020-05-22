@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
-import 'package:github_activity_feed/screens/settings.dart';
+import 'package:github_activity_feed/screens/settings_screen.dart';
 import 'package:github_activity_feed/services/extensions.dart';
 import 'package:github_activity_feed/widgets/activity_feed.dart';
 import 'package:github_activity_feed/widgets/user_profile.dart';
@@ -66,7 +66,7 @@ class _UserOverviewState extends State<UserOverview> with ProvidedState {
                 color: context.colorScheme.secondary,
               ),
               onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => MobileSettings()),
+                MaterialPageRoute(builder: (context) => SettingsScreen()),
               ),
             ),
         ],
