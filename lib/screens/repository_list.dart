@@ -3,6 +3,8 @@ import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/repository_screen.dart';
 import 'package:github_activity_feed/utils/navigation_util.dart';
+import 'package:intl/intl.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class RepositoryList extends StatefulWidget {
   RepositoryList({
@@ -63,18 +65,20 @@ class _RepositoryListState extends State<RepositoryList> with ProvidedState {
                       borderRadius: BorderRadius.circular(14),
                     ),
                     child: ListTile(
-                      /*onTap: () => navigateToScreen(
+                      onTap: () => navigateToScreen(
                         context,
                         RepositoryScreen(
                           key: Key('repo-${repository.id}'),
                           repository: repository,
                         ),
-                      ),*/
+                      ),
                       leading: CircleAvatar(
                         backgroundImage: NetworkImage(repository.owner.avatarUrl),
                       ),
                       title: Text(repository.fullName),
-                      //subtitle: repository.isFork ? Text('forked from') : Container(),
+                      subtitle:
+                          Text('Created on ${DateFormat.yMMMd().format(repository.createdAt)}'),
+                      trailing: repository.isFork ? Icon(MdiIcons.sourceFork, size: 18) : null,
                     ),
                   );
                 },

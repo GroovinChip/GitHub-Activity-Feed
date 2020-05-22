@@ -47,14 +47,22 @@ class _RepositoryScreenState extends State<RepositoryScreen>
   @override
   void initState() {
     super.initState();
-    _repositorySlug = RepositorySlug.full(widget.event.repo.name);
-
     //todo: refactor all this out into a service (or something)
-    _getRepoOwner();
-    _getRepo();
-    _getReadme();
-    _getRepoActivity();
-    _checkIfStarred();
+    if (widget.repository != null) {
+      _repositorySlug = RepositorySlug.full(widget.repository.fullName);
+      _repository.value = widget.repository;
+      _getRepoOwner(widget.repository.owner.login);
+      _getRepoActivity();
+      _checkIfStarred();
+      _getReadme();
+    } else {
+      _repositorySlug = RepositorySlug.full(widget.event.repo.name);
+      _getRepoOwner(widget.event.repo.name);
+      _getRepo();
+      _getReadme();
+      _getRepoActivity();
+      _checkIfStarred();
+    }
     _tabController = TabController(length: 2, vsync: this);
   }
 
@@ -82,8 +90,8 @@ class _RepositoryScreenState extends State<RepositoryScreen>
     );
   }
 
-  void _getRepoOwner() {
-    _repoOwnerLogin = widget.event.repo.name.replaceAfter('/', '').replaceAll('/', '');
+  void _getRepoOwner(String name) {
+    _repoOwnerLogin = name.replaceAfter('/', '').replaceAll('/', '');
     updateBehaviorSubjectAsync(
       _repoOwner,
       () => githubService.github.users
