@@ -611,9 +611,9 @@ class _EventCardState extends State<EventCard> with ProvidedState {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-            TextSpan(text: ' ${widget.event.repo.name} '),
+            TextSpan(text: ' ${widget.event.repo.name}'),
             TextSpan(
-              text: ' ${pullRequestEvent.number} ',
+              text: ' #${pullRequestEvent.number} ',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
@@ -663,7 +663,7 @@ class _EventCardState extends State<EventCard> with ProvidedState {
             ),
             TextSpan(text: ' ${widget.event.repo.name}'),
             TextSpan(
-              text: '#${pullRequest.number}',
+              text: ' #${pullRequest.number}',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
