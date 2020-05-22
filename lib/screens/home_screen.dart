@@ -114,13 +114,6 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
           FollowingUsers(users: _userFollowing),
         ],
       ),
-      /*body: TwoTabPager(
-        index: _currentIndex,
-        children: [
-          MobileActivityFeed(events: _activityFeed),
-          FollowingUsers(users: _userFollowing),
-        ],
-      ),*/
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
