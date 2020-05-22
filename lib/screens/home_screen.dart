@@ -2,6 +2,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
+import 'package:github_activity_feed/screens/search_screen.dart';
 import 'package:github_activity_feed/screens/user_overview.dart';
 import 'package:github_activity_feed/services/repositories/readmes.dart';
 import 'package:github_activity_feed/widgets/activity_feed.dart';
@@ -97,7 +98,12 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
         actions: [
           IconButton(
             icon: Icon(Icons.search),
-            onPressed: () {},
+            onPressed: () => showSearch(
+              context: context,
+              delegate: SearchScreen(
+                gitHub: githubService.github,
+              ),
+            ),
           ),
         ],
       ),
