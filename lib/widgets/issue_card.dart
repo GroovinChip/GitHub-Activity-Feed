@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
+import 'package:github_activity_feed/screens/user_overview.dart';
+import 'package:github_activity_feed/utils/navigation_util.dart';
 import 'package:github_activity_feed/widgets/github_markdown.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -24,8 +26,14 @@ class IssueCard extends StatelessWidget {
           children: [
             ListTile(
               contentPadding: EdgeInsets.zero,
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(issue.user.avatarUrl),
+              leading: GestureDetector(
+                onTap: () => navigateToScreen(
+                  context,
+                  UserOverview(user: issue.user),
+                ),
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(issue.user.avatarUrl),
+                ),
               ),
               title: Text(
                 issue.user.login,
