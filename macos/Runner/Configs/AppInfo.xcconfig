@@ -8,7 +8,7 @@
 PRODUCT_NAME = github_activity_feed
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.groovinchip.githubActivityFeed
+PRODUCT_BUNDLE_IDENTIFIER = com.groovinchip.github-activity-feed
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2020 com.groovinchip. All rights reserved.
