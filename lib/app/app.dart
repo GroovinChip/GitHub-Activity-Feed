@@ -110,7 +110,9 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
           themeMode: ThemeMode.dark,
-          initialRoute: widget.githubService.currentUser.value == null ? LoginPage.routeName : HomeScreen.routeName,
+          initialRoute: widget.githubService.currentUser.value == null
+              ? LoginPage.routeName
+              : HomeScreen.routeName,
           onGenerateInitialRoutes: (String initialRoute) => [
             _onGenerateRoute(RouteSettings(name: initialRoute)),
           ],

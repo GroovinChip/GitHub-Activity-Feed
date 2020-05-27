@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
@@ -5,10 +7,12 @@ import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/search_screen.dart';
 import 'package:github_activity_feed/screens/user_overview.dart';
 import 'package:github_activity_feed/services/repositories/readmes.dart';
+import 'package:github_activity_feed/utils/prettyJson.dart';
 import 'package:github_activity_feed/widgets/activity_feed.dart';
 import 'package:github_activity_feed/widgets/following_users.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:simple_gql/simple_gql.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = Navigator.defaultRouteName;
@@ -72,8 +76,31 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
     super.dispose();
   }
 
+  Future<void> testGqlQuery() async {
+    try {
+      final client = GQLClient(url: 'https://api.github.com/graphql');
+      final GQLResponse response = await client.query(
+        query: r'''
+        query {
+          user(login: "GroovinChip") {
+            login
+            avatarUrl
+          }
+        }
+      ''',
+        headers: {'Authorization': 'Bearer ${githubService.github.auth.token}'},
+      );
+      printPrettyJson(response.data);
+    } on GQLError catch (e) {
+      print('gql error: $e');
+    } catch (e) {
+      print('unknown error: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    testGqlQuery();
     return Scaffold(
       appBar: AppBar(
         leading: InkResponse(

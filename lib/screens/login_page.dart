@@ -41,9 +41,9 @@ class _LoginPageState extends State<LoginPage> with ProvidedState {
             Text(
               'GitHub Activity Feed',
               style: Theme.of(context).textTheme.headline4.copyWith(
-                color: Theme.of(context).colorScheme.onBackground,
-                fontWeight: FontWeight.bold,
-              ),
+                    color: Theme.of(context).colorScheme.onBackground,
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             SizedBox(height: 52),
             AnimatedSwitcher(
