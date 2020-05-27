@@ -17,15 +17,15 @@ class ViewerFollowingList extends StatefulWidget {
 
 class _ViewerFollowingListState extends State<ViewerFollowingList> {
   Future _viewerFollowing;
-  GHQueryService ghQueryService;
+  GhGraphQLService ghGraphQLService;
 
   @override
   void initState() {
     super.initState();
-    ghQueryService = Provider.of<GHQueryService>(context, listen: false);
+    ghGraphQLService = Provider.of<GhGraphQLService>(context, listen: false);
 
     /// prevent FutureBuilder from rebuilding on setState() calls
-    _viewerFollowing = ghQueryService.getViewerFollowing();
+    _viewerFollowing = ghGraphQLService.getViewerFollowing();
   }
 
   @override

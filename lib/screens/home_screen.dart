@@ -38,12 +38,12 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
   int _currentIndex = 0;
   final _activityFeed = BehaviorSubject<List<Event>>();
   final _userFollowing = BehaviorSubject<List<User>>();
-  GHQueryService ghQueryService;
+  GhGraphQLService ghGraphQLService;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    ghQueryService = Provider.of<GHQueryService>(context, listen: false);
+    ghGraphQLService = Provider.of<GhGraphQLService>(context, listen: false);
     //ghQueryService.getViewerBasic();
     if (!_activityFeed.hasValue) {
       PaginationHelper(githubService.github)

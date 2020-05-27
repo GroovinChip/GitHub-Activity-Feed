@@ -27,13 +27,13 @@ class GitHubActivityFeedApp extends StatefulWidget {
 
 class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
   final _navigatorKey = GlobalKey<NavigatorState>();
-  GHQueryService ghQueryService;
+  GhGraphQLService ghQueryService;
 
   @override
   void initState() {
     super.initState();
     widget.githubService.currentUser.addListener(_onCurrentUserChanged);
-    ghQueryService = GHQueryService(token: widget.githubService.github.auth.token);
+    ghQueryService = GhGraphQLService(token: widget.githubService.github.auth.token);
   }
 
   void _onCurrentUserChanged() {
@@ -61,7 +61,7 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
         Provider<AuthService>.value(value: widget.authService),
         Provider<GitHubService>.value(value: widget.githubService),
         ValueListenableProvider.value(value: widget.githubService.currentUser),
-        Provider<GHQueryService>.value(value: ghQueryService),
+        Provider<GhGraphQLService>.value(value: ghQueryService),
       ],
       child: Wiredash(
         navigatorKey: _navigatorKey,
