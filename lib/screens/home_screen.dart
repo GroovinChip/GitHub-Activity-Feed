@@ -12,6 +12,7 @@ import 'package:github_activity_feed/utils/prettyJson.dart';
 import 'package:github_activity_feed/widgets/activity_feed.dart';
 import 'package:github_activity_feed/widgets/following_users.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:simple_gql/simple_gql.dart';
 
@@ -42,8 +43,8 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    ghQueryService = GHQueryService(token: githubService.github.auth.token);
-    ghQueryService.getViewerBasic();
+    ghQueryService = Provider.of<GHQueryService>(context, listen: false);
+    //ghQueryService.getViewerBasic();
     if (!_activityFeed.hasValue) {
       PaginationHelper(githubService.github)
           .objects(
@@ -119,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
         index: _currentIndex,
         children: [
           ActivityFeed(events: _activityFeed),
-          FollowingUsers(users: _userFollowing),
+          ViewerFollowingList(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

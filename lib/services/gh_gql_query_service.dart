@@ -3,6 +3,8 @@ import 'package:github_activity_feed/utils/prettyJson.dart';
 import 'package:simple_gql/simple_gql.dart';
 
 /// This class handles GraphQL API calls to the GitHub v4 GraphQL endpoint
+/// Some terminology:
+/// - Viewer: the currently authenticated user
 class GHQueryService {
   GHQueryService({
     @required this.token,
@@ -16,7 +18,7 @@ class GHQueryService {
 
   //--- Queries ---//
 
-  /// This query gets basic information related to the authenticated user
+  /// This query gets basic information related to the viewer
   Future<dynamic> getViewerBasic() async {
     // todo: error handling
     final GQLResponse viewerBasicResponse = await client.query(
@@ -35,8 +37,32 @@ class GHQueryService {
     return viewerBasicResponse.data;
   }
 
-  /// This query returns more complex information related to the authenticated user
+  /// This query returns more complex information related to the viewer
   Future<dynamic> getViewerComplex() async {}
+
+  /// This query returns a list of users that the viewer follows
+  Future<dynamic> getViewerFollowing() async {
+    // todo: error handling
+    final GQLResponse viewerBasicResponse = await client.query(
+      query: r'''
+        query {
+          viewer {
+            following (first: 100) {
+              totalCount
+              users: nodes {
+                login
+                avatarUrl
+              }
+            }
+          }
+        }
+      ''',
+      headers: {'Authorization': 'Bearer $token'},
+    );
+    print('API CALL: Viewer Following:');
+    printPrettyJson(viewerBasicResponse.data);
+    return viewerBasicResponse.data;
+  }
 
   /// This query gets basic information related to a specified user
   Future<dynamic> getUserBasic(String userLogin) async {}
