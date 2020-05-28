@@ -1,10 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:github/github.dart';
-import 'package:github/hooks.dart';
-import 'package:github_activity_feed/screens/commit_list_screen.dart';
-import 'package:github_activity_feed/screens/issue_screen.dart';
-import 'package:github_activity_feed/screens/pull_request_screen.dart';
-import 'package:github_activity_feed/screens/repository_screen.dart';
 import 'package:github_activity_feed/services/gh_gql_query_service.dart';
 import 'package:github_activity_feed/widgets/issue_comment_event_card.dart';
 import 'package:provider/provider.dart';
