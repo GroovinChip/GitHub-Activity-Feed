@@ -149,6 +149,7 @@ class GhGraphQLService {
                       __typename
                       databaseId
                       title
+                      number
                       author {
                         login
                         avatarUrl
@@ -188,7 +189,12 @@ class GhGraphQLService {
                       __typename
                       databaseId
                       title
+                      number
+                      baseRefName
+                      headRefName
+                      bodyText
                       createdAt
+                      changedFiles
                       author {
                         login
                         avatarUrl
