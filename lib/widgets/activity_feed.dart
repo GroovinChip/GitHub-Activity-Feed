@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/services/gh_gql_query_service.dart';
-import 'package:github_activity_feed/widgets/issue_comment_event_card.dart';
+import 'package:github_activity_feed/widgets/feedback_on_error.dart';
+import 'package:github_activity_feed/widgets/issue_comment_card.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -11,13 +12,15 @@ class ActivityFeed extends StatelessWidget {
     return FutureBuilder<dynamic>(
       future: ghGraphQLService.activityFeed(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (!snapshot.hasData) {
+        if (!snapshot.hasData && snapshot.connectionState == ConnectionState.waiting) {
           return Center(
             child: CircularProgressIndicator(),
           );
+        } else if (snapshot.hasError) {
+          return FeedbackOnError(message: snapshot.error.toString());
         } else {
           /// lists of data
-          final users = snapshot.data['viewer']['following']['nodes'];
+          final users = snapshot.data['user']['following']['nodes'];
           List<dynamic> issues = [];
           List<dynamic> issueComments = [];
           List<dynamic> pullRequests = [];
@@ -87,7 +90,8 @@ class ActivityFeed extends StatelessWidget {
 
                           /// fuzzy timestamp
                           trailing: Text(timeago
-                              .format(DateTime.parse(activityFeed[index]['createdAt']), locale: 'en_short')
+                              .format(DateTime.parse(activityFeed[index]['createdAt']),
+                                  locale: 'en_short')
                               .replaceAll(' ', '')),
                         ),
 
@@ -105,7 +109,7 @@ class ActivityFeed extends StatelessWidget {
                     ),
                   );
                 case 'IssueComment':
-                  return IssueCommentEventCard(comment: activityFeed[index]);
+                  return IssueCommentCard(comment: activityFeed[index]);
                 case 'PullRequest':
                   return Card(
                     elevation: 2,
@@ -152,7 +156,8 @@ class ActivityFeed extends StatelessWidget {
 
                           /// fuzzy timestamp
                           trailing: Text(timeago
-                              .format(DateTime.parse(activityFeed[index]['createdAt']), locale: 'en_short')
+                              .format(DateTime.parse(activityFeed[index]['createdAt']),
+                                  locale: 'en_short')
                               .replaceAll(' ', '')),
                         ),
 

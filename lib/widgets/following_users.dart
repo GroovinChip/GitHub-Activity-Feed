@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/services/gh_gql_query_service.dart';
-import 'package:github_activity_feed/widgets/user_list_tile.dart';
+import 'package:github_activity_feed/utils/prettyJson.dart';
+import 'package:github_activity_feed/widgets/user_card.dart';
 import 'package:provider/provider.dart';
 
 class ViewerFollowingList extends StatefulWidget {
@@ -42,14 +43,14 @@ class _ViewerFollowingListState extends State<ViewerFollowingList> {
         } else if (snapshot.data.isEmpty && widget.emptyBuilder != null) {
           return widget.emptyBuilder(context);
         } else {
-          List<dynamic> viewerFollowing = snapshot.data['viewer']['following']['users'];
+          List<dynamic> viewerFollowing = snapshot.data['user']['following']['users'];
           return Scrollbar(
             child: ListView.builder(
               itemCount: viewerFollowing.length,
               itemBuilder: (context, index) {
-                return UserListTile(
-                  login: viewerFollowing[index]['login'],
-                  avatarUrl: viewerFollowing[index]['avatarUrl'],
+                //printPrettyJson(viewerFollowing[index]);
+                return UserCard(
+                  user: viewerFollowing[index],
                 );
               },
             ),

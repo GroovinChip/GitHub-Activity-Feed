@@ -1,4 +1,3 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/search_screen.dart';
@@ -42,7 +41,10 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
           onTap: () {
             return Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => UserOverview(user: user),
+                builder: (context) => UserOverview(
+                  login: user.login,
+                  isViewer: true,
+                ),
               ),
             );
           },
@@ -83,95 +85,6 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
           BottomNavigationBarItem(
             icon: Icon(Icons.people_outline),
             title: Text('Following'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class TwoTabPager extends StatefulWidget {
-  const TwoTabPager({
-    Key key,
-    this.index,
-    this.children,
-  })  : assert(children.length == 2),
-        super(key: key);
-
-  final int index;
-  final List<Widget> children;
-
-  @override
-  _TwoTabPagerState createState() => _TwoTabPagerState();
-}
-
-class _TwoTabPagerState extends State<TwoTabPager> with TickerProviderStateMixin {
-  AnimationController tab0PrimaryAnimation;
-  AnimationController tab0SecondaryAnimation;
-  AnimationController tab1PrimaryAnimation;
-  AnimationController tab1SecondaryAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    final duration = const Duration(milliseconds: 300);
-    tab0PrimaryAnimation = AnimationController(
-      value: widget.index == 0 ? 1.0 : 0.0,
-      duration: duration,
-      vsync: this,
-    );
-    tab0SecondaryAnimation = AnimationController(duration: duration, vsync: this);
-    tab1PrimaryAnimation = AnimationController(
-      value: widget.index == 0 ? 0.0 : 1.0,
-      duration: duration,
-      vsync: this,
-    );
-    tab1SecondaryAnimation = AnimationController(duration: duration, vsync: this);
-  }
-
-  @override
-  void didUpdateWidget(TwoTabPager oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.index != widget.index) {
-      if (widget.index == 0) {
-        tab0PrimaryAnimation.forward(from: 0.0);
-        tab1SecondaryAnimation.forward(from: 0.0);
-        tab1PrimaryAnimation.reverse();
-        tab0SecondaryAnimation.reverse();
-      } else {
-        tab1PrimaryAnimation.forward(from: 0.0);
-        tab0SecondaryAnimation.forward(from: 0.0);
-        tab0PrimaryAnimation.reverse();
-        tab1SecondaryAnimation.reverse();
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    tab0SecondaryAnimation.dispose();
-    tab0PrimaryAnimation.dispose();
-    tab1SecondaryAnimation.dispose();
-    tab1PrimaryAnimation.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    //PageTransitionSwitcher();
-    return IgnorePointer(
-      ignoring: false,
-      child: Stack(
-        children: [
-          FadeThroughTransition(
-            animation: tab0PrimaryAnimation,
-            secondaryAnimation: tab0SecondaryAnimation,
-            child: widget.children[0],
-          ),
-          FadeThroughTransition(
-            animation: tab1PrimaryAnimation,
-            secondaryAnimation: tab1SecondaryAnimation,
-            child: widget.children[1],
           ),
         ],
       ),

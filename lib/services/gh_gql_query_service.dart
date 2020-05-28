@@ -24,7 +24,7 @@ class GhGraphQLService {
     final GQLResponse viewerBasicResponse = await client.query(
       query: r'''
         query {
-          viewer {
+          user: viewer {
             login
             avatarUrl
           }
@@ -41,7 +41,7 @@ class GhGraphQLService {
     final GQLResponse viewerComplexResponse = await client.query(
       query: r'''
         query {
-          viewer {
+          user: viewer {
             login
             url
             avatarUrl
@@ -58,7 +58,7 @@ class GhGraphQLService {
             viewerCanFollow
             viewerIsFollowing
             websiteUrl
-            
+            name
             starredRepositories(first: 100) {
               totalCount
             }
@@ -76,12 +76,24 @@ class GhGraphQLService {
     final GQLResponse viewerFollowingResponse = await client.query(
       query: r'''
         query {
-          viewer {
+          user: viewer {
             following (first: 100) {
               totalCount
               users: nodes {
                 login
+                url
                 avatarUrl
+                createdAt
+                viewerIsFollowing
+                bio
+                location
+                name
+                email
+                company
+                status {
+                  emoji
+                  message
+                }
               }
             }
           }
@@ -93,15 +105,36 @@ class GhGraphQLService {
   }
 
   /// This query gets basic information related to a specified user
-  Future<dynamic> getUserBasic(String userLogin) async {}
+  Future<dynamic> getUserBasic(String userLogin) async {
+    GQLResponse userBasicResponse;
+    try {
+      userBasicResponse = await client.query(
+        query: r'''
+        query ($userLogin: String!) {
+          user: (login: $userLogin) {
+            login
+            avatarUrl
+          }
+        }
+      ''',
+        headers: {'Authorization': 'Bearer $token'},
+        variables: {'userLogin': userLogin},
+      );
+    } on GQLError catch (e) {
+      print(e);
+    } catch (error, stackTrace) {
+      print('$error\n$stackTrace');
+    }
+    return userBasicResponse.data;
+  }
 
   /// This query returns more complex information related to a specified user
   Future<dynamic> getUserComplex(String userLogin) async {
     // todo: error handling
     final GQLResponse userComplexResponse = await client.query(
       query: r'''
-        query ($userLogin:String!) {
-          user: (login: "") {
+        query ($userLogin: String!) {
+          user: (login: $userLogin) {
             login
             url
             avatarUrl
@@ -138,7 +171,7 @@ class GhGraphQLService {
     final GQLResponse response = await client.query(
       query: r'''
           query {
-            viewer {
+            user: viewer {
               following(last: 10) {
                 nodes {
                   login
@@ -213,6 +246,37 @@ class GhGraphQLService {
       headers: {'Authorization': 'Bearer $token'},
     );
     return response.data;
+  }
+
+  Future<dynamic> searchUsers(String query) async {
+    GQLResponse searchResponse;
+    searchResponse = await client.query(
+      query: r'''
+        query ($user: String!) {
+          search(query: $user, type: USER, first: 25) {
+            userCount
+            edges {
+              node {
+                ... on User {
+                  login
+                  avatarUrl
+                  viewerIsFollowing
+                  bio
+                  company
+                  status {
+                    emoji
+                    message
+                  }
+                }
+              }
+            }
+          }
+        }
+      ''',
+      headers: {'Authorization': 'Bearer $token'},
+      variables: {"user": query},
+    );
+    return searchResponse.data;
   }
 
   //--- Mutations ---//

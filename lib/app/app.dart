@@ -3,7 +3,7 @@ import 'package:github_activity_feed/keys.dart';
 import 'package:github_activity_feed/screens/login_page.dart';
 import 'package:github_activity_feed/screens/home_screen.dart';
 import 'package:github_activity_feed/services/auth_service.dart';
-import 'package:github_activity_feed/services/extensions.dart';
+import 'file:///C:/Users/groov/Flutter_Projects/github_activity_feed/lib/utils/extensions.dart';
 import 'package:github_activity_feed/services/gh_gql_query_service.dart';
 import 'package:github_activity_feed/services/github_service.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -83,6 +83,7 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
               secondary: Color(0xff3BACFF),
               secondaryVariant: Color(0xff007ecb),
             ),
+            primaryColor: Color(0xff2962FF),
             // for CircularProgressIndicator and material scroll color
             accentColor: Color(0xff3BACFF),
             textTheme: GoogleFonts.interTextTheme(
@@ -102,10 +103,15 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
               secondary: Color(0xff3BACFF),
               secondaryVariant: Color(0xff007ecb),
             ),
+            primaryColor: Color(0xff2962FF),
             // for CircularProgressIndicator and material scroll color
             accentColor: Color(0xff3BACFF),
+            canvasColor: ColorScheme.dark().background,
             textTheme: GoogleFonts.interTextTheme(
               ThemeData.dark().textTheme,
+            ),
+            appBarTheme: AppBarTheme(
+              color: ThemeData.dark().primaryColorDark,
             ),
             bottomNavigationBarTheme: BottomNavigationBarThemeData(
               selectedItemColor: context.colorScheme.primary,
@@ -113,7 +119,7 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
             ),
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
-          themeMode: ThemeMode.dark,
+          themeMode: ThemeMode.system,
           initialRoute: widget.githubService.currentUser.value == null
               ? LoginPage.routeName
               : HomeScreen.routeName,
