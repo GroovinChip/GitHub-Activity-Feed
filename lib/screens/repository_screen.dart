@@ -204,14 +204,7 @@ class _RepositoryScreenState extends State<RepositoryScreen>
                       ),
 
                       /// Feed
-                      ActivityFeed(
-                        events: _repositoryFeed,
-                        emptyBuilder: (BuildContext context) {
-                          return Center(
-                            child: Text('No activity found'),
-                          );
-                        },
-                      ),
+                      ActivityFeed(),
                     ],
                   ),
                 ),

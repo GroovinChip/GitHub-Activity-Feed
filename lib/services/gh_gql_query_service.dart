@@ -32,8 +32,6 @@ class GhGraphQLService {
       ''',
       headers: {'Authorization': 'Bearer $token'},
     );
-    print('API CALL: Viewer Basic:');
-    printPrettyJson(viewerBasicResponse.data);
     return viewerBasicResponse.data;
   }
 
@@ -69,8 +67,6 @@ class GhGraphQLService {
       ''',
       headers: {'Authorization': 'Bearer $token'},
     );
-    print('API CALL: Viewer Complex:');
-    printPrettyJson(viewerComplexResponse.data);
     return viewerComplexResponse.data;
   }
 
@@ -93,8 +89,6 @@ class GhGraphQLService {
       ''',
       headers: {'Authorization': 'Bearer $token'},
     );
-    print('API CALL: Viewer Following:');
-    printPrettyJson(viewerFollowingResponse.data);
     return viewerFollowingResponse.data;
   }
 
@@ -136,9 +130,83 @@ class GhGraphQLService {
         'userLogin': userLogin,
       },
     );
-    print('API CALL: User Complex:');
-    printPrettyJson(userComplexResponse.data);
     return userComplexResponse.data;
+  }
+
+  /// Get the main activity feed
+  Future<dynamic> activityFeed() async {
+    final GQLResponse response = await client.query(
+      query: r'''
+          query {
+            viewer {
+              following(last: 10) {
+                nodes {
+                  login
+                  name
+                  avatarUrl
+                  issues(last: 10) {
+                    nodes {
+                      __typename
+                      databaseId
+                      title
+                      author {
+                        login
+                        avatarUrl
+                      }
+                      repository {
+                        nameWithOwner
+                      }
+                      createdAt
+                    }
+                  }
+                  issueComments(last: 10) {
+                    nodes {
+                      __typename
+                      databaseId
+                      bodyText
+                      createdAt
+                      author {
+                        login
+                        avatarUrl
+                      }
+                      issue {
+                        title
+                        author {
+                          login
+                          avatarUrl
+                        }
+                        repository {
+                          nameWithOwner
+                        }
+                        id
+                        number
+                      }
+                    }
+                  }
+                  pullRequests(last: 10) {
+                    nodes {
+                      __typename
+                      databaseId
+                      title
+                      createdAt
+                      author {
+                        login
+                        avatarUrl
+                      }
+                      repository {
+                        nameWithOwner
+                        description
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ''',
+      headers: {'Authorization': 'Bearer $token'},
+    );
+    return response.data;
   }
 
   //--- Mutations ---//

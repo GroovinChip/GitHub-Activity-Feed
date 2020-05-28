@@ -1,20 +1,11 @@
-import 'dart:io';
-
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/search_screen.dart';
 import 'package:github_activity_feed/screens/user_overview.dart';
-import 'package:github_activity_feed/services/gh_gql_query_service.dart';
-import 'package:github_activity_feed/services/repositories/readmes.dart';
-import 'package:github_activity_feed/utils/prettyJson.dart';
 import 'package:github_activity_feed/widgets/activity_feed.dart';
 import 'package:github_activity_feed/widgets/following_users.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:provider/provider.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:simple_gql/simple_gql.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = Navigator.defaultRouteName;
@@ -36,50 +27,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with ProvidedState {
   int _currentIndex = 0;
-  final _activityFeed = BehaviorSubject<List<Event>>();
-  final _userFollowing = BehaviorSubject<List<User>>();
-  GhGraphQLService ghGraphQLService;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    ghGraphQLService = Provider.of<GhGraphQLService>(context, listen: false);
-    //ghQueryService.getViewerBasic();
-    if (!_activityFeed.hasValue) {
-      PaginationHelper(githubService.github)
-          .objects(
-            'GET',
-            '/users/${user.login}/received_events',
-            (i) => Event.fromJson(i),
-            statusCode: 200,
-          )
-          .toList()
-          .then((data) {
-        _activityFeed.value = data;
-        ReadmeRepository.preCacheReadmes(githubService.github, data);
-      });
-    }
-    if (!_userFollowing.hasValue) {
-      PaginationHelper(githubService.github)
-          .objects(
-            'GET',
-            '/user/following',
-            (i) => User.fromJson(i),
-            statusCode: 200,
-          )
-          .toList()
-          .then((data) {
-        _userFollowing.value = data;
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    _userFollowing.close();
-    _activityFeed.close();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
       body: IndexedStack(
         index: _currentIndex,
         children: [
-          ActivityFeed(events: _activityFeed),
+          ActivityFeed(),
           ViewerFollowingList(),
         ],
       ),

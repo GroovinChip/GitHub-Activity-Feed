@@ -74,7 +74,8 @@ class _UserOverviewState extends State<UserOverview> with ProvidedState {
       body: IndexedStack(
         index: _currentIndex,
         children: [
-          ActivityFeed(events: _events),
+          //ActivityFeed(),
+          Center(child: Text('UserFeed'),),
           UserProfile(currentUser: _currentUser),
         ],
       ),
