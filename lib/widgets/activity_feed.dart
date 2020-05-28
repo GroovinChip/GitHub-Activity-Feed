@@ -61,49 +61,4 @@ class ActivityFeed extends StatelessWidget {
       },
     );
   }
-
-  void _navigateToIssue(BuildContext context, Event event) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => IssueScreen(event: event),
-      ),
-    );
-  }
-
-  void _navigateToPullRequest(Event event, BuildContext context) {
-    PullRequestEvent _prEvent = PullRequestEvent.fromJson(event.payload);
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => PullRequestScreen(
-          event: event,
-          pullRequestEvent: _prEvent,
-        ),
-      ),
-    );
-  }
-
-  void _navigateToCommits(Event event, BuildContext context) {
-    List<GitCommit> commits = [];
-    for (dynamic commit in event.payload['commits']) {
-      commits.add(GitCommit.fromJson(commit));
-    }
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => CommitListScreen(
-          committedBy: event.actor,
-          repoName: event.repo.name,
-          commits: commits,
-          fromEventType: event.type,
-        ),
-      ),
-    );
-  }
-
-  void _navigateToRepo(BuildContext context, Event event) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => RepositoryScreen(event: event),
-      ),
-    );
-  }
 }
