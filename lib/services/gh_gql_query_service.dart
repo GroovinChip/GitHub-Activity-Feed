@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:github_activity_feed/utils/prettyJson.dart';
 import 'package:simple_gql/simple_gql.dart';
 
 /// This class handles GraphQL API calls to the GitHub v4 GraphQL endpoint
@@ -33,6 +32,23 @@ class GhGraphQLService {
       headers: {'Authorization': 'Bearer $token'},
     );
     return viewerBasicResponse.data;
+  }
+
+  Future<dynamic> isViewerFollowingUser(String userLogin) async {
+    GQLResponse isViewerFollowingUserResponse;
+    // todo: error handling
+    isViewerFollowingUserResponse = await client.query(
+      query: r'''
+        query ($userLogin: String!) {
+          user (login: $userLogin) {
+            viewerIsFollowing
+          }
+        }
+      ''',
+      headers: {'Authorization': 'Bearer $token'},
+      variables: {'userLogin': userLogin},
+    );
+    return isViewerFollowingUserResponse.data;
   }
 
   /// This query returns more complex information related to the viewer
@@ -80,6 +96,7 @@ class GhGraphQLService {
             following (first: 100) {
               totalCount
               users: nodes {
+                id
                 login
                 url
                 avatarUrl
@@ -288,6 +305,7 @@ class GhGraphQLService {
             edges {
               node {
                 ... on User {
+                  id
                   login
                   avatarUrl
                   viewerIsFollowing
@@ -312,11 +330,11 @@ class GhGraphQLService {
   //--- Mutations ---//
 
   /// Follow a user and return whether the operation was successful
-  Future<bool> followUser(String userLogin) async {
+  Future<bool> followUser(String userId) async {
     final GQLResponse followUserResponse = await client.mutation(
       mutation: r'''
         mutation FollowUser($input: FollowUserInput!) {
-          followUser(inputData: $input) {
+          followUser(input: $input) {
             clientMutationId
             user {
               viewerIsFollowing
@@ -326,18 +344,20 @@ class GhGraphQLService {
       ''',
       headers: {'Authorization': 'Bearer $token'},
       variables: {
-        'FollowUserInput!': userLogin,
+        'input': {
+          "userId": userId,
+        },
       },
     );
-    return followUserResponse.data['user']['viewerIsFollowing'];
+    return followUserResponse.data['followUser']['user']['viewerIsFollowing'];
   }
 
   /// Unfollow a user and return whether the operation was successful
-  Future<bool> unfollowUser(String userLogin) async {
+  Future<bool> unfollowUser(String userId) async {
     final GQLResponse unfollowUserResponse = await client.mutation(
       mutation: r'''
         mutation UnollowUser($input: UnfollowUserInput!) {
-          unfollowUser(inputData: $input) {
+          unfollowUser(input: $input) {
             clientMutationId
             user {
               viewerIsFollowing
@@ -347,9 +367,11 @@ class GhGraphQLService {
       ''',
       headers: {'Authorization': 'Bearer $token'},
       variables: {
-        'UnfollowUserInput!': userLogin,
+        'input': {
+          "userId": userId,
+        },
       },
     );
-    return unfollowUserResponse.data['user']['viewerIsFollowing'];
+    return unfollowUserResponse.data['unfollowUser']['user']['viewerIsFollowing'];
   }
 }
