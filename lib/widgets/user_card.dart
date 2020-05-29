@@ -97,13 +97,15 @@ class _UserInfoRowState extends State<UserInfoRow> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                widget.login,
+                widget.name ?? widget.login,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
               ),
-              Text(widget.name ?? widget.login),
+              Text(
+                widget.login,
+              ),
             ],
           ),
           Spacer(),
