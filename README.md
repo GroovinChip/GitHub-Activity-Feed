@@ -35,3 +35,5 @@ const wiredashSecret = 'yourWiredashSecret';
 - This project uses Firebase to handle authentication redirect so you will need to [create a Firebase
 project](console.firebase.google.com), follow the instructions to configure Android and iOS projects, 
 and download their respective google-services files.
+- File an issue or comment on an existing issue to report what you will be working to fix or add
+- When you are ready, open a pull request and request review from me, GroovinChip.
