@@ -2,6 +2,8 @@
 
 A Flutter application for viewing a rich feed of GitHub activity.
 
+[![Generic badge](https://badgen.net/badge/support/GitHub%20Spronsors/blue?icon=github())](https://github.com/sponsors/GroovinChip)
+
 ## Project status:
 **Public Preview**: Version 0.2.2
 
