@@ -187,12 +187,12 @@ class GhGraphQLService {
   Future<dynamic> activityFeed() async {
     final GQLResponse response = await client.query(
       query: r'''
-          query {
+          {
             user: viewer {
               following(last: 10) {
-                nodes {
+                user: nodes {
                   issues(last: 10) {
-                    nodes {
+                    issue: nodes {
                       __typename
                       databaseId
                       title
@@ -213,7 +213,7 @@ class GhGraphQLService {
                     }
                   }
                   issueComments(last: 10) {
-                    nodes {
+                    issueComment:nodes {
                       __typename
                       databaseId
                       bodyText
@@ -224,7 +224,7 @@ class GhGraphQLService {
                         avatarUrl
                         url
                       }
-                      issue {
+                      parentIssue: issue {
                         title
                         author {
                           login
@@ -242,7 +242,7 @@ class GhGraphQLService {
                     }
                   }
                   pullRequests(last: 10) {
-                    nodes {
+                    pullRequest: nodes {
                       __typename
                       databaseId
                       title
@@ -266,10 +266,10 @@ class GhGraphQLService {
                     }
                   }
                   starredRepositories(last: 10) {
-                    edges {
+                    srEdges: edges {
                       createdAt: starredAt
                       __typename
-                      node {
+                      star: node {
                         __typename
                         id
                         databaseId
@@ -310,6 +310,8 @@ class GhGraphQLService {
                   avatarUrl
                   viewerIsFollowing
                   bio
+                  name
+                  url
                   company
                   status {
                     emoji

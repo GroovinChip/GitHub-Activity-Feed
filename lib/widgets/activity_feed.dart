@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:github_activity_feed/data/activity_feed_models.dart';
 import 'package:github_activity_feed/services/gh_gql_query_service.dart';
 import 'package:github_activity_feed/widgets/feedback_on_error.dart';
 import 'package:github_activity_feed/widgets/issue_card.dart';
@@ -22,20 +23,21 @@ class ActivityFeed extends StatelessWidget {
           return FeedbackOnError(message: snapshot.error.toString());
         } else {
           /// lists of data
-          final users = snapshot.data['user']['following']['nodes'];
-          List<dynamic> issues = [];
-          List<dynamic> issueComments = [];
-          List<dynamic> pullRequests = [];
-          List<dynamic> stars = [];
+          final Following feed = Following.fromJson(snapshot.data['user']['following']);
+          List<Issue> issues = [];
+          List<IssueComment> issueComments = [];
+          List<PullRequest> pullRequests = [];
+          List<SrEdge> stars = [];
+
           // todo: turn into Map so that we get the name of the user who starred. Then turn back into list.
           List<dynamic> activityFeed = [];
 
           /// populate lists
-          for (int uIndex = 0; uIndex < users.length; uIndex++) {
-            issues += users[uIndex]['issues']['nodes'];
-            issueComments += users[uIndex]['issueComments']['nodes'];
-            pullRequests += users[uIndex]['pullRequests']['nodes'];
-            stars += users[uIndex]['starredRepositories']['edges'];
+          for (int uIndex = 0; uIndex < feed.user.length; uIndex++) {
+            issues += feed.user[uIndex].issues.issues;
+            issueComments += feed.user[uIndex].issueComments.issueComments;
+            pullRequests += feed.user[uIndex].pullRequests.pullRequests;
+            stars += feed.user[uIndex].starredRepositories.srEdges;
           }
 
           /// populate master list and sort by date/time
@@ -44,7 +46,7 @@ class ActivityFeed extends StatelessWidget {
             ..addAll(issueComments)
             ..addAll(pullRequests)
             ..addAll(stars)
-            ..sort((e1, e2) => e2['createdAt'].compareTo(e1['createdAt']));
+            ..sort((e1, e2) => e2.createdAt.compareTo(e1.createdAt));
 
           /// build activity feed
           return Scrollbar(
@@ -52,7 +54,7 @@ class ActivityFeed extends StatelessWidget {
               itemCount: activityFeed.length,
               padding: const EdgeInsets.all(8.0),
               itemBuilder: (BuildContext context, int index) {
-                switch (activityFeed[index]['__typename']) {
+                switch (activityFeed[index].sTypename) {
                   case 'Issue':
                     return IssueCard(issue: activityFeed[index]);
                   case 'IssueComment':
@@ -61,7 +63,8 @@ class ActivityFeed extends StatelessWidget {
                     return PullRequestCard(pullRequest: activityFeed[index]);
                   case 'StarredRepositoryEdge':
                     return StarCard(
-                      star: activityFeed[index],
+                      star: activityFeed[index].star,
+                      starredAt: activityFeed[index].createdAt,
                     );
                   default:
                     return Container();
