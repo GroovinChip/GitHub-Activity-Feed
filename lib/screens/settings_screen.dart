@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/app/provided.dart';
-import 'package:github_activity_feed/services/extensions.dart';
+import 'file:///C:/Users/groov/Flutter_Projects/github_activity_feed/lib/utils/extensions.dart';
 import 'package:wiredash/wiredash.dart';
 
 class SettingsScreen extends StatefulWidget {

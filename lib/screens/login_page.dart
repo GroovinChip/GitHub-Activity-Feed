@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
-import 'package:github_activity_feed/services/extensions.dart';
+import 'file:///C:/Users/groov/Flutter_Projects/github_activity_feed/lib/utils/extensions.dart';
 
 class LoginPage extends StatefulWidget {
   static const routeName = '/login';
@@ -41,9 +41,9 @@ class _LoginPageState extends State<LoginPage> with ProvidedState {
             Text(
               'GitHub Activity Feed',
               style: Theme.of(context).textTheme.headline4.copyWith(
-                color: Theme.of(context).colorScheme.onBackground,
-                fontWeight: FontWeight.bold,
-              ),
+                    color: Theme.of(context).colorScheme.onBackground,
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             SizedBox(height: 52),
             AnimatedSwitcher(

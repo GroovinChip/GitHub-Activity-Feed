@@ -31,8 +31,7 @@ class GitHubService {
 
   Future<void> _onAuthStateChanged(AuthState authState) async {
     _github.auth = _githubAuthForState(authState);
-    currentUser.value =
-        _github.auth.isAnonymous ? null : await _github.users.getCurrentUser();
+    currentUser.value = _github.auth.isAnonymous ? null : await _github.users.getCurrentUser();
   }
 
   Authentication _githubAuthForState(AuthState authState) {

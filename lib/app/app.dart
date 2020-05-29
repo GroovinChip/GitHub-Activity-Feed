@@ -3,7 +3,8 @@ import 'package:github_activity_feed/keys.dart';
 import 'package:github_activity_feed/screens/login_page.dart';
 import 'package:github_activity_feed/screens/home_screen.dart';
 import 'package:github_activity_feed/services/auth_service.dart';
-import 'package:github_activity_feed/services/extensions.dart';
+import 'file:///C:/Users/groov/Flutter_Projects/github_activity_feed/lib/utils/extensions.dart';
+import 'package:github_activity_feed/services/gh_gql_query_service.dart';
 import 'package:github_activity_feed/services/github_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -26,11 +27,13 @@ class GitHubActivityFeedApp extends StatefulWidget {
 
 class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
   final _navigatorKey = GlobalKey<NavigatorState>();
+  GhGraphQLService ghQueryService;
 
   @override
   void initState() {
     super.initState();
     widget.githubService.currentUser.addListener(_onCurrentUserChanged);
+    ghQueryService = GhGraphQLService(token: widget.githubService.github.auth.token);
   }
 
   void _onCurrentUserChanged() {
@@ -58,6 +61,7 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
         Provider<AuthService>.value(value: widget.authService),
         Provider<GitHubService>.value(value: widget.githubService),
         ValueListenableProvider.value(value: widget.githubService.currentUser),
+        Provider<GhGraphQLService>.value(value: ghQueryService),
       ],
       child: Wiredash(
         navigatorKey: _navigatorKey,
@@ -79,10 +83,14 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
               secondary: Color(0xff3BACFF),
               secondaryVariant: Color(0xff007ecb),
             ),
+            primaryColor: Color(0xff2962FF),
             // for CircularProgressIndicator and material scroll color
             accentColor: Color(0xff3BACFF),
             textTheme: GoogleFonts.interTextTheme(
               ThemeData.light().textTheme,
+            ),
+            appBarTheme: AppBarTheme(
+              color: Color(0xff2962FF),
             ),
             bottomNavigationBarTheme: BottomNavigationBarThemeData(
               selectedItemColor: context.colorScheme.primary,
@@ -98,10 +106,15 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
               secondary: Color(0xff3BACFF),
               secondaryVariant: Color(0xff007ecb),
             ),
+            primaryColor: Color(0xff2962FF),
             // for CircularProgressIndicator and material scroll color
             accentColor: Color(0xff3BACFF),
+            canvasColor: ColorScheme.dark().background,
             textTheme: GoogleFonts.interTextTheme(
               ThemeData.dark().textTheme,
+            ),
+            appBarTheme: AppBarTheme(
+              color: Colors.black,
             ),
             bottomNavigationBarTheme: BottomNavigationBarThemeData(
               selectedItemColor: context.colorScheme.primary,
@@ -109,8 +122,10 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
             ),
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
-          themeMode: ThemeMode.dark,
-          initialRoute: widget.githubService.currentUser.value == null ? LoginPage.routeName : HomeScreen.routeName,
+          themeMode: ThemeMode.system,
+          initialRoute: widget.githubService.currentUser.value == null
+              ? LoginPage.routeName
+              : HomeScreen.routeName,
           onGenerateInitialRoutes: (String initialRoute) => [
             _onGenerateRoute(RouteSettings(name: initialRoute)),
           ],

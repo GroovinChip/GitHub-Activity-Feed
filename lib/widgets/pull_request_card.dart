@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:github/github.dart';
-import 'package:github_activity_feed/screens/user_overview.dart';
-import 'package:github_activity_feed/utils/navigation_util.dart';
-import 'package:github_activity_feed/widgets/github_markdown.dart';
+import 'package:github_activity_feed/utils/prettyJson.dart';
+import 'package:timeago/timeago.dart' as timeago;
+import 'package:github_activity_feed/utils/extensions.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PullRequestCard extends StatelessWidget {
   const PullRequestCard({
@@ -10,46 +10,92 @@ class PullRequestCard extends StatelessWidget {
     @required this.pullRequest,
   }) : super(key: key);
 
-  final PullRequest pullRequest;
+  final dynamic pullRequest;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _UserTile(user: pullRequest.user),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8, 0, 8, 12),
-            child: GitHubMarkdown(
-              markdown: pullRequest.body,
-              useScrollable: false,
-            ),
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Material(
+        elevation: 2,
+        color: context.isDarkTheme ? Colors.grey[800] : Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: InkWell(
+          onTap: () => launch(pullRequest['url']),
+          onLongPress: () => printPrettyJson((pullRequest)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ListTile(
+                /// user avatar
+                leading: GestureDetector(
+                  onTap: () => launch(pullRequest['author']['url']),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(
+                      pullRequest['author']['avatarUrl'],
+                    ),
+                  ),
+                ),
+
+                /// user with action
+                title: Text(
+                  '${pullRequest['author']['login']} opened pull request',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onBackground,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+
+                /// repository with issue number
+                subtitle: RichText(
+                  text: TextSpan(
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: '${pullRequest['repository']['nameWithOwner']} ',
+                      ),
+
+                      /// this is here for optional styling
+                      TextSpan(text: '#${pullRequest['number']}'),
+                    ],
+                  ),
+                ),
+
+                /// fuzzy timestamp
+                trailing: Text(timeago
+                    .format(DateTime.parse(pullRequest['createdAt']), locale: 'en_short')
+                    .replaceAll(' ', '')),
+              ),
+
+              /// issue title
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                child: Text(
+                  pullRequest['title'],
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+
+              /// issue body text preview
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                child: Text(
+                  pullRequest['bodyText'] == '' ? 'No description' : pullRequest['bodyText'],
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 14),
+                ),
+              )
+            ],
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class _UserTile extends StatelessWidget {
-  const _UserTile({
-    Key key,
-    @required this.user,
-  }) : super(key: key);
-
-  final User user;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      onTap: () => navigateToScreen(context, UserOverview(user: user)),
-      leading: CircleAvatar(
-        backgroundImage: NetworkImage(user.avatarUrl),
-      ),
-      title: Text(
-        user.login,
-        style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+        ),
       ),
     );
   }
