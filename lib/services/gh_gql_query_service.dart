@@ -111,7 +111,7 @@ class GhGraphQLService {
       userBasicResponse = await client.query(
         query: r'''
         query ($userLogin: String!) {
-          user: (login: $userLogin) {
+          user (login: $userLogin) {
             login
             avatarUrl
           }
@@ -134,7 +134,7 @@ class GhGraphQLService {
     final GQLResponse userComplexResponse = await client.query(
       query: r'''
         query ($userLogin: String!) {
-          user: (login: $userLogin) {
+          user (login: $userLogin) {
             login
             url
             avatarUrl
@@ -182,13 +182,18 @@ class GhGraphQLService {
                       __typename
                       databaseId
                       title
+                      url
                       number
+                      bodyText
                       author {
                         login
                         avatarUrl
+                        url
                       }
                       repository {
                         nameWithOwner
+                        description
+                        url
                       }
                       createdAt
                     }
@@ -199,18 +204,23 @@ class GhGraphQLService {
                       databaseId
                       bodyText
                       createdAt
+                      url
                       author {
                         login
                         avatarUrl
+                        url
                       }
                       issue {
                         title
                         author {
                           login
                           avatarUrl
+                          url
                         }
                         repository {
                           nameWithOwner
+                          description
+                          url
                         }
                         id
                         number
@@ -222,6 +232,7 @@ class GhGraphQLService {
                       __typename
                       databaseId
                       title
+                      url
                       number
                       baseRefName
                       headRefName
@@ -231,10 +242,12 @@ class GhGraphQLService {
                       author {
                         login
                         avatarUrl
+                        url
                       }
                       repository {
                         nameWithOwner
                         description
+                        url
                       }
                     }
                   }

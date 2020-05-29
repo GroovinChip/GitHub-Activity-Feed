@@ -42,21 +42,23 @@ class ActivityFeed extends StatelessWidget {
             ..sort((e1, e2) => e2['createdAt'].compareTo(e1['createdAt']));
 
           /// build activity feed
-          return ListView.builder(
-            itemCount: activityFeed.length,
-            padding: EdgeInsets.only(left: 8.0, right: 8.0),
-            itemBuilder: (BuildContext context, int index) {
-              switch (activityFeed[index]['__typename']) {
-                case 'Issue':
-                  return IssueCard(issue: activityFeed[index]);
-                case 'IssueComment':
-                  return IssueCommentCard(comment: activityFeed[index]);
-                case 'PullRequest':
-                  return PullRequestCard(pullRequest: activityFeed[index]);
-                default:
-                  return Container();
-              }
-            },
+          return Scrollbar(
+            child: ListView.builder(
+              itemCount: activityFeed.length,
+              padding: const EdgeInsets.all(8.0),
+              itemBuilder: (BuildContext context, int index) {
+                switch (activityFeed[index]['__typename']) {
+                  case 'Issue':
+                    return IssueCard(issue: activityFeed[index]);
+                  case 'IssueComment':
+                    return IssueCommentCard(comment: activityFeed[index]);
+                  case 'PullRequest':
+                    return PullRequestCard(pullRequest: activityFeed[index]);
+                  default:
+                    return Container();
+                }
+              },
+            ),
           );
         }
       },

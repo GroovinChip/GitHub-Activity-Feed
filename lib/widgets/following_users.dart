@@ -46,7 +46,7 @@ class _ViewerFollowingListState extends State<ViewerFollowingList> {
           return Scrollbar(
             child: ListView.builder(
               itemCount: viewerFollowing.length,
-              padding: EdgeInsets.only(left: 8.0, right: 8.0),
+              padding: const EdgeInsets.all(8.0),
               itemBuilder: (context, index) {
                 return UserCard(
                   user: viewerFollowing[index],
