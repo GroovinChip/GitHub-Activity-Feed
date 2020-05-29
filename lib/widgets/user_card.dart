@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 class UserCard extends StatelessWidget {
   const UserCard({
@@ -13,12 +13,12 @@ class UserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
+    return RippleCard(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(8.0),
       ),
-      child: UserRow(
+      onTap: () => launch(user['url']),
+      child: UserInfoRow(
         avatarUrl: user['avatarUrl'],
         login: user['login'],
         name: user['name'],
@@ -29,8 +29,38 @@ class UserCard extends StatelessWidget {
   }
 }
 
-class UserRow extends StatefulWidget {
-  const UserRow({
+class RippleCard extends StatelessWidget {
+  const RippleCard({
+    Key key,
+    this.shape,
+    this.onTap,
+    this.child,
+  }) : super(key: key);
+
+  final ShapeBorder shape;
+  final VoidCallback onTap;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Material(
+        color: context.isDarkTheme ? Colors.grey[800] : Colors.white,
+        shape: shape,
+        elevation: 2.0,
+        child: InkWell(
+          customBorder: shape,
+          onTap: onTap,
+          child: child,
+        ),
+      ),
+    );
+  }
+}
+
+class UserInfoRow extends StatefulWidget {
+  const UserInfoRow({
     Key key,
     @required this.avatarUrl,
     @required this.login,
@@ -49,14 +79,14 @@ class UserRow extends StatefulWidget {
   final String profileUrl;
 
   @override
-  _UserRowState createState() => _UserRowState();
+  _UserInfoRowState createState() => _UserInfoRowState();
 }
 
-class _UserRowState extends State<UserRow> {
+class _UserInfoRowState extends State<UserInfoRow> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(12.0),
       child: Row(
         children: [
           CircleAvatar(

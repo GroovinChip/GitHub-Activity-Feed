@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/services/gh_gql_query_service.dart';
-import 'package:github_activity_feed/utils/prettyJson.dart';
 import 'package:github_activity_feed/widgets/user_card.dart';
 import 'package:provider/provider.dart';
 
@@ -47,8 +46,8 @@ class _ViewerFollowingListState extends State<ViewerFollowingList> {
           return Scrollbar(
             child: ListView.builder(
               itemCount: viewerFollowing.length,
+              padding: EdgeInsets.only(left: 8.0, right: 8.0),
               itemBuilder: (context, index) {
-                //printPrettyJson(viewerFollowing[index]);
                 return UserCard(
                   user: viewerFollowing[index],
                 );

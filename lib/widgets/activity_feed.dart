@@ -44,6 +44,7 @@ class ActivityFeed extends StatelessWidget {
           /// build activity feed
           return ListView.builder(
             itemCount: activityFeed.length,
+            padding: EdgeInsets.only(left: 8.0, right: 8.0),
             itemBuilder: (BuildContext context, int index) {
               switch (activityFeed[index]['__typename']) {
                 case 'Issue':
