@@ -3,7 +3,7 @@
 A Flutter application for viewing a rich feed of GitHub activity.
 
 ## Project status:
-**Public Alpha**: Version 0.2.0
+**Public Alpha**: Version 0.2.1
 **Supported platforms**: Android
 
 ### Implemented Features:
