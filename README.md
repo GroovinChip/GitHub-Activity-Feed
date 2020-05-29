@@ -13,6 +13,7 @@ in your browser or another GitHub app.
 - Send direct feedback to the developer within the app
 
 Roadmap 
+- [ ] [ThemeMode switcher](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/8)
 - [ ] [Sort repository lists](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/51)
 - [ ] [Actionable markdown](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/48)
 - [ ] [Device notifications](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/40)
