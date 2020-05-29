@@ -3,18 +3,19 @@
 A Flutter application for viewing a rich feed of GitHub activity.
 
 ## Project status:
-**Public Alpha**: Version 0.2.1
+**Public Beta**: Version 0.2.2
 
 **Supported platforms**: Android
 
 ### Implemented Features:
 - View the activity for all users you follow in one place. Tapping on an activity card or a user will
 open that item in the browser (or another github application installed on your device).
+- Follow/unfollow users
 - Search for users
 - Send direct feedback to the developer within the app
 
 ### General Roadmap:
-- [ ] Follow/unfollow users
+- [x] Follow/unfollow users
 - [ ] [ThemeMode switcher](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/8)
 - [ ] [Discovery service](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/56)
 - [ ] Paginated activity feed ([#57](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/57) , [#58](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/58))
