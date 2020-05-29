@@ -27,10 +27,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with ProvidedState {
   int _currentIndex = 0;
-  final List<Widget> titles = [
-    Text('Activity Feed'),
-    Text('Users You Follow'),
-  ];
+  final List<Widget> titles = [Text('Activity Feed'), Text('You Follow'), Text('Discover More')];
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +72,9 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
         children: [
           ActivityFeed(),
           ViewerFollowingList(),
+          Center(
+            child: Text('Discovery Service'),
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -90,6 +90,10 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
           BottomNavigationBarItem(
             icon: Icon(Icons.people_outline),
             title: Text('Following'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(MdiIcons.featureSearchOutline),
+            title: Text('Discover'),
           ),
         ],
       ),
