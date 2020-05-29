@@ -174,9 +174,6 @@ class GhGraphQLService {
             user: viewer {
               following(last: 10) {
                 nodes {
-                  login
-                  name
-                  avatarUrl
                   issues(last: 10) {
                     nodes {
                       __typename
@@ -247,6 +244,26 @@ class GhGraphQLService {
                       repository {
                         nameWithOwner
                         description
+                        url
+                      }
+                    }
+                  }
+                  starredRepositories(last: 10) {
+                    edges {
+                      createdAt: starredAt
+                      __typename
+                      node {
+                        __typename
+                        id
+                        databaseId
+                        nameWithOwner
+                        description
+                        forkCount
+                        isFork
+                        stargazers {
+                          totalCount
+                        }
+                        updatedAt
                         url
                       }
                     }

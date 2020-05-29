@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:github_activity_feed/utils/prettyJson.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -23,6 +24,7 @@ class PullRequestCard extends StatelessWidget {
         ),
         child: InkWell(
           onTap: () => launch(pullRequest['url']),
+          onLongPress: () => printPrettyJson((pullRequest)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -85,7 +87,7 @@ class PullRequestCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                 child: Text(
-                  pullRequest['bodyText'] ?? 'No description',
+                  pullRequest['bodyText'] == '' ? 'No description' : pullRequest['bodyText'],
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontSize: 14),

@@ -4,6 +4,7 @@ import 'package:github_activity_feed/widgets/feedback_on_error.dart';
 import 'package:github_activity_feed/widgets/issue_card.dart';
 import 'package:github_activity_feed/widgets/issue_comment_card.dart';
 import 'package:github_activity_feed/widgets/pull_request_card.dart';
+import 'package:github_activity_feed/widgets/star_card.dart';
 import 'package:provider/provider.dart';
 
 class ActivityFeed extends StatelessWidget {
@@ -25,6 +26,8 @@ class ActivityFeed extends StatelessWidget {
           List<dynamic> issues = [];
           List<dynamic> issueComments = [];
           List<dynamic> pullRequests = [];
+          List<dynamic> stars = [];
+          // todo: turn into Map so that we get the name of the user who starred. Then turn back into list.
           List<dynamic> activityFeed = [];
 
           /// populate lists
@@ -32,6 +35,7 @@ class ActivityFeed extends StatelessWidget {
             issues += users[uIndex]['issues']['nodes'];
             issueComments += users[uIndex]['issueComments']['nodes'];
             pullRequests += users[uIndex]['pullRequests']['nodes'];
+            stars += users[uIndex]['starredRepositories']['edges'];
           }
 
           /// populate master list and sort by date/time
@@ -39,6 +43,7 @@ class ActivityFeed extends StatelessWidget {
             ..addAll(issues)
             ..addAll(issueComments)
             ..addAll(pullRequests)
+            ..addAll(stars)
             ..sort((e1, e2) => e2['createdAt'].compareTo(e1['createdAt']));
 
           /// build activity feed
@@ -54,6 +59,10 @@ class ActivityFeed extends StatelessWidget {
                     return IssueCommentCard(comment: activityFeed[index]);
                   case 'PullRequest':
                     return PullRequestCard(pullRequest: activityFeed[index]);
+                  case 'StarredRepositoryEdge':
+                    return StarCard(
+                      star: activityFeed[index],
+                    );
                   default:
                     return Container();
                 }
