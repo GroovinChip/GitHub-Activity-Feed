@@ -18,84 +18,87 @@ class UserCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
+      child: UserRow(
+        avatarUrl: user['avatarUrl'],
+        login: user['login'],
+        name: user['name'],
+        viewerIsFollowing: user['viewerIsFollowing'],
+        profileUrl: user['url'],
+      ),
+    );
+  }
+}
+
+class UserRow extends StatefulWidget {
+  const UserRow({
+    Key key,
+    @required this.avatarUrl,
+    @required this.login,
+    this.name,
+    @required this.viewerIsFollowing,
+    @required this.profileUrl,
+  })  : assert(avatarUrl != null),
+        assert(login != null),
+        assert(viewerIsFollowing != null),
+        super(key: key);
+
+  final String avatarUrl;
+  final String login;
+  final String name;
+  final bool viewerIsFollowing;
+  final String profileUrl;
+
+  @override
+  _UserRowState createState() => _UserRowState();
+}
+
+class _UserRowState extends State<UserRow> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
       child: Row(
         children: [
-          Column(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(14),
-                child: Image.network(
-                  user['avatarUrl'],
-                  width: 50,
-                  height: 50,
-                ),
-              ),
-            ],
+          CircleAvatar(
+            backgroundImage: NetworkImage(widget.avatarUrl),
           ),
           SizedBox(width: 8),
           Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 16),
-              Row(
-                children: [
-                  Icon(Icons.person_outline, size: 16),
-                  SizedBox(width: 4),
-                  Text('${user['login']}${user['name'] != null ? ' (${user['name']})' : ''}'),
-                ],
-              ),
-              Row(
-                children: [
-                  Icon(Icons.access_time, size: 16),
-                  SizedBox(width: 4),
-                  Text('${user['createdAt'] != null ? 'joined GitHub ${timeago.format(DateTime.parse(user['createdAt']), locale: 'en_short')} ago' : ''}'),
-                ],
-              ),
-              if (user['email'] != '')
-                Row(
-                  children: [
-                    Icon(Icons.mail_outline, size: 16),
-                    SizedBox(width: 4),
-                    Text(user['email']),
-                  ],
+            children: <Widget>[
+              Text(
+                widget.login,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
                 ),
-              SizedBox(height: 16),
+              ),
+              Text(widget.name ?? widget.login),
             ],
+          ),
+          Spacer(),
+          SizedBox(
+            height: 45,
+            width: 45,
+            child: Material(
+              color: Theme.of(context).accentColor,
+              shape: const CircleBorder(),
+              child: InkWell(
+                customBorder: const CircleBorder(),
+                onTap: () {},
+                child: Center(
+                  child: Icon(
+                    widget.viewerIsFollowing
+                        ? MdiIcons.accountMinusOutline
+                        : MdiIcons.accountPlusOutline,
+                    size: 18,
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
       ),
-      /*child: ListTile(
-        leading: ClipRRect(
-          borderRadius: BorderRadius.circular(14),
-          child: Image.network(
-            user['avatarUrl'],
-            width: 50,
-            height: 50,
-          ),
-        ),
-        title: Text(
-          user['login'],
-          style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
-        ),
-        subtitle: user['name'] != null ? Text(user['name']) : null,
-        trailing: RaisedButton.icon(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          color: Theme.of(context).primaryColor,
-          icon: Icon(
-            user['viewerIsFollowing'] ? MdiIcons.accountMinusOutline : MdiIcons.accountPlusOutline,
-            color: Theme.of(context).colorScheme.onPrimary,
-          ),
-          label: Text(
-            user['viewerIsFollowing'] ? 'Unfollow' : 'Follow',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onPrimary,
-            ),
-          ),
-          onPressed: () {},
-        ),
-        onTap: () => launch(user['url']),
-      ),*/
     );
   }
 }

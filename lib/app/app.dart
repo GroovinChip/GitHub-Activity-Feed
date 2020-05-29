@@ -89,6 +89,9 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
             textTheme: GoogleFonts.interTextTheme(
               ThemeData.light().textTheme,
             ),
+            appBarTheme: AppBarTheme(
+              color: Color(0xff2962FF),
+            ),
             bottomNavigationBarTheme: BottomNavigationBarThemeData(
               selectedItemColor: context.colorScheme.primary,
               unselectedItemColor: context.colorScheme.onSurface,
@@ -111,7 +114,7 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
               ThemeData.dark().textTheme,
             ),
             appBarTheme: AppBarTheme(
-              color: ThemeData.dark().primaryColorDark,
+              color: Colors.black,
             ),
             bottomNavigationBarTheme: BottomNavigationBarThemeData(
               selectedItemColor: context.colorScheme.primary,

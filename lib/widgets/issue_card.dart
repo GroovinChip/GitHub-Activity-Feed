@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:github_activity_feed/screens/user_overview.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-class IssueCommentCard extends StatelessWidget {
-  const IssueCommentCard({
+
+class IssueCard extends StatelessWidget {
+  const IssueCard({
     Key key,
-    @required this.comment,
+    @required this.issue,
   }) : super(key: key);
 
-  final dynamic comment;
+  final dynamic issue;
 
   @override
   Widget build(BuildContext context) {
@@ -23,20 +23,17 @@ class IssueCommentCard extends StatelessWidget {
           ListTile(
             /// user avatar
             leading: GestureDetector(
-              onTap: () => UserOverview(
-                login: comment['author']['login'],
-                isViewer: comment['author']['isViewer'],
-              ),
+              onTap: () {},
               child: CircleAvatar(
                 backgroundImage: NetworkImage(
-                  comment['author']['avatarUrl'],
+                  issue['author']['avatarUrl'],
                 ),
               ),
             ),
 
             /// user with action
             title: Text(
-              '${comment['author']['login']} commented on issue',
+              '${issue['author']['login']} opened issue',
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onBackground,
                 fontWeight: FontWeight.bold,
@@ -49,18 +46,18 @@ class IssueCommentCard extends StatelessWidget {
               text: TextSpan(
                 children: <TextSpan>[
                   TextSpan(
-                    text: '${comment['issue']['repository']['nameWithOwner']} ',
+                    text: '${issue['repository']['nameWithOwner']} ',
                   ),
 
                   /// this is here for optional styling
-                  TextSpan(text: '#${comment['issue']['number']}'),
+                  TextSpan(text: '#${issue['number']}'),
                 ],
               ),
             ),
 
             /// fuzzy timestamp
             trailing: Text(timeago
-                .format(DateTime.parse(comment['createdAt']), locale: 'en_short')
+                .format(DateTime.parse(issue['createdAt']), locale: 'en_short')
                 .replaceAll(' ', '')),
           ),
 
@@ -68,7 +65,7 @@ class IssueCommentCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
             child: Text(
-              comment['bodyText'],
+              issue['bodyText'] ?? 'No description',
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(fontSize: 14),

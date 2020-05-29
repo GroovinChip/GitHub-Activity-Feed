@@ -18,10 +18,13 @@ class SearchScreen extends SearchDelegate {
 
   @override
   ThemeData appBarTheme(BuildContext context) {
-    assert(context != null);
     final ThemeData theme = Theme.of(context);
-    assert(theme != null);
-    return theme;
+    return theme.copyWith(
+      primaryColor: theme.appBarTheme.color,
+      primaryIconTheme: theme.appBarTheme.iconTheme,
+      primaryColorBrightness: theme.appBarTheme.brightness,
+      primaryTextTheme: theme.appBarTheme.textTheme,
+    );
   }
 
   @override
@@ -81,7 +84,7 @@ class SearchScreen extends SearchDelegate {
             itemCount: users.length,
             itemBuilder: (BuildContext context, int index) {
               return UserCard(
-                user: users[index],
+                user: users[index]['node'],
               );
             },
           );
