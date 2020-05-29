@@ -2,15 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/widgets/log_out_confirm_dialog.dart';
 import 'package:groovin_widgets/modal_drawer_handle.dart';
+import 'package:package_info/package_info.dart';
 import 'package:wiredash/wiredash.dart';
 
 class MenuBottomSheetContent extends StatefulWidget {
-
   @override
   _MenuBottomSheetContentState createState() => _MenuBottomSheetContentState();
 }
 
 class _MenuBottomSheetContentState extends State<MenuBottomSheetContent> with ProvidedState {
+  PackageInfo _packageInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    getPackageInfo();
+  }
+
+  void getPackageInfo() {
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      setState(() => _packageInfo = packageInfo);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -43,6 +57,9 @@ class _MenuBottomSheetContentState extends State<MenuBottomSheetContent> with Pr
             Navigator.pop(context);
             Wiredash.of(context).show();
           },
+        ),
+        ListTile(
+          title: Text('Version ${_packageInfo?.version}'),
         ),
       ],
     );
