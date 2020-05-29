@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/app/provided.dart';
+import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
-import 'file:///C:/Users/groov/Flutter_Projects/github_activity_feed/lib/utils/extensions.dart';
 
 class LoginPage extends StatefulWidget {
   static const routeName = '/login';
