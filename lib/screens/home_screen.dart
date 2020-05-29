@@ -1,9 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/search_screen.dart';
-import 'package:github_activity_feed/screens/user_overview.dart';
 import 'package:github_activity_feed/widgets/activity_feed.dart';
 import 'package:github_activity_feed/widgets/following_users.dart';
+import 'package:github_activity_feed/widgets/menu_bottom_sheet_content.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -42,16 +43,13 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
               backgroundImage: NetworkImage(user.avatarUrl),
             ),
           ),
-          onTap: () {
-            return Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => UserOverview(
-                  login: user.login,
-                  isViewer: true,
-                ),
-              ),
-            );
-          },
+          onTap: () => showModalBottomSheet(
+            context: context,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            builder: (_) => MenuBottomSheetContent(),
+          ),
         ),
         title: DefaultTextStyle(
           style: TextStyle(
