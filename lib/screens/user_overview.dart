@@ -45,70 +45,71 @@ class _UserOverviewState extends State<UserOverview> with ProvidedState {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder<dynamic>(
-          future: _user,
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (!snapshot.hasData && snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (snapshot.hasError) {
-              return FeedbackOnError(message: snapshot.error.toString());
-            } else {
-              return CustomScrollView(
-                slivers: [
-                  SliverAppBar(
-                    automaticallyImplyLeading: false,
-                    titleSpacing: 8,
-                    title: Row(
-                      children: [
-                        AvatarBackButton(
-                          avatar: snapshot.data['user']['avatarUrl'],
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                        SizedBox(width: 16),
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+        future: _user,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (!snapshot.hasData && snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return FeedbackOnError(message: snapshot.error.toString());
+          } else {
+            return CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  automaticallyImplyLeading: false,
+                  titleSpacing: 8,
+                  title: Row(
+                    children: [
+                      AvatarBackButton(
+                        avatar: snapshot.data['user']['avatarUrl'],
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      SizedBox(width: 16),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            snapshot.data['user']['login'],
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          if (snapshot.data['user']['name'] != null)
                             Text(
-                              snapshot.data['user']['login'],
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              snapshot.data['user']['name'],
+                              style: Theme.of(context).textTheme.bodyText1,
                             ),
-                            if (snapshot.data['user']['name'] != null)
-                              Text(
-                                snapshot.data['user']['name'],
-                                style: Theme.of(context).textTheme.bodyText1,
-                              ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    actions: [
-                      ViewInBrowserButton(
-                          url: 'https://github.com/${snapshot.data['user']['login']}'),
-                      if (widget.isViewer)
-                        IconButton(
-                          icon: Icon(
-                            MdiIcons.cogOutline,
-                            color: context.colorScheme.secondary,
-                          ),
-                          onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => SettingsScreen()),
-                          ),
-                        ),
+                        ],
+                      ),
                     ],
                   ),
-                  SliverList(
-                    delegate: SliverChildListDelegate([
-                      UserProfile(
-                        currentUser: snapshot.data['user'],
+                  actions: [
+                    ViewInBrowserButton(
+                        url: 'https://github.com/${snapshot.data['user']['login']}'),
+                    if (widget.isViewer)
+                      IconButton(
+                        icon: Icon(
+                          MdiIcons.cogOutline,
+                          color: context.colorScheme.secondary,
+                        ),
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => SettingsScreen()),
+                        ),
                       ),
-                    ]),
-                  )
-                ],
-              );
-            }
-          }),
+                  ],
+                ),
+                SliverList(
+                  delegate: SliverChildListDelegate([
+                    UserProfile(
+                      currentUser: snapshot.data['user'],
+                    ),
+                  ]),
+                )
+              ],
+            );
+          }
+        },
+      ),
     );
   }
 }

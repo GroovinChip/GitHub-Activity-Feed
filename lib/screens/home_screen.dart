@@ -26,6 +26,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with ProvidedState {
   int _currentIndex = 0;
+  final List<Widget> titles = [
+    Text('Activity Feed'),
+    Text('Users You Follow'),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +53,12 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
             );
           },
         ),
-        title: Text(
-          'Activity Feed',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: DefaultTextStyle(
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+          child: titles[_currentIndex],
         ),
         actions: [
           IconButton(
