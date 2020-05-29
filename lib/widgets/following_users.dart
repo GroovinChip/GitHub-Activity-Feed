@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:github_activity_feed/data/following_users.dart';
 import 'package:github_activity_feed/services/gh_gql_query_service.dart';
 import 'package:github_activity_feed/widgets/user_card.dart';
 import 'package:provider/provider.dart';
@@ -42,14 +43,19 @@ class _ViewerFollowingListState extends State<ViewerFollowingList> {
         } else if (snapshot.data.isEmpty && widget.emptyBuilder != null) {
           return widget.emptyBuilder(context);
         } else {
-          List<dynamic> viewerFollowing = snapshot.data['user']['following']['users'];
+          FollowingUsers viewerFollowing = FollowingUsers.fromJson(snapshot.data['user']);
           return Scrollbar(
             child: ListView.builder(
-              itemCount: viewerFollowing.length,
+              itemCount: viewerFollowing.following.users.length,
               padding: const EdgeInsets.all(8.0),
               itemBuilder: (context, index) {
+                final FollowingUser user = viewerFollowing.following.users[index];
                 return UserCard(
-                  user: viewerFollowing[index],
+                  avatarUrl: user.avatarUrl,
+                  id: user.id.toString(),
+                  login: user.login,
+                  name: user.name,
+                  url: user.url,
                 );
               },
             ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:github_activity_feed/data/viewer_following.dart';
 import 'package:github_activity_feed/services/gh_gql_query_service.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/widgets/report_bug_button.dart';
@@ -10,10 +11,18 @@ import 'package:url_launcher/url_launcher.dart';
 class UserCard extends StatelessWidget {
   const UserCard({
     Key key,
-    @required this.user,
+    @required this.avatarUrl,
+    @required this.id,
+    @required this.login,
+    @required this.name,
+    @required this.url,
   }) : super(key: key);
 
-  final dynamic user;
+  final String avatarUrl;
+  final String id;
+  final String login;
+  final String name;
+  final String url;
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +30,13 @@ class UserCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
-      onTap: () => launch(user['url']),
+      onTap: () => launch(url),
       child: UserInfoRow(
-        id: user['id'],
-        avatarUrl: user['avatarUrl'],
-        login: user['login'],
-        name: user['name'],
-        profileUrl: user['url'],
+        id: id,
+        avatarUrl: avatarUrl,
+        login: login,
+        name: name,
+        profileUrl: url,
       ),
     );
   }
@@ -119,36 +128,49 @@ class _UserInfoRowState extends State<UserInfoRow> {
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasError) {
                 return ReportBugButton();
-              } else {
+              } else if (!snapshot.hasData) {
                 return SizedBox(
                   height: 45,
                   width: 45,
                   child: Material(
                     color: Theme.of(context).accentColor,
                     shape: const CircleBorder(),
-                    child: !snapshot.hasData
-                        ? Center(
-                            child: CircularProgressIndicator(),
-                          )
-                        : InkWell(
-                            customBorder: const CircleBorder(),
-                            onTap: () {
-                              if (snapshot.data['user']['viewerIsFollowing'] == true) {
-                                ghGraphQLService.unfollowUser(widget.id);
-                                SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {}));
-                              } else {
-                                ghGraphQLService.followUser(widget.id);
-                                SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {}));
-                              }
-                            },
-                            child: Center(
-                              child: Icon(
-                                snapshot.data['user']['viewerIsFollowing'] ? MdiIcons.accountMinusOutline : MdiIcons.accountPlusOutline,
-                                size: 18,
-                                color: context.colorScheme.onSecondary,
-                              ),
-                            ),
-                          ),
+                    child: Center(
+                      child: Icon(
+                        Icons.person_outline,
+                        size: 18,
+                        color: context.colorScheme.onSecondary,
+                      ),
+                    ),
+                  ),
+                );
+              } else {
+                ViewerFollowing viewerFollowing = ViewerFollowing.fromJson(snapshot.data['user']);
+                return SizedBox(
+                  height: 45,
+                  width: 45,
+                  child: Material(
+                    color: Theme.of(context).accentColor,
+                    shape: const CircleBorder(),
+                    child: InkWell(
+                      customBorder: const CircleBorder(),
+                      onTap: () {
+                        if (viewerFollowing.viewerIsFollowing == true) {
+                          ghGraphQLService.unfollowUser(widget.id);
+                          SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {}));
+                        } else {
+                          ghGraphQLService.followUser(widget.id);
+                          SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {}));
+                        }
+                      },
+                      child: Center(
+                        child: Icon(
+                          viewerFollowing.viewerIsFollowing ? MdiIcons.accountMinusOutline : MdiIcons.accountPlusOutline,
+                          size: 18,
+                          color: context.colorScheme.onSecondary,
+                        ),
+                      ),
+                    ),
                   ),
                 );
               }

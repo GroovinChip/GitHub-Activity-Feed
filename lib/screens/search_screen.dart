@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:github/github.dart';
+import 'package:github/github.dart' hide SearchResults;
+import 'package:github_activity_feed/data/search_results.dart';
 import 'package:github_activity_feed/services/gh_gql_query_service.dart';
 import 'package:github_activity_feed/widgets/feedback_on_error.dart';
 import 'package:github_activity_feed/widgets/user_card.dart';
@@ -11,7 +12,7 @@ class SearchScreen extends SearchDelegate {
   });
 
   final GitHub gitHub;
-  List<dynamic> users = [];
+  SearchResults searchResults;
 
   @override
   String get searchFieldLabel => 'Search users';
@@ -34,7 +35,7 @@ class SearchScreen extends SearchDelegate {
         icon: Icon(Icons.clear),
         onPressed: () {
           query = '';
-          users.clear();
+          searchResults.edges.clear();
         },
       ),
     ];
@@ -48,10 +49,14 @@ class SearchScreen extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     return ListView.builder(
-      itemCount: users.length,
+      itemCount: searchResults.edges.length,
       itemBuilder: (BuildContext context, int index) {
         return UserCard(
-          user: users[index],
+          avatarUrl: searchResults.edges[index].node.avatarUrl,
+          id: searchResults.edges[index].node.id,
+          login: searchResults.edges[index].node.login,
+          name: searchResults.edges[index].node.name,
+          url: searchResults.edges[index].node.url,
         );
       },
     );
@@ -79,12 +84,16 @@ class SearchScreen extends SearchDelegate {
           );
         } else {
           /// results
-          users = snapshot.data['search']['edges'];
+          searchResults = SearchResults.fromJson(snapshot.data['search']);
           return ListView.builder(
-            itemCount: users.length,
+            itemCount: searchResults.edges.length,
             itemBuilder: (BuildContext context, int index) {
               return UserCard(
-                user: users[index]['node'],
+                avatarUrl: searchResults.edges[index].node.avatarUrl,
+                id: searchResults.edges[index].node.id,
+                login: searchResults.edges[index].node.login,
+                name: searchResults.edges[index].node.name,
+                url: searchResults.edges[index].node.url,
               );
             },
           );
