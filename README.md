@@ -3,9 +3,11 @@
 A Flutter application for viewing a rich feed of GitHub activity.
 
 ## Project status:
-**Public Beta**: Version 0.2.2
+**Public Preview**: Version 0.2.2
 
 **Supported platforms**: Android
+
+Please note that apk's posted to [releases](https://github.com/GroovinChip/GitHub-Activity-Feed/releases) are not signed during the public preview phase.
 
 ### Implemented Features:
 - View the activity for all users you follow in one place. Tapping on an activity card or a user will
