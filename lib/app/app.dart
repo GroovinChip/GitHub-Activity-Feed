@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/keys.dart';
-import 'package:github_activity_feed/screens/login_page.dart';
 import 'package:github_activity_feed/screens/home_screen.dart';
+import 'package:github_activity_feed/screens/login_page.dart';
 import 'package:github_activity_feed/services/auth_service.dart';
-import 'file:///C:/Users/groov/Flutter_Projects/github_activity_feed/lib/utils/extensions.dart';
 import 'package:github_activity_feed/services/gh_gql_query_service.dart';
 import 'package:github_activity_feed/services/github_service.dart';
+import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
@@ -123,9 +123,7 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
           themeMode: ThemeMode.system,
-          initialRoute: widget.githubService.currentUser.value == null
-              ? LoginPage.routeName
-              : HomeScreen.routeName,
+          initialRoute: widget.githubService.currentUser.value == null ? LoginPage.routeName : HomeScreen.routeName,
           onGenerateInitialRoutes: (String initialRoute) => [
             _onGenerateRoute(RouteSettings(name: initialRoute)),
           ],
