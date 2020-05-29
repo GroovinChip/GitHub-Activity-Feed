@@ -2,9 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/app/provided.dart';
-import 'package:github_activity_feed/screens/settings_screen.dart';
-import 'file:///C:/Users/groov/Flutter_Projects/github_activity_feed/lib/utils/extensions.dart';
 import 'package:github_activity_feed/services/gh_gql_query_service.dart';
+import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/widgets/feedback_on_error.dart';
 import 'package:github_activity_feed/widgets/user_profile.dart';
 import 'package:github_activity_feed/widgets/view_in_browser_button.dart';
@@ -85,17 +84,8 @@ class _UserOverviewState extends State<UserOverview> with ProvidedState {
                   ),
                   actions: [
                     ViewInBrowserButton(
-                        url: 'https://github.com/${snapshot.data['user']['login']}'),
-                    if (widget.isViewer)
-                      IconButton(
-                        icon: Icon(
-                          MdiIcons.cogOutline,
-                          color: context.colorScheme.secondary,
-                        ),
-                        onPressed: () => Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => SettingsScreen()),
-                        ),
-                      ),
+                      url: 'https://github.com/${snapshot.data['user']['login']}',
+                    ),
                   ],
                 ),
                 SliverList(
