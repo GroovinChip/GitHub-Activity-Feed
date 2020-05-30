@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/app/provided.dart';
+import 'package:github_activity_feed/state/prefs_bloc.dart';
 import 'package:github_activity_feed/widgets/log_out_confirm_dialog.dart';
 import 'package:groovin_widgets/modal_drawer_handle.dart';
 import 'package:package_info/package_info.dart';
+import 'package:provider/provider.dart';
 import 'package:wiredash/wiredash.dart';
 
 class MenuBottomSheetContent extends StatefulWidget {
@@ -12,11 +14,18 @@ class MenuBottomSheetContent extends StatefulWidget {
 
 class _MenuBottomSheetContentState extends State<MenuBottomSheetContent> with ProvidedState {
   PackageInfo _packageInfo;
+  PrefsBloc prefsbloc;
 
   @override
   void initState() {
     super.initState();
     getPackageInfo();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    prefsbloc = Provider.of<PrefsBloc>(context);
   }
 
   void getPackageInfo() {
@@ -49,6 +58,23 @@ class _MenuBottomSheetContentState extends State<MenuBottomSheetContent> with Pr
               ),
             ),
           ),
+        ),
+        StreamBuilder<bool>(
+          stream: prefsbloc.userCardOrTile,
+          initialData: prefsbloc.userCardOrTile.value,
+          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            return SwitchListTile(
+              value: snapshot.data,
+              onChanged: (bool) {
+                setState(() {
+                  prefsbloc.setUserCardPrefs(bool);
+                });
+              },
+              activeColor: Theme.of(context).accentColor,
+              title: Text(snapshot.data == true ? 'Switch to tiles' : 'Switch to cards'),
+              subtitle: Text(snapshot.data == true ? 'Show users as tiles instead of cards' : 'Show users as cards instead of tiles'),
+            );
+          },
         ),
         Divider(height: 0.0),
         ListTile(

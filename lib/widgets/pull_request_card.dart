@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/activity_feed_models.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
-import 'package:github_activity_feed/utils/prettyJson.dart';
+import 'package:github_activity_feed/utils/printers.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -19,7 +19,7 @@ class PullRequestCard extends StatelessWidget {
       padding: const EdgeInsets.all(4.0),
       child: Material(
         elevation: 2,
-        color: context.isDarkTheme ? Colors.grey[800] : Colors.white,
+        color: context.isDarkTheme ? Colors.grey[900] : Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
@@ -65,7 +65,9 @@ class PullRequestCard extends StatelessWidget {
                 ),
 
                 /// fuzzy timestamp
-                trailing: Text(timeago.format(DateTime.parse(pullRequest.createdAt), locale: 'en_short').replaceAll(' ', '')),
+                trailing: Text(timeago
+                    .format(DateTime.parse(pullRequest.createdAt), locale: 'en_short')
+                    .replaceAll(' ', '')),
               ),
 
               /// issue title

@@ -1,3 +1,5 @@
+import 'package:github_activity_feed/data/base_user.dart';
+
 class FollowingUsers {
   Following following;
 
@@ -42,19 +44,19 @@ class Following {
   }
 }
 
-class FollowingUser {
-  String id;
-  String login;
-  String url;
-  String avatarUrl;
-  String createdAt;
-  bool viewerIsFollowing;
-  String bio;
-  String location;
-  String name;
-  String email;
-  String company;
-  Status status;
+class FollowingUser extends BaseUser {
+  final String location;
+  final String company;
+  final Status status;
+  final String id;
+  final String login;
+  final String url;
+  final String avatarUrl;
+  final String createdAt;
+  final bool viewerIsFollowing;
+  final String bio;
+  final String name;
+  final String email;
 
   FollowingUser({
     this.id,
@@ -71,19 +73,21 @@ class FollowingUser {
     this.status,
   });
 
-  FollowingUser.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    login = json['login'];
-    url = json['url'];
-    avatarUrl = json['avatarUrl'];
-    createdAt = json['createdAt'];
-    viewerIsFollowing = json['viewerIsFollowing'];
-    bio = json['bio'];
-    location = json['location'];
-    name = json['name'];
-    email = json['email'];
-    company = json['company'];
-    status = json['status'] != null ? new Status.fromJson(json['status']) : null;
+  factory FollowingUser.fromJson(Map<String, dynamic> json) {
+    return FollowingUser(
+      id: json['id'],
+      login: json['login'],
+      url: json['url'],
+      avatarUrl: json['avatarUrl'],
+      createdAt: json['createdAt'],
+      viewerIsFollowing: json['viewerIsFollowing'],
+      bio: json['bio'],
+      location: json['location'],
+      name: json['name'],
+      email: json['email'],
+      company: json['company'],
+      status: json['status'] != null ? new Status.fromJson(json['status']) : null,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -102,25 +106,6 @@ class FollowingUser {
     if (this.status != null) {
       data['status'] = this.status.toJson();
     }
-    return data;
-  }
-}
-
-class Status {
-  String emoji;
-  String message;
-
-  Status({this.emoji, this.message});
-
-  Status.fromJson(Map<String, dynamic> json) {
-    emoji = json['emoji'];
-    message = json['message'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['emoji'] = this.emoji;
-    data['message'] = this.message;
     return data;
   }
 }
