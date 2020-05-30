@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:github_activity_feed/data/base_user.dart';
-import 'package:github_activity_feed/data/following_users.dart';
 import 'package:github_activity_feed/data/viewer_following.dart';
 import 'package:github_activity_feed/services/gh_gql_query_service.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
