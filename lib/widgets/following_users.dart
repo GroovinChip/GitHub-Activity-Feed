@@ -50,7 +50,7 @@ class _ViewerFollowingListState extends State<ViewerFollowingList> {
                 crossAxisCount: 2,
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
-                childAspectRatio: 0.8,
+                childAspectRatio: 1.1,
               ),
               itemCount: viewerFollowing.following.users.length,
               padding: EdgeInsets.all(8.0),
