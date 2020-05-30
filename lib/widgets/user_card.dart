@@ -49,17 +49,22 @@ class UserCard extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-              child: user.name != null
-                  ? Text(
-                      user.name,
-                      maxLines: 1,
-                    )
-                  : Text(
-                      '@${user.login}',
-                      maxLines: 1,
-                    ),
+            DefaultTextStyle(
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                child: user.name != null
+                    ? Text(
+                        user.name,
+                        maxLines: 1,
+                      )
+                    : Text(
+                        '@${user.login}',
+                        maxLines: 1,
+                      ),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
