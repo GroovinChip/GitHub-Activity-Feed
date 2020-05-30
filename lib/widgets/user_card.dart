@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/base_user.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
+import 'package:github_activity_feed/utils/printers.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// A card that represents a User, with more detail than [UserTile]
 class UserCard extends StatelessWidget {
   const UserCard({
     Key key,
@@ -21,6 +23,7 @@ class UserCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(8),
       child: InkWell(
         onTap: () => launch(user.url),
+        onLongPress: () => printFormattedBaseUser(user),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -30,7 +33,8 @@ class UserCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CircleAvatar(
-                    backgroundImage: NetworkImage(user.avatarUrl ?? 'https://avatars1.githubusercontent.com/u/5868834?s=400&v=4'), // hack
+                    backgroundImage: NetworkImage(user.avatarUrl ??
+                        'https://avatars1.githubusercontent.com/u/5868834?s=400&v=4'), // hack
                     backgroundColor: Colors.grey[200],
                   ),
                   if (user.viewerIsFollowing != null)
@@ -82,70 +86,6 @@ class UserCard extends StatelessWidget {
             // maybe something about contribution activity?
           ],
         ),
-        /*child: Column(
-          children: [
-            Expanded(
-              child: Ink(
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  image: DecorationImage(
-                    image: NetworkImage(avatarUrl),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                    icon: Icon(MdiIcons.accountPlusOutline),
-                    onPressed: () {},
-                  ),
-                ),
-              ),
-            ),
-            Ink(
-              decoration: BoxDecoration(
-                color: context.isDarkTheme ? Colors.grey[900] : Colors.grey[200],
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        name != null
-                            ? Text(
-                              name,
-                              maxLines: 1,
-                              style: TextStyle(
-                                //fontSize: 12,
-                              ),
-                            )
-                            : Text(
-                                '@$login',
-                                maxLines: 1,
-                                style: TextStyle(
-                                  //fontSize: 12,
-                                ),
-                              ),
-                        Text(
-                          name != null ? '@$login' : '',
-                          maxLines: 1,
-                          style: TextStyle(
-                            //fontSize: 10,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),*/
       ),
     );
   }

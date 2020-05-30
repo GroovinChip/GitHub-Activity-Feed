@@ -5,6 +5,7 @@ import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// A tile that represents a User, with less detail that [UserCard]
 class UserTile extends StatelessWidget {
   const UserTile({
     Key key,
