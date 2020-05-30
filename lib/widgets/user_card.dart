@@ -1,13 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:github_activity_feed/data/base_user.dart';
-import 'package:github_activity_feed/data/viewer_following.dart';
-import 'package:github_activity_feed/services/gh_gql_query_service.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
-import 'package:github_activity_feed/widgets/report_bug_button.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UserCard extends StatelessWidget {

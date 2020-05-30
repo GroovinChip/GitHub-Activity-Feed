@@ -4,14 +4,18 @@ import 'package:github_activity_feed/data/search_results.dart';
 import 'package:github_activity_feed/services/gh_gql_query_service.dart';
 import 'package:github_activity_feed/widgets/feedback_on_error.dart';
 import 'package:github_activity_feed/widgets/user_card.dart';
+import 'package:github_activity_feed/widgets/user_tile.dart';
 import 'package:provider/provider.dart';
 
 class SearchScreen extends SearchDelegate {
   SearchScreen({
     @required this.gitHub,
+    @required this.showCardsOrTiles,
   });
 
   final GitHub gitHub;
+  final bool showCardsOrTiles;
+
   SearchResults searchResults;
 
   @override
@@ -88,21 +92,33 @@ class SearchScreen extends SearchDelegate {
         } else {
           /// results
           searchResults = SearchResults.fromJson(snapshot.data['search']);
-          return GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 8,
-              mainAxisSpacing: 8,
-              childAspectRatio: 1.1,
-            ),
-            padding: EdgeInsets.all(8.0),
-            itemCount: searchResults.edges.length,
-            itemBuilder: (BuildContext context, int index) {
-              return UserCard(
-                user: searchResults.edges[index].node,
-              );
-            },
-          );
+          if (showCardsOrTiles) {
+            return GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+                childAspectRatio: 1.1,
+              ),
+              padding: EdgeInsets.all(8.0),
+              itemCount: searchResults.edges.length,
+              itemBuilder: (BuildContext context, int index) {
+                return UserCard(
+                  user: searchResults.edges[index].node,
+                );
+              },
+            );
+          } else {
+            return ListView.builder(
+              padding: EdgeInsets.all(8.0),
+              itemCount: searchResults.edges.length,
+              itemBuilder: (BuildContext context, int index) {
+                return UserTile(
+                  user: searchResults.edges[index].node,
+                );
+              },
+            );
+          }
         }
       },
     );

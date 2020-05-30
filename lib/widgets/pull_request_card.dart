@@ -19,7 +19,7 @@ class PullRequestCard extends StatelessWidget {
       padding: const EdgeInsets.all(4.0),
       child: Material(
         elevation: 2,
-        color: context.isDarkTheme ? Colors.grey[800] : Colors.white,
+        color: context.isDarkTheme ? Colors.grey[900] : Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),

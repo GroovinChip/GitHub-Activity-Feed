@@ -5,6 +5,7 @@ import 'package:github_activity_feed/screens/login_page.dart';
 import 'package:github_activity_feed/services/auth_service.dart';
 import 'package:github_activity_feed/services/gh_gql_query_service.dart';
 import 'package:github_activity_feed/services/github_service.dart';
+import 'package:github_activity_feed/state/prefs_bloc.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -16,10 +17,12 @@ class GitHubActivityFeedApp extends StatefulWidget {
     Key key,
     @required this.authService,
     @required this.githubService,
+    @required this.prefsBloc,
   }) : super(key: key);
 
   final AuthService authService;
   final GitHubService githubService;
+  final PrefsBloc prefsBloc;
 
   @override
   _GitHubActivityFeedAppState createState() => _GitHubActivityFeedAppState();
@@ -62,6 +65,7 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
         Provider<GitHubService>.value(value: widget.githubService),
         ValueListenableProvider.value(value: widget.githubService.currentUser),
         Provider<GhGraphQLService>.value(value: ghQueryService),
+        Provider<PrefsBloc>.value(value: widget.prefsBloc),
       ],
       child: Wiredash(
         navigatorKey: _navigatorKey,
