@@ -45,7 +45,23 @@ class _ViewerFollowingListState extends State<ViewerFollowingList> {
         } else {
           FollowingUsers viewerFollowing = FollowingUsers.fromJson(snapshot.data['user']);
           return Scrollbar(
-            child: ListView.builder(
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+                childAspectRatio: 0.8,
+              ),
+              itemCount: viewerFollowing.following.users.length,
+              padding: EdgeInsets.all(8.0),
+              itemBuilder: (BuildContext context, int index) {
+                final FollowingUser user = viewerFollowing.following.users[index];
+                return UserCard(
+                  user: user,
+                );
+              },
+            ),
+            /*child: ListView.builder(
               itemCount: viewerFollowing.following.users.length,
               padding: const EdgeInsets.all(8.0),
               itemBuilder: (context, index) {
@@ -58,7 +74,7 @@ class _ViewerFollowingListState extends State<ViewerFollowingList> {
                   url: user.url,
                 );
               },
-            ),
+            ),*/
           );
         }
       },

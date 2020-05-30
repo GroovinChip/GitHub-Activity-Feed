@@ -48,15 +48,18 @@ class SearchScreen extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    return ListView.builder(
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+        childAspectRatio: 0.8,
+      ),
+      padding: EdgeInsets.all(8.0),
       itemCount: searchResults.edges.length,
       itemBuilder: (BuildContext context, int index) {
         return UserCard(
-          avatarUrl: searchResults.edges[index].node.avatarUrl,
-          id: searchResults.edges[index].node.id,
-          login: searchResults.edges[index].node.login,
-          name: searchResults.edges[index].node.name,
-          url: searchResults.edges[index].node.url,
+          user: searchResults.edges[index].node,
         );
       },
     );
@@ -85,15 +88,18 @@ class SearchScreen extends SearchDelegate {
         } else {
           /// results
           searchResults = SearchResults.fromJson(snapshot.data['search']);
-          return ListView.builder(
+          return GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+              childAspectRatio: 0.8,
+            ),
+            padding: EdgeInsets.all(8.0),
             itemCount: searchResults.edges.length,
             itemBuilder: (BuildContext context, int index) {
               return UserCard(
-                avatarUrl: searchResults.edges[index].node.avatarUrl,
-                id: searchResults.edges[index].node.id,
-                login: searchResults.edges[index].node.login,
-                name: searchResults.edges[index].node.name,
-                url: searchResults.edges[index].node.url,
+                user: searchResults.edges[index].node,
               );
             },
           );

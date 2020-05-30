@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
   int _currentIndex = 0;
   final List<Widget> titles = [
     Text('Activity Feed'),
-    Text('Users You Follow'),
+    Text('You Follow'),
   ];
 
   @override
