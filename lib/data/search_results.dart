@@ -1,23 +1,27 @@
 import 'base_user.dart';
 
+/// Generated using https://javiercbk.github.io/json_to_dart/
 class SearchResults {
   int userCount;
   List<SearchEdge> edges;
 
-  SearchResults({this.userCount, this.edges});
+  SearchResults({
+    this.userCount,
+    this.edges,
+  });
 
   SearchResults.fromJson(Map<String, dynamic> json) {
     userCount = json['userCount'];
     if (json['edges'] != null) {
-      edges = new List<SearchEdge>();
+      edges = List<SearchEdge>();
       json['edges'].forEach((v) {
-        edges.add(new SearchEdge.fromJson(v));
+        edges.add(SearchEdge.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['userCount'] = this.userCount;
     if (this.edges != null) {
       data['edges'] = this.edges.map((v) => v.toJson()).toList();
@@ -32,11 +36,11 @@ class SearchEdge {
   SearchEdge({this.node});
 
   SearchEdge.fromJson(Map<String, dynamic> json) {
-    node = json['node'] != null ? new UserSearchNode.fromJson(json['node']) : null;
+    node = json['node'] != null ? UserSearchNode.fromJson(json['node']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.node != null) {
       data['node'] = this.node.toJson();
     }
@@ -86,12 +90,12 @@ class UserSearchNode extends BaseUser {
       name: json['name'],
       email: json['email'],
       company: json['company'],
-      status: json['status'] != null ? new Status.fromJson(json['status']) : null,
+      status: json['status'] != null ? Status.fromJson(json['status']) : null,
     );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['login'] = this.login;
     data['url'] = this.url;
@@ -109,5 +113,3 @@ class UserSearchNode extends BaseUser {
     return data;
   }
 }
-
-

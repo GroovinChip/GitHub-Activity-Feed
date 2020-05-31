@@ -1,16 +1,17 @@
 import 'package:github_activity_feed/data/base_user.dart';
 
+/// Generated using https://javiercbk.github.io/json_to_dart/
 class FollowingUsers {
   Following following;
 
   FollowingUsers({this.following});
 
   FollowingUsers.fromJson(Map<String, dynamic> json) {
-    following = json['following'] != null ? new Following.fromJson(json['following']) : null;
+    following = json['following'] != null ? Following.fromJson(json['following']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.following != null) {
       data['following'] = this.following.toJson();
     }
@@ -22,20 +23,23 @@ class Following {
   int totalCount;
   List<FollowingUser> users;
 
-  Following({this.totalCount, this.users});
+  Following({
+    this.totalCount,
+    this.users,
+  });
 
   Following.fromJson(Map<String, dynamic> json) {
     totalCount = json['totalCount'];
     if (json['users'] != null) {
-      users = new List<FollowingUser>();
+      users = List<FollowingUser>();
       json['users'].forEach((v) {
-        users.add(new FollowingUser.fromJson(v));
+        users.add(FollowingUser.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['totalCount'] = this.totalCount;
     if (this.users != null) {
       data['users'] = this.users.map((v) => v.toJson()).toList();
@@ -86,12 +90,12 @@ class FollowingUser extends BaseUser {
       name: json['name'],
       email: json['email'],
       company: json['company'],
-      status: json['status'] != null ? new Status.fromJson(json['status']) : null,
+      status: json['status'] != null ? Status.fromJson(json['status']) : null,
     );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['login'] = this.login;
     data['url'] = this.url;
