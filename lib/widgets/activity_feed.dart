@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/activity_feed_models.dart';
+import 'package:github_activity_feed/data/gist.dart';
 import 'package:github_activity_feed/services/gh_gql_query_service.dart';
+import 'package:github_activity_feed/utils/printers.dart';
 import 'package:github_activity_feed/widgets/feedback_on_error.dart';
+import 'package:github_activity_feed/widgets/gist_card.dart';
 import 'package:github_activity_feed/widgets/issue_card.dart';
 import 'package:github_activity_feed/widgets/issue_comment_card.dart';
 import 'package:github_activity_feed/widgets/pull_request_card.dart';
@@ -24,6 +27,7 @@ class ActivityFeed extends StatelessWidget {
         } else {
           /// lists of data
           final Following feed = Following.fromJson(snapshot.data['user']['following']);
+          List<Gist> gists = [];
           List<Issue> issues = [];
           List<IssueComment> issueComments = [];
           List<PullRequest> pullRequests = [];
@@ -33,15 +37,17 @@ class ActivityFeed extends StatelessWidget {
           List<dynamic> activityFeed = [];
 
           /// populate lists
-          for (int uIndex = 0; uIndex < feed.user.length; uIndex++) {
-            issues += feed.user[uIndex].issues.issues;
-            issueComments += feed.user[uIndex].issueComments.issueComments;
-            pullRequests += feed.user[uIndex].pullRequests.pullRequests;
-            stars += feed.user[uIndex].starredRepositories.srEdges;
+          for (int uIndex = 0; uIndex < feed.userActivity.length; uIndex++) {
+            gists += feed.userActivity[uIndex].gists.gist;
+            issues += feed.userActivity[uIndex].issues.issues;
+            issueComments += feed.userActivity[uIndex].issueComments.issueComments;
+            pullRequests += feed.userActivity[uIndex].pullRequests.pullRequests;
+            stars += feed.userActivity[uIndex].starredRepositories.srEdges;
           }
 
           /// populate master list and sort by date/time
           activityFeed
+            ..addAll(gists)
             ..addAll(issues)
             ..addAll(issueComments)
             ..addAll(pullRequests)
@@ -55,6 +61,8 @@ class ActivityFeed extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               itemBuilder: (BuildContext context, int index) {
                 switch (activityFeed[index].sTypename) {
+                  case 'Gist':
+                    return GistCard(gist: activityFeed[index]);
                   case 'Issue':
                     return IssueCard(issue: activityFeed[index]);
                   case 'IssueComment':

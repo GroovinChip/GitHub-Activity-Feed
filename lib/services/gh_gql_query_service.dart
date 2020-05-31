@@ -184,6 +184,7 @@ class GhGraphQLService {
   }
 
   /// Get the main activity feed
+  /// todo: pagination
   Future<dynamic> activityFeed() async {
     final GQLResponse response = await client.query(
       query: r'''
@@ -191,6 +192,25 @@ class GhGraphQLService {
             user: viewer {
               following(last: 10) {
                 user: nodes {
+                  login
+                  avatarUrl
+                  url
+                  gists(last: 10, privacy: PUBLIC) {
+                    gist: nodes {
+                      __typename
+                      description
+                      createdAt
+                      files {
+                        name
+                      }
+                      owner {
+                        login
+                        avatarUrl
+                        url
+                      }
+                      url
+                    }
+                  }
                   issues(last: 10) {
                     issue: nodes {
                       __typename

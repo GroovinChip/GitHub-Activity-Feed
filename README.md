@@ -5,7 +5,7 @@ A Flutter application for viewing a rich feed of GitHub activity.
 [![Generic badge](https://badgen.net/badge/support/GitHub%20Spronsors/blue?icon=github())](https://github.com/sponsors/GroovinChip)
 
 ## Project status:
-**Public Preview**: Version 0.2.4
+**Public Preview**: Version 0.2.5
 
 **Supported platforms**: Android
 
@@ -25,7 +25,7 @@ open that item in the browser (or another github application installed on your d
 - [ ] Paginated activity feed ([#57](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/57) , [#58](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/58))
 - [ ] [Filter activity feed](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/51)
 - [ ] [Actionable markdown](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/48)
-- [ ] [Show gists created by a user in the activity feed](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/38)
+- [X] [Show gists created by a user in the activity feed](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/38)
 - [ ] [Pull to refresh for all feeds](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/21)
 
 For a complete list, please see [this project board](https://github.com/GroovinChip/GitHub-Activity-Feed/projects/3)

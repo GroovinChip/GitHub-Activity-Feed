@@ -1,43 +1,73 @@
-class Following {
-  List<UserActivity> user;
+import 'package:github_activity_feed/data/gist.dart';
 
-  Following({this.user});
+/// Generated using https://javiercbk.github.io/json_to_dart/
+
+class Following {
+  List<UserActivity> userActivity;
+
+  Following({this.userActivity});
 
   Following.fromJson(Map<String, dynamic> json) {
     if (json['user'] != null) {
-      user = new List<UserActivity>();
+      userActivity = List<UserActivity>();
       json['user'].forEach((v) {
-        user.add(new UserActivity.fromJson(v));
+        userActivity.add(UserActivity.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.user != null) {
-      data['user'] = this.user.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    if (this.userActivity != null) {
+      data['user'] = this.userActivity.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class UserActivity {
+  String userLogin;
+  String userAvatarUrl;
+  String userUrl;
+  Gists gists;
   Issues issues;
   IssueComments issueComments;
   PullRequests pullRequests;
   StarredRepositories starredRepositories;
 
-  UserActivity({this.issues, this.issueComments, this.pullRequests, this.starredRepositories});
+  UserActivity({
+    this.userLogin,
+    this.userAvatarUrl,
+    this.userUrl,
+    this.issues,
+    this.issueComments,
+    this.pullRequests,
+    this.starredRepositories,
+  });
 
   UserActivity.fromJson(Map<String, dynamic> json) {
-    issues = json['issues'] != null ? new Issues.fromJson(json['issues']) : null;
-    issueComments = json['issueComments'] != null ? new IssueComments.fromJson(json['issueComments']) : null;
-    pullRequests = json['pullRequests'] != null ? new PullRequests.fromJson(json['pullRequests']) : null;
-    starredRepositories = json['starredRepositories'] != null ? new StarredRepositories.fromJson(json['starredRepositories']) : null;
+    userLogin = json['login'];
+    userAvatarUrl = json['avatarUrl'];
+    userUrl = json['url'];
+    gists = json['gists'] != null ? new Gists.fromJson(json['gists']) : null;
+    issues = json['issues'] != null ? Issues.fromJson(json['issues']) : null;
+    issueComments =
+        json['issueComments'] != null ? IssueComments.fromJson(json['issueComments']) : null;
+    pullRequests =
+        json['pullRequests'] != null ? PullRequests.fromJson(json['pullRequests']) : null;
+    starredRepositories = json['starredRepositories'] != null
+        ? StarredRepositories.fromJson(json['starredRepositories'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['login'] = this.userLogin;
+    data['avatarUrl'] = this.userAvatarUrl;
+    data['url'] = this.userUrl;
+    if (this.gists != null) {
+      data['gists'] = this.gists.toJson();
+    }
     if (this.issues != null) {
       data['issues'] = this.issues.toJson();
     }
@@ -61,15 +91,15 @@ class Issues {
 
   Issues.fromJson(Map<String, dynamic> json) {
     if (json['issue'] != null) {
-      issues = new List<Issue>();
+      issues = List<Issue>();
       json['issue'].forEach((v) {
-        issues.add(new Issue.fromJson(v));
+        issues.add(Issue.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.issues != null) {
       data['issue'] = this.issues.map((v) => v.toJson()).toList();
     }
@@ -88,7 +118,17 @@ class Issue {
   Repository repository;
   String createdAt;
 
-  Issue({this.sTypename, this.databaseId, this.title, this.url, this.number, this.bodyText, this.author, this.repository, this.createdAt});
+  Issue({
+    this.sTypename,
+    this.databaseId,
+    this.title,
+    this.url,
+    this.number,
+    this.bodyText,
+    this.author,
+    this.repository,
+    this.createdAt,
+  });
 
   Issue.fromJson(Map<String, dynamic> json) {
     sTypename = json['__typename'];
@@ -97,13 +137,13 @@ class Issue {
     url = json['url'];
     number = json['number'];
     bodyText = json['bodyText'];
-    author = json['author'] != null ? new Author.fromJson(json['author']) : null;
-    repository = json['repository'] != null ? new Repository.fromJson(json['repository']) : null;
+    author = json['author'] != null ? Author.fromJson(json['author']) : null;
+    repository = json['repository'] != null ? Repository.fromJson(json['repository']) : null;
     createdAt = json['createdAt'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['__typename'] = this.sTypename;
     data['databaseId'] = this.databaseId;
     data['title'] = this.title;
@@ -126,7 +166,11 @@ class Author {
   String avatarUrl;
   String url;
 
-  Author({this.login, this.avatarUrl, this.url});
+  Author({
+    this.login,
+    this.avatarUrl,
+    this.url,
+  });
 
   Author.fromJson(Map<String, dynamic> json) {
     login = json['login'];
@@ -135,7 +179,7 @@ class Author {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['login'] = this.login;
     data['avatarUrl'] = this.avatarUrl;
     data['url'] = this.url;
@@ -148,7 +192,11 @@ class Repository {
   String description;
   String url;
 
-  Repository({this.nameWithOwner, this.description, this.url});
+  Repository({
+    this.nameWithOwner,
+    this.description,
+    this.url,
+  });
 
   Repository.fromJson(Map<String, dynamic> json) {
     nameWithOwner = json['nameWithOwner'];
@@ -157,7 +205,7 @@ class Repository {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['nameWithOwner'] = this.nameWithOwner;
     data['description'] = this.description;
     data['url'] = this.url;
@@ -172,15 +220,15 @@ class IssueComments {
 
   IssueComments.fromJson(Map<String, dynamic> json) {
     if (json['issueComment'] != null) {
-      issueComments = new List<IssueComment>();
+      issueComments = List<IssueComment>();
       json['issueComment'].forEach((v) {
-        issueComments.add(new IssueComment.fromJson(v));
+        issueComments.add(IssueComment.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.issueComments != null) {
       data['issueComment'] = this.issueComments.map((v) => v.toJson()).toList();
     }
@@ -197,7 +245,15 @@ class IssueComment {
   Author author;
   ParentIssue parentIssue;
 
-  IssueComment({this.sTypename, this.databaseId, this.bodyText, this.createdAt, this.url, this.author, this.parentIssue});
+  IssueComment({
+    this.sTypename,
+    this.databaseId,
+    this.bodyText,
+    this.createdAt,
+    this.url,
+    this.author,
+    this.parentIssue,
+  });
 
   IssueComment.fromJson(Map<String, dynamic> json) {
     sTypename = json['__typename'];
@@ -205,12 +261,12 @@ class IssueComment {
     bodyText = json['bodyText'];
     createdAt = json['createdAt'];
     url = json['url'];
-    author = json['author'] != null ? new Author.fromJson(json['author']) : null;
-    parentIssue = json['parentIssue'] != null ? new ParentIssue.fromJson(json['parentIssue']) : null;
+    author = json['author'] != null ? Author.fromJson(json['author']) : null;
+    parentIssue = json['parentIssue'] != null ? ParentIssue.fromJson(json['parentIssue']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['__typename'] = this.sTypename;
     data['databaseId'] = this.databaseId;
     data['bodyText'] = this.bodyText;
@@ -233,18 +289,24 @@ class ParentIssue {
   String id;
   int number;
 
-  ParentIssue({this.title, this.author, this.repository, this.id, this.number});
+  ParentIssue({
+    this.title,
+    this.author,
+    this.repository,
+    this.id,
+    this.number,
+  });
 
   ParentIssue.fromJson(Map<String, dynamic> json) {
     title = json['title'];
-    author = json['author'] != null ? new Author.fromJson(json['author']) : null;
-    repository = json['repository'] != null ? new Repository.fromJson(json['repository']) : null;
+    author = json['author'] != null ? Author.fromJson(json['author']) : null;
+    repository = json['repository'] != null ? Repository.fromJson(json['repository']) : null;
     id = json['id'];
     number = json['number'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['title'] = this.title;
     if (this.author != null) {
       data['author'] = this.author.toJson();
@@ -265,15 +327,15 @@ class PullRequests {
 
   PullRequests.fromJson(Map<String, dynamic> json) {
     if (json['pullRequest'] != null) {
-      pullRequests = new List<PullRequest>();
+      pullRequests = List<PullRequest>();
       json['pullRequest'].forEach((v) {
-        pullRequests.add(new PullRequest.fromJson(v));
+        pullRequests.add(PullRequest.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.pullRequests != null) {
       data['pullRequest'] = this.pullRequests.map((v) => v.toJson()).toList();
     }
@@ -295,19 +357,20 @@ class PullRequest {
   Author author;
   Repository repository;
 
-  PullRequest(
-      {this.sTypename,
-      this.databaseId,
-      this.title,
-      this.url,
-      this.number,
-      this.baseRefName,
-      this.headRefName,
-      this.bodyText,
-      this.createdAt,
-      this.changedFiles,
-      this.author,
-      this.repository});
+  PullRequest({
+    this.sTypename,
+    this.databaseId,
+    this.title,
+    this.url,
+    this.number,
+    this.baseRefName,
+    this.headRefName,
+    this.bodyText,
+    this.createdAt,
+    this.changedFiles,
+    this.author,
+    this.repository,
+  });
 
   PullRequest.fromJson(Map<String, dynamic> json) {
     sTypename = json['__typename'];
@@ -320,12 +383,12 @@ class PullRequest {
     bodyText = json['bodyText'];
     createdAt = json['createdAt'];
     changedFiles = json['changedFiles'];
-    author = json['author'] != null ? new Author.fromJson(json['author']) : null;
-    repository = json['repository'] != null ? new Repository.fromJson(json['repository']) : null;
+    author = json['author'] != null ? Author.fromJson(json['author']) : null;
+    repository = json['repository'] != null ? Repository.fromJson(json['repository']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['__typename'] = this.sTypename;
     data['databaseId'] = this.databaseId;
     data['title'] = this.title;
@@ -353,15 +416,15 @@ class StarredRepositories {
 
   StarredRepositories.fromJson(Map<String, dynamic> json) {
     if (json['srEdges'] != null) {
-      srEdges = new List<SrEdge>();
+      srEdges = List<SrEdge>();
       json['srEdges'].forEach((v) {
-        srEdges.add(new SrEdge.fromJson(v));
+        srEdges.add(SrEdge.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.srEdges != null) {
       data['srEdges'] = this.srEdges.map((v) => v.toJson()).toList();
     }
@@ -374,16 +437,20 @@ class SrEdge {
   String sTypename;
   Star star;
 
-  SrEdge({this.createdAt, this.sTypename, this.star});
+  SrEdge({
+    this.createdAt,
+    this.sTypename,
+    this.star,
+  });
 
   SrEdge.fromJson(Map<String, dynamic> json) {
     createdAt = json['createdAt'];
     sTypename = json['__typename'];
-    star = json['star'] != null ? new Star.fromJson(json['star']) : null;
+    star = json['star'] != null ? Star.fromJson(json['star']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['createdAt'] = this.createdAt;
     data['__typename'] = this.sTypename;
     if (this.star != null) {
@@ -405,8 +472,18 @@ class Star {
   String updatedAt;
   String url;
 
-  Star(
-      {this.sTypename, this.id, this.databaseId, this.nameWithOwner, this.description, this.forkCount, this.isFork, this.stargazers, this.updatedAt, this.url});
+  Star({
+    this.sTypename,
+    this.id,
+    this.databaseId,
+    this.nameWithOwner,
+    this.description,
+    this.forkCount,
+    this.isFork,
+    this.stargazers,
+    this.updatedAt,
+    this.url,
+  });
 
   Star.fromJson(Map<String, dynamic> json) {
     sTypename = json['__typename'];
@@ -416,13 +493,13 @@ class Star {
     description = json['description'];
     forkCount = json['forkCount'];
     isFork = json['isFork'];
-    stargazers = json['stargazers'] != null ? new Stargazers.fromJson(json['stargazers']) : null;
+    stargazers = json['stargazers'] != null ? Stargazers.fromJson(json['stargazers']) : null;
     updatedAt = json['updatedAt'];
     url = json['url'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['__typename'] = this.sTypename;
     data['id'] = this.id;
     data['databaseId'] = this.databaseId;
@@ -449,7 +526,7 @@ class Stargazers {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['totalCount'] = this.totalCount;
     return data;
   }
