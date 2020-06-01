@@ -26,7 +26,6 @@ class _ThemeSwitcherState extends State<ThemeSwitcher> {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      useMaterialBorderRadius: true,
       backgroundColor: Theme.of(context).canvasColor,
       title: Text('Change app theme'),
       children: [

@@ -95,7 +95,8 @@ class _MenuBottomSheetContentState extends State<MenuBottomSheetContent> with Pr
             return SwitchListTile(
               value: snapshot.data,
               onChanged: (bool) {
-                setState(() => prefsbloc.setCardOrTilePref(bool));
+                prefsbloc.setCardOrTilePref(bool);
+                setState(() {});
               },
               activeColor: Theme.of(context).accentColor,
               title: Text(snapshot.data == true ? 'Switch to tiles' : 'Switch to cards'),
