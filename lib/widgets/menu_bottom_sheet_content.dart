@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/state/prefs_bloc.dart';
 import 'package:github_activity_feed/widgets/log_out_confirm_dialog.dart';
+import 'package:github_activity_feed/widgets/theme_switcher.dart';
 import 'package:groovin_widgets/modal_drawer_handle.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
@@ -59,16 +60,42 @@ class _MenuBottomSheetContentState extends State<MenuBottomSheetContent> with Pr
             ),
           ),
         ),
+        StreamBuilder<ThemeMode>(
+          stream: prefsbloc.themeModeSubject,
+          initialData: prefsbloc.themeModeSubject.value,
+          builder: (BuildContext context, AsyncSnapshot<ThemeMode> snapshot) {
+            String currentThemeMode;
+            switch (snapshot.data) {
+              case ThemeMode.system:
+                currentThemeMode = 'System theme';
+                break;
+              case ThemeMode.light:
+                currentThemeMode = 'Light theme';
+                break;
+              case ThemeMode.dark:
+                currentThemeMode = 'Dark theme';
+                break;
+            }
+            return ListTile(
+              title: Text("Change app theme"),
+              subtitle: Text(currentThemeMode),
+              onTap: () => showDialog(
+                context: context,
+                builder: (_) => ThemeSwitcher(
+                  themeMode: snapshot.data,
+                ),
+              ),
+            );
+          },
+        ),
         StreamBuilder<bool>(
-          stream: prefsbloc.userCardOrTile,
-          initialData: prefsbloc.userCardOrTile.value,
+          stream: prefsbloc.cardOrTileSubject,
+          initialData: prefsbloc.cardOrTileSubject.value,
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
             return SwitchListTile(
               value: snapshot.data,
               onChanged: (bool) {
-                setState(() {
-                  prefsbloc.setUserCardPrefs(bool);
-                });
+                setState(() => prefsbloc.setCardOrTilePref(bool));
               },
               activeColor: Theme.of(context).accentColor,
               title: Text(snapshot.data == true ? 'Switch to tiles' : 'Switch to cards'),

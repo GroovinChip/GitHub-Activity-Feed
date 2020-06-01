@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,24 +14,38 @@ class PrefsBloc {
 
   Future<void> _init() async {
     preferences = await SharedPreferences.getInstance();
-    readUserCardPrefs();
+    readCardOrTilePref();
+    readThemeModePref();
   }
 
   SharedPreferences preferences;
 
-  final userCardOrTile = BehaviorSubject<bool>();
+  final cardOrTileSubject = BehaviorSubject<bool>();
+  final themeModeSubject = BehaviorSubject<ThemeMode>();
 
   void close() {
-    userCardOrTile.close();
+    cardOrTileSubject.close();
+    themeModeSubject.close();
   }
 
-  Future<void> readUserCardPrefs() async {
-    bool isCardOrTile = preferences.get('userCardOrTile') ?? true;
-    userCardOrTile.add(isCardOrTile);
-  }
-
-  Future<void> setUserCardPrefs(bool isCardOrTile) async {
+  Future<void> setCardOrTilePref(bool isCardOrTile) async {
     await preferences.setBool('userCardOrTile', isCardOrTile);
-    userCardOrTile.add(isCardOrTile);
+    cardOrTileSubject.add(isCardOrTile);
+  }
+
+  void readCardOrTilePref() {
+    bool isCardOrTile = preferences.get('userCardOrTile') ?? true;
+    cardOrTileSubject.add(isCardOrTile);
+  }
+
+  Future<void> setThemeModePref(ThemeMode themeMode) async {
+    await preferences.setString('themeModePref', '${themeMode.toString()}');
+    themeModeSubject.add(themeMode);
+  }
+
+  void readThemeModePref() {
+    String tm = preferences.get('themeModePref') ?? 'ThemeMode.system';
+    ThemeMode themeMode = ThemeMode.values.firstWhere((element) => element.toString() == tm);
+    themeModeSubject.add(themeMode);
   }
 }

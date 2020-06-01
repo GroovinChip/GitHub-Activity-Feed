@@ -34,7 +34,7 @@ class _ViewerFollowingListState extends State<ViewerFollowingList> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<bool>(
-        stream: Provider.of<PrefsBloc>(context).userCardOrTile,
+        stream: Provider.of<PrefsBloc>(context).cardOrTileSubject,
         builder: (BuildContext context, AsyncSnapshot<bool> isCardOrTile) {
           return FutureBuilder<dynamic>(
             future: _viewerFollowing,
