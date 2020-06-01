@@ -69,8 +69,8 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
         ),
         actions: [
           StreamBuilder<bool>(
-            stream: prefsbloc.userCardOrTile,
-            initialData: prefsbloc.userCardOrTile.value,
+            stream: prefsbloc.cardOrTileSubject,
+            initialData: prefsbloc.cardOrTileSubject.value,
             builder: (context, snapshot) {
               return IconButton(
                 icon: Icon(Icons.search),
