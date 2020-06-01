@@ -19,7 +19,7 @@ open that item in the browser (or another github application installed on your d
 
 ### General Roadmap:
 - [ ] Follow/unfollow users (being tracked by [#52](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/52))
-- [ ] [ThemeMode switcher](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/8)
+- [X] [ThemeMode switcher](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/8)
 - [ ] [Discovery service](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/56)
 - [ ] Paginated activity feed ([#57](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/57) , [#58](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/58))
 - [ ] [Filter activity feed](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/51)
