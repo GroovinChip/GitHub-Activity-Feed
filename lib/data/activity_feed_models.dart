@@ -3,9 +3,9 @@ import 'package:github_activity_feed/data/gist.dart';
 /// Generated using https://javiercbk.github.io/json_to_dart/
 
 class Following {
-  List<UserActivity> userActivity;
-
   Following({this.userActivity});
+
+  List<UserActivity> userActivity;
 
   Following.fromJson(Map<String, dynamic> json) {
     if (json['user'] != null) {
@@ -26,15 +26,6 @@ class Following {
 }
 
 class UserActivity {
-  String userLogin;
-  String userAvatarUrl;
-  String userUrl;
-  Gists gists;
-  Issues issues;
-  IssueComments issueComments;
-  PullRequests pullRequests;
-  StarredRepositories starredRepositories;
-
   UserActivity({
     this.userLogin,
     this.userAvatarUrl,
@@ -44,6 +35,15 @@ class UserActivity {
     this.pullRequests,
     this.starredRepositories,
   });
+
+  String userLogin;
+  String userAvatarUrl;
+  String userUrl;
+  Gists gists;
+  Issues issues;
+  IssueComments issueComments;
+  PullRequests pullRequests;
+  StarredRepositories starredRepositories;
 
   UserActivity.fromJson(Map<String, dynamic> json) {
     userLogin = json['login'];
@@ -85,9 +85,9 @@ class UserActivity {
 }
 
 class Issues {
-  List<Issue> issues;
-
   Issues({this.issues});
+
+  List<Issue> issues;
 
   Issues.fromJson(Map<String, dynamic> json) {
     if (json['issue'] != null) {
@@ -108,16 +108,6 @@ class Issues {
 }
 
 class Issue {
-  String sTypename;
-  int databaseId;
-  String title;
-  String url;
-  int number;
-  String bodyText;
-  Author author;
-  Repository repository;
-  String createdAt;
-
   Issue({
     this.sTypename,
     this.databaseId,
@@ -129,6 +119,16 @@ class Issue {
     this.repository,
     this.createdAt,
   });
+
+  String sTypename;
+  int databaseId;
+  String title;
+  String url;
+  int number;
+  String bodyText;
+  Author author;
+  Repository repository;
+  String createdAt;
 
   Issue.fromJson(Map<String, dynamic> json) {
     sTypename = json['__typename'];
@@ -162,15 +162,15 @@ class Issue {
 }
 
 class Author {
-  String login;
-  String avatarUrl;
-  String url;
-
   Author({
     this.login,
     this.avatarUrl,
     this.url,
   });
+
+  String login;
+  String avatarUrl;
+  String url;
 
   Author.fromJson(Map<String, dynamic> json) {
     login = json['login'];
@@ -188,15 +188,15 @@ class Author {
 }
 
 class Repository {
-  String nameWithOwner;
-  String description;
-  String url;
-
   Repository({
     this.nameWithOwner,
     this.description,
     this.url,
   });
+
+  String nameWithOwner;
+  String description;
+  String url;
 
   Repository.fromJson(Map<String, dynamic> json) {
     nameWithOwner = json['nameWithOwner'];
@@ -214,9 +214,9 @@ class Repository {
 }
 
 class IssueComments {
-  List<IssueComment> issueComments;
-
   IssueComments({this.issueComments});
+
+  List<IssueComment> issueComments;
 
   IssueComments.fromJson(Map<String, dynamic> json) {
     if (json['issueComment'] != null) {
@@ -237,14 +237,6 @@ class IssueComments {
 }
 
 class IssueComment {
-  String sTypename;
-  int databaseId;
-  String bodyText;
-  String createdAt;
-  String url;
-  Author author;
-  ParentIssue parentIssue;
-
   IssueComment({
     this.sTypename,
     this.databaseId,
@@ -254,6 +246,14 @@ class IssueComment {
     this.author,
     this.parentIssue,
   });
+
+  String sTypename;
+  int databaseId;
+  String bodyText;
+  String createdAt;
+  String url;
+  Author author;
+  ParentIssue parentIssue;
 
   IssueComment.fromJson(Map<String, dynamic> json) {
     sTypename = json['__typename'];
@@ -283,12 +283,6 @@ class IssueComment {
 }
 
 class ParentIssue {
-  String title;
-  Author author;
-  Repository repository;
-  String id;
-  int number;
-
   ParentIssue({
     this.title,
     this.author,
@@ -296,6 +290,12 @@ class ParentIssue {
     this.id,
     this.number,
   });
+
+  String title;
+  Author author;
+  Repository repository;
+  String id;
+  int number;
 
   ParentIssue.fromJson(Map<String, dynamic> json) {
     title = json['title'];
@@ -321,9 +321,9 @@ class ParentIssue {
 }
 
 class PullRequests {
-  List<PullRequest> pullRequests;
-
   PullRequests({this.pullRequests});
+
+  List<PullRequest> pullRequests;
 
   PullRequests.fromJson(Map<String, dynamic> json) {
     if (json['pullRequest'] != null) {
@@ -344,19 +344,6 @@ class PullRequests {
 }
 
 class PullRequest {
-  String sTypename;
-  int databaseId;
-  String title;
-  String url;
-  int number;
-  String baseRefName;
-  String headRefName;
-  String bodyText;
-  String createdAt;
-  int changedFiles;
-  Author author;
-  Repository repository;
-
   PullRequest({
     this.sTypename,
     this.databaseId,
@@ -371,6 +358,19 @@ class PullRequest {
     this.author,
     this.repository,
   });
+
+  String sTypename;
+  int databaseId;
+  String title;
+  String url;
+  int number;
+  String baseRefName;
+  String headRefName;
+  String bodyText;
+  String createdAt;
+  int changedFiles;
+  Author author;
+  Repository repository;
 
   PullRequest.fromJson(Map<String, dynamic> json) {
     sTypename = json['__typename'];
@@ -410,9 +410,9 @@ class PullRequest {
 }
 
 class StarredRepositories {
-  List<SrEdge> srEdges;
-
   StarredRepositories({this.srEdges});
+
+  List<SrEdge> srEdges;
 
   StarredRepositories.fromJson(Map<String, dynamic> json) {
     if (json['srEdges'] != null) {
@@ -433,15 +433,15 @@ class StarredRepositories {
 }
 
 class SrEdge {
-  String createdAt;
-  String sTypename;
-  Star star;
-
   SrEdge({
     this.createdAt,
     this.sTypename,
     this.star,
   });
+
+  String createdAt;
+  String sTypename;
+  Star star;
 
   SrEdge.fromJson(Map<String, dynamic> json) {
     createdAt = json['createdAt'];
@@ -461,17 +461,6 @@ class SrEdge {
 }
 
 class Star {
-  String sTypename;
-  String id;
-  int databaseId;
-  String nameWithOwner;
-  String description;
-  int forkCount;
-  bool isFork;
-  Stargazers stargazers;
-  String updatedAt;
-  String url;
-
   Star({
     this.sTypename,
     this.id,
@@ -484,6 +473,17 @@ class Star {
     this.updatedAt,
     this.url,
   });
+
+  String sTypename;
+  String id;
+  int databaseId;
+  String nameWithOwner;
+  String description;
+  int forkCount;
+  bool isFork;
+  Stargazers stargazers;
+  String updatedAt;
+  String url;
 
   Star.fromJson(Map<String, dynamic> json) {
     sTypename = json['__typename'];
@@ -517,9 +517,9 @@ class Star {
 }
 
 class Stargazers {
-  int totalCount;
-
   Stargazers({this.totalCount});
+
+  int totalCount;
 
   Stargazers.fromJson(Map<String, dynamic> json) {
     totalCount = json['totalCount'];
