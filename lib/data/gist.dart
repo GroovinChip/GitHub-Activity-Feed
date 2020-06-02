@@ -1,3 +1,5 @@
+import 'package:github_activity_feed/data/activity_feed_models.dart';
+
 /// Generated using https://javiercbk.github.io/json_to_dart/
 
 class Gists {
@@ -23,16 +25,8 @@ class Gists {
   }
 }
 
-class Gist {
-  String sTypename;
-  String description;
-  String createdAt;
-  List<Files> files;
-  Owner owner;
-  String url;
-
+class Gist implements ActivityFeedItem {
   Gist({
-    this.sTypename,
     this.description,
     this.createdAt,
     this.files,
@@ -40,10 +34,18 @@ class Gist {
     this.url,
   });
 
+  ActivityFeedItemType get type => ActivityFeedItemType.gist;
+
+  String description;
+  DateTime createdAt;
+  List<Files> files;
+  Owner owner;
+  String url;
+
+
   Gist.fromJson(Map<String, dynamic> json) {
-    sTypename = json['__typename'];
     description = json['description'];
-    createdAt = json['createdAt'];
+    createdAt = DateTime.parse(json['createdAt'] as String);
     if (json['files'] != null) {
       files = new List<Files>();
       json['files'].forEach((v) {
@@ -56,7 +58,7 @@ class Gist {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['__typename'] = this.sTypename;
+    data['__typename'] = this.type;
     data['description'] = this.description;
     data['createdAt'] = this.createdAt;
     if (this.files != null) {

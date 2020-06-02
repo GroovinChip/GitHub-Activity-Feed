@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/following_users.dart';
-import 'package:github_activity_feed/services/gh_gql_query_service.dart';
+import 'package:github_activity_feed/services/graphql_service.dart';
 import 'package:github_activity_feed/state/prefs_bloc.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_card.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_tile.dart';
@@ -20,15 +20,15 @@ class ViewerFollowingList extends StatefulWidget {
 
 class _ViewerFollowingListState extends State<ViewerFollowingList> {
   Future _viewerFollowing;
-  GhGraphQLService ghGraphQLService;
+  GraphQLService graphQLService;
 
   @override
   void initState() {
     super.initState();
-    ghGraphQLService = Provider.of<GhGraphQLService>(context, listen: false);
+    graphQLService = Provider.of<GraphQLService>(context, listen: false);
 
     /// prevent FutureBuilder from rebuilding on setState() calls
-    _viewerFollowing = ghGraphQLService.getViewerFollowing();
+    _viewerFollowing = graphQLService.getViewerFollowing();
   }
 
   @override

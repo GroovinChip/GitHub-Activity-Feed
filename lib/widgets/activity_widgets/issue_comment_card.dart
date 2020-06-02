@@ -63,7 +63,7 @@ class IssueCommentCard extends StatelessWidget {
                 ),
 
                 /// fuzzy timestamp
-                trailing: Text(timeago.format(DateTime.parse(comment.createdAt), locale: 'en_short').replaceAll(' ', '')),
+                trailing: Text(timeago.format(comment.createdAt, locale: 'en_short').replaceAll(' ', '')),
               ),
 
               /// issue body text preview

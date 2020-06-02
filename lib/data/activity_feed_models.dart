@@ -1,11 +1,42 @@
+import 'package:github_activity_feed/utils/annotations.dart';
+import 'package:meta/meta.dart';
 import 'package:github_activity_feed/data/gist.dart';
 
 /// Generated using https://javiercbk.github.io/json_to_dart/
 
-class Following {
-  List<UserActivity> userActivity;
+abstract class ActivityFeedItem {
+  ActivityFeedItemType get type;
+  DateTime get createdAt;
+}
 
+class ActivityFeedItemType {
+  static const gist = ActivityFeedItemType._('Gist');
+  static const issue = ActivityFeedItemType._('Issue');
+  static const issueComment = ActivityFeedItemType._('IssueComment');
+  static const pullRequest = ActivityFeedItemType._('PullRequest');
+  static const starredRepoEdge = ActivityFeedItemType._('StarredRepositoryEdge');
+
+  static const values = [
+    gist,
+    issue,
+    issueComment,
+    pullRequest,
+    starredRepoEdge,
+  ];
+
+  static ActivityFeedItemType from(String value) {
+    return values.firstWhere((el) => el.name == value);
+  }
+
+  const ActivityFeedItemType._(this.name);
+
+  final String name;
+}
+
+class Following {
   Following({this.userActivity});
+
+  List<UserActivity> userActivity;
 
   Following.fromJson(Map<String, dynamic> json) {
     if (json['user'] != null) {
@@ -25,39 +56,50 @@ class Following {
   }
 }
 
+@immutable
 class UserActivity {
-  String userLogin;
-  String userAvatarUrl;
-  String userUrl;
-  Gists gists;
-  Issues issues;
-  IssueComments issueComments;
-  PullRequests pullRequests;
-  StarredRepositories starredRepositories;
-
-  UserActivity({
+  const UserActivity({
     this.userLogin,
     this.userAvatarUrl,
     this.userUrl,
+    this.gists,
     this.issues,
     this.issueComments,
     this.pullRequests,
     this.starredRepositories,
   });
 
-  UserActivity.fromJson(Map<String, dynamic> json) {
-    userLogin = json['login'];
-    userAvatarUrl = json['avatarUrl'];
-    userUrl = json['url'];
-    gists = json['gists'] != null ? new Gists.fromJson(json['gists']) : null;
-    issues = json['issues'] != null ? Issues.fromJson(json['issues']) : null;
-    issueComments =
-        json['issueComments'] != null ? IssueComments.fromJson(json['issueComments']) : null;
-    pullRequests =
-        json['pullRequests'] != null ? PullRequests.fromJson(json['pullRequests']) : null;
-    starredRepositories = json['starredRepositories'] != null
-        ? StarredRepositories.fromJson(json['starredRepositories'])
-        : null;
+  final String userLogin;
+  final String userAvatarUrl;
+  final String userUrl;
+  final Gists gists;
+  final Issues issues;
+  final IssueComments issueComments;
+  final PullRequests pullRequests;
+  final List<StarredRepoEdge> starredRepositories;
+
+  factory UserActivity.fromJson(Map<String, dynamic> json) {
+    final starredRepositories = <StarredRepoEdge>[];
+    final activity = UserActivity(
+      userLogin: json['login'],
+      userAvatarUrl: json['avatarUrl'],
+      userUrl: json['url'],
+      gists: json['gists'] != null ? new Gists.fromJson(json['gists']) : null,
+      issues: json['issues'] != null ? Issues.fromJson(json['issues']) : null,
+      issueComments:
+          json['issueComments'] != null ? IssueComments.fromJson(json['issueComments']) : null,
+      pullRequests:
+          json['pullRequests'] != null ? PullRequests.fromJson(json['pullRequests']) : null,
+      starredRepositories: starredRepositories,
+    );
+    if (json['starredRepositories'] != null) {
+      if (json['starredRepositories']['srEdges'] != null) {
+        for (Map<String, dynamic> edge in json['starredRepositories']['srEdges']) {
+          starredRepositories.add(StarredRepoEdge.fromJson(edge, activity));
+        }
+      }
+    }
+    return activity;
   }
 
   Map<String, dynamic> toJson() {
@@ -77,17 +119,14 @@ class UserActivity {
     if (this.pullRequests != null) {
       data['pullRequests'] = this.pullRequests.toJson();
     }
-    if (this.starredRepositories != null) {
-      data['starredRepositories'] = this.starredRepositories.toJson();
-    }
     return data;
   }
 }
 
 class Issues {
-  List<Issue> issues;
-
   Issues({this.issues});
+
+  List<Issue> issues;
 
   Issues.fromJson(Map<String, dynamic> json) {
     if (json['issue'] != null) {
@@ -107,19 +146,8 @@ class Issues {
   }
 }
 
-class Issue {
-  String sTypename;
-  int databaseId;
-  String title;
-  String url;
-  int number;
-  String bodyText;
-  Author author;
-  Repository repository;
-  String createdAt;
-
+class Issue implements ActivityFeedItem {
   Issue({
-    this.sTypename,
     this.databaseId,
     this.title,
     this.url,
@@ -130,8 +158,18 @@ class Issue {
     this.createdAt,
   });
 
+  ActivityFeedItemType get type => ActivityFeedItemType.issue;
+
+  int databaseId;
+  String title;
+  String url;
+  int number;
+  String bodyText;
+  Author author;
+  Repository repository;
+  DateTime createdAt;
+
   Issue.fromJson(Map<String, dynamic> json) {
-    sTypename = json['__typename'];
     databaseId = json['databaseId'];
     title = json['title'];
     url = json['url'];
@@ -139,12 +177,12 @@ class Issue {
     bodyText = json['bodyText'];
     author = json['author'] != null ? Author.fromJson(json['author']) : null;
     repository = json['repository'] != null ? Repository.fromJson(json['repository']) : null;
-    createdAt = json['createdAt'];
+    createdAt = DateTime.parse(json['createdAt'] as String);
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['__typename'] = this.sTypename;
+    data['__typename'] = this.type.name;
     data['databaseId'] = this.databaseId;
     data['title'] = this.title;
     data['url'] = this.url;
@@ -162,15 +200,15 @@ class Issue {
 }
 
 class Author {
-  String login;
-  String avatarUrl;
-  String url;
-
   Author({
     this.login,
     this.avatarUrl,
     this.url,
   });
+
+  String login;
+  String avatarUrl;
+  String url;
 
   Author.fromJson(Map<String, dynamic> json) {
     login = json['login'];
@@ -188,15 +226,15 @@ class Author {
 }
 
 class Repository {
-  String nameWithOwner;
-  String description;
-  String url;
-
   Repository({
     this.nameWithOwner,
     this.description,
     this.url,
   });
+
+  String nameWithOwner;
+  String description;
+  String url;
 
   Repository.fromJson(Map<String, dynamic> json) {
     nameWithOwner = json['nameWithOwner'];
@@ -214,9 +252,9 @@ class Repository {
 }
 
 class IssueComments {
-  List<IssueComment> issueComments;
-
   IssueComments({this.issueComments});
+
+  List<IssueComment> issueComments;
 
   IssueComments.fromJson(Map<String, dynamic> json) {
     if (json['issueComment'] != null) {
@@ -236,17 +274,8 @@ class IssueComments {
   }
 }
 
-class IssueComment {
-  String sTypename;
-  int databaseId;
-  String bodyText;
-  String createdAt;
-  String url;
-  Author author;
-  ParentIssue parentIssue;
-
+class IssueComment implements ActivityFeedItem {
   IssueComment({
-    this.sTypename,
     this.databaseId,
     this.bodyText,
     this.createdAt,
@@ -255,11 +284,19 @@ class IssueComment {
     this.parentIssue,
   });
 
+  ActivityFeedItemType get type => ActivityFeedItemType.issueComment;
+
+  int databaseId;
+  String bodyText;
+  DateTime createdAt;
+  String url;
+  Author author;
+  ParentIssue parentIssue;
+
   IssueComment.fromJson(Map<String, dynamic> json) {
-    sTypename = json['__typename'];
-    databaseId = json['databaseId'];
+   databaseId = json['databaseId'];
     bodyText = json['bodyText'];
-    createdAt = json['createdAt'];
+    createdAt = DateTime.parse(json['createdAt'] as String);
     url = json['url'];
     author = json['author'] != null ? Author.fromJson(json['author']) : null;
     parentIssue = json['parentIssue'] != null ? ParentIssue.fromJson(json['parentIssue']) : null;
@@ -267,7 +304,7 @@ class IssueComment {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['__typename'] = this.sTypename;
+    data['__typename'] = this.type.name;
     data['databaseId'] = this.databaseId;
     data['bodyText'] = this.bodyText;
     data['createdAt'] = this.createdAt;
@@ -283,12 +320,6 @@ class IssueComment {
 }
 
 class ParentIssue {
-  String title;
-  Author author;
-  Repository repository;
-  String id;
-  int number;
-
   ParentIssue({
     this.title,
     this.author,
@@ -296,6 +327,12 @@ class ParentIssue {
     this.id,
     this.number,
   });
+
+  String title;
+  Author author;
+  Repository repository;
+  String id;
+  int number;
 
   ParentIssue.fromJson(Map<String, dynamic> json) {
     title = json['title'];
@@ -321,9 +358,9 @@ class ParentIssue {
 }
 
 class PullRequests {
-  List<PullRequest> pullRequests;
-
   PullRequests({this.pullRequests});
+
+  List<PullRequest> pullRequests;
 
   PullRequests.fromJson(Map<String, dynamic> json) {
     if (json['pullRequest'] != null) {
@@ -343,22 +380,8 @@ class PullRequests {
   }
 }
 
-class PullRequest {
-  String sTypename;
-  int databaseId;
-  String title;
-  String url;
-  int number;
-  String baseRefName;
-  String headRefName;
-  String bodyText;
-  String createdAt;
-  int changedFiles;
-  Author author;
-  Repository repository;
-
+class PullRequest implements ActivityFeedItem {
   PullRequest({
-    this.sTypename,
     this.databaseId,
     this.title,
     this.url,
@@ -372,8 +395,21 @@ class PullRequest {
     this.repository,
   });
 
+  ActivityFeedItemType get type => ActivityFeedItemType.pullRequest;
+
+  int databaseId;
+  String title;
+  String url;
+  int number;
+  String baseRefName;
+  String headRefName;
+  String bodyText;
+  DateTime createdAt;
+  int changedFiles;
+  Author author;
+  Repository repository;
+
   PullRequest.fromJson(Map<String, dynamic> json) {
-    sTypename = json['__typename'];
     databaseId = json['databaseId'];
     title = json['title'];
     url = json['url'];
@@ -381,7 +417,7 @@ class PullRequest {
     baseRefName = json['baseRefName'];
     headRefName = json['headRefName'];
     bodyText = json['bodyText'];
-    createdAt = json['createdAt'];
+    createdAt = DateTime.parse(json['createdAt'] as String);
     changedFiles = json['changedFiles'];
     author = json['author'] != null ? Author.fromJson(json['author']) : null;
     repository = json['repository'] != null ? Repository.fromJson(json['repository']) : null;
@@ -389,7 +425,7 @@ class PullRequest {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['__typename'] = this.sTypename;
+    data['__typename'] = this.type.name;
     data['databaseId'] = this.databaseId;
     data['title'] = this.title;
     data['url'] = this.url;
@@ -409,69 +445,32 @@ class PullRequest {
   }
 }
 
-class StarredRepositories {
-  List<SrEdge> srEdges;
-
-  StarredRepositories({this.srEdges});
-
-  StarredRepositories.fromJson(Map<String, dynamic> json) {
-    if (json['srEdges'] != null) {
-      srEdges = List<SrEdge>();
-      json['srEdges'].forEach((v) {
-        srEdges.add(SrEdge.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    if (this.srEdges != null) {
-      data['srEdges'] = this.srEdges.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class SrEdge {
-  String createdAt;
-  String sTypename;
-  Star star;
-
-  SrEdge({
+@immutable
+class StarredRepoEdge implements ActivityFeedItem {
+  const StarredRepoEdge({
     this.createdAt,
-    this.sTypename,
     this.star,
+    this.userActivity,
   });
 
-  SrEdge.fromJson(Map<String, dynamic> json) {
-    createdAt = json['createdAt'];
-    sTypename = json['__typename'];
-    star = json['star'] != null ? Star.fromJson(json['star']) : null;
-  }
+  ActivityFeedItemType get type => ActivityFeedItemType.starredRepoEdge;
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['createdAt'] = this.createdAt;
-    data['__typename'] = this.sTypename;
-    if (this.star != null) {
-      data['star'] = this.star.toJson();
-    }
-    return data;
+  final DateTime createdAt;
+  final Star star;
+
+  @transient
+  final UserActivity userActivity;
+
+  factory StarredRepoEdge.fromJson(Map<String, dynamic> json, UserActivity userActivity) {
+    return StarredRepoEdge(
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      star: json['star'] != null ? Star.fromJson(json['star']) : null,
+      userActivity: userActivity,
+    );
   }
 }
 
 class Star {
-  String sTypename;
-  String id;
-  int databaseId;
-  String nameWithOwner;
-  String description;
-  int forkCount;
-  bool isFork;
-  Stargazers stargazers;
-  String updatedAt;
-  String url;
-
   Star({
     this.sTypename,
     this.id,
@@ -484,6 +483,17 @@ class Star {
     this.updatedAt,
     this.url,
   });
+
+  String sTypename;
+  String id;
+  int databaseId;
+  String nameWithOwner;
+  String description;
+  int forkCount;
+  bool isFork;
+  Stargazers stargazers;
+  String updatedAt;
+  String url;
 
   Star.fromJson(Map<String, dynamic> json) {
     sTypename = json['__typename'];
@@ -517,9 +527,9 @@ class Star {
 }
 
 class Stargazers {
-  int totalCount;
-
   Stargazers({this.totalCount});
+
+  int totalCount;
 
   Stargazers.fromJson(Map<String, dynamic> json) {
     totalCount = json['totalCount'];

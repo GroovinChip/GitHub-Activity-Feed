@@ -3,8 +3,8 @@ import 'package:github_activity_feed/keys.dart';
 import 'package:github_activity_feed/screens/home_screen.dart';
 import 'package:github_activity_feed/screens/login_page.dart';
 import 'package:github_activity_feed/services/auth_service.dart';
-import 'package:github_activity_feed/services/gh_gql_query_service.dart';
 import 'package:github_activity_feed/services/github_service.dart';
+import 'package:github_activity_feed/services/graphql_service.dart';
 import 'package:github_activity_feed/state/prefs_bloc.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -30,13 +30,13 @@ class GitHubActivityFeedApp extends StatefulWidget {
 
 class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
   final _navigatorKey = GlobalKey<NavigatorState>();
-  GhGraphQLService ghQueryService;
+  GraphQLService graphQLService;
 
   @override
   void initState() {
     super.initState();
     widget.githubService.currentUser.addListener(_onCurrentUserChanged);
-    ghQueryService = GhGraphQLService(token: widget.githubService.github.auth.token);
+    graphQLService = GraphQLService(token: widget.githubService.github.auth.token);
   }
 
   void _onCurrentUserChanged() {
@@ -64,7 +64,7 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
         Provider<AuthService>.value(value: widget.authService),
         Provider<GitHubService>.value(value: widget.githubService),
         ValueListenableProvider.value(value: widget.githubService.currentUser),
-        Provider<GhGraphQLService>.value(value: ghQueryService),
+        Provider<GraphQLService>.value(value: graphQLService),
         Provider<PrefsBloc>.value(value: widget.prefsBloc),
       ],
       child: Wiredash(
