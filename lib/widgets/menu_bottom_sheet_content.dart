@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/state/prefs_bloc.dart';
-import 'package:github_activity_feed/widgets/log_out_confirm_dialog.dart';
-import 'package:github_activity_feed/widgets/theme_switcher.dart';
+import 'package:github_activity_feed/widgets/dialogs/log_out_confirm_dialog.dart';
+import 'package:github_activity_feed/widgets/dialogs/theme_switcher_dialog.dart';
 import 'package:groovin_widgets/modal_drawer_handle.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
@@ -81,7 +81,7 @@ class _MenuBottomSheetContentState extends State<MenuBottomSheetContent> with Pr
               subtitle: Text(currentThemeMode),
               onTap: () => showDialog(
                 context: context,
-                builder: (_) => ThemeSwitcher(
+                builder: (_) => ThemeSwitcherDialog(
                   themeMode: snapshot.data,
                 ),
               ),
@@ -100,7 +100,9 @@ class _MenuBottomSheetContentState extends State<MenuBottomSheetContent> with Pr
               },
               activeColor: Theme.of(context).accentColor,
               title: Text(snapshot.data == true ? 'Switch to tiles' : 'Switch to cards'),
-              subtitle: Text(snapshot.data == true ? 'Show users as tiles instead of cards' : 'Show users as cards instead of tiles'),
+              subtitle: Text(snapshot.data == true
+                  ? 'Show users as tiles instead of cards'
+                  : 'Show users as cards instead of tiles'),
             );
           },
         ),

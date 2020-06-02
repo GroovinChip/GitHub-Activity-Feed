@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/activity_feed_models.dart';
 import 'package:github_activity_feed/data/gist.dart';
 import 'package:github_activity_feed/services/gh_gql_query_service.dart';
+import 'package:github_activity_feed/widgets/activity_widgets/gist_card.dart';
+import 'package:github_activity_feed/widgets/activity_widgets/issue_card.dart';
+import 'package:github_activity_feed/widgets/activity_widgets/issue_comment_card.dart';
+import 'package:github_activity_feed/widgets/activity_widgets/pull_request_card.dart';
+import 'package:github_activity_feed/widgets/activity_widgets/star_card.dart';
 import 'package:github_activity_feed/widgets/feedback_on_error.dart';
-import 'package:github_activity_feed/widgets/gist_card.dart';
-import 'package:github_activity_feed/widgets/issue_card.dart';
-import 'package:github_activity_feed/widgets/issue_comment_card.dart';
-import 'package:github_activity_feed/widgets/pull_request_card.dart';
-import 'package:github_activity_feed/widgets/star_card.dart';
 import 'package:provider/provider.dart';
 
 class ActivityFeed extends StatelessWidget {

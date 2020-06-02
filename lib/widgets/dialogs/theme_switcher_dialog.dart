@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:github_activity_feed/state/prefs_bloc.dart';
 import 'package:provider/provider.dart';
 
-class ThemeSwitcher extends StatefulWidget {
-  ThemeSwitcher({
+class ThemeSwitcherDialog extends StatefulWidget {
+  ThemeSwitcherDialog({
     Key key,
     this.themeMode,
   }) : super(key: key);
@@ -11,10 +11,10 @@ class ThemeSwitcher extends StatefulWidget {
   final ThemeMode themeMode;
 
   @override
-  _ThemeSwitcherState createState() => _ThemeSwitcherState();
+  _ThemeSwitcherDialogState createState() => _ThemeSwitcherDialogState();
 }
 
-class _ThemeSwitcherState extends State<ThemeSwitcher> {
+class _ThemeSwitcherDialogState extends State<ThemeSwitcherDialog> {
   PrefsBloc prefsbloc;
 
   @override

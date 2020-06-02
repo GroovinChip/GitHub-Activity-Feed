@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/following_users.dart';
 import 'package:github_activity_feed/services/gh_gql_query_service.dart';
 import 'package:github_activity_feed/state/prefs_bloc.dart';
-import 'package:github_activity_feed/widgets/user_card.dart';
-import 'package:github_activity_feed/widgets/user_tile.dart';
+import 'file:///C:/Users/groov/Flutter_Projects/github_activity_feed/lib/widgets/user_widgets/user_card.dart';
+import 'file:///C:/Users/groov/Flutter_Projects/github_activity_feed/lib/widgets/user_widgets/user_tile.dart';
 import 'package:provider/provider.dart';
 
 class ViewerFollowingList extends StatefulWidget {
