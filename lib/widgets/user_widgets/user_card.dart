@@ -75,11 +75,40 @@ class UserCard extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-              child: Text(
-                user.bio ?? '[No bio]',
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
+              padding: const EdgeInsets.fromLTRB(7, 4, 8, 0),
+              child: Row(
+                children: [
+                  Icon(
+                    MdiIcons.mapMarkerOutline,
+                    size: 12,
+                    color: Colors.grey,
+                  ),
+                  Expanded(
+                    child: Text(
+                      user.location != null || user.location != '' ? '${user.location}' : '',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Container(
+                alignment: Alignment.topLeft,
+                padding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
+                child: Text(
+                  user.bio == null || user.bio == '' ? '[No bio]' : user.bio,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 12,
+                  ),
+                ),
               ),
             ),
 

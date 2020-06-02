@@ -8,6 +8,7 @@ abstract class BaseUser {
   String get name;
   String get email;
   String get bio;
+  String get location;
 }
 
 class Status {
