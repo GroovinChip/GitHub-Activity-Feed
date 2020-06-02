@@ -3,8 +3,8 @@ import 'package:github/github.dart' hide SearchResults;
 import 'package:github_activity_feed/data/search_results.dart';
 import 'package:github_activity_feed/services/gh_gql_query_service.dart';
 import 'package:github_activity_feed/widgets/feedback_on_error.dart';
-import 'file:///C:/Users/groov/Flutter_Projects/github_activity_feed/lib/widgets/user_widgets/user_card.dart';
-import 'file:///C:/Users/groov/Flutter_Projects/github_activity_feed/lib/widgets/user_widgets/user_tile.dart';
+import 'package:github_activity_feed/widgets/user_widgets/user_card.dart';
+import 'package:github_activity_feed/widgets/user_widgets/user_tile.dart';
 import 'package:provider/provider.dart';
 
 class SearchScreen extends SearchDelegate {

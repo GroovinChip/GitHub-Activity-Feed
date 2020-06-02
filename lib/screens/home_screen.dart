@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/search_screen.dart';
 import 'package:github_activity_feed/state/prefs_bloc.dart';
-import 'file:///C:/Users/groov/Flutter_Projects/github_activity_feed/lib/widgets/activity_widgets/activity_feed.dart';
-import 'file:///C:/Users/groov/Flutter_Projects/github_activity_feed/lib/widgets/user_widgets/following_users.dart';
+import 'package:github_activity_feed/widgets/activity_widgets/activity_feed.dart';
 import 'package:github_activity_feed/widgets/menu_bottom_sheet_content.dart';
+import 'package:github_activity_feed/widgets/user_widgets/following_users.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
