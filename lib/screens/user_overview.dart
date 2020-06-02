@@ -3,12 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/services/gh_gql_query_service.dart';
-import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/widgets/feedback_on_error.dart';
 import 'package:github_activity_feed/widgets/user_profile.dart';
 import 'package:github_activity_feed/widgets/view_in_browser_button.dart';
 import 'package:groovin_widgets/avatar_back_button.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
 class UserOverview extends StatefulWidget {

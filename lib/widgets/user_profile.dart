@@ -55,28 +55,3 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 }
-
-class _ProfileEntry extends StatelessWidget {
-  final String name;
-  final int count;
-
-  const _ProfileEntry({
-    Key key,
-    this.name,
-    this.count,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(name),
-          count == null ? Text('...') : Text('$count'),
-        ],
-      ),
-    );
-  }
-}

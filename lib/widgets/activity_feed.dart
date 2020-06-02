@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/activity_feed_models.dart';
 import 'package:github_activity_feed/data/gist.dart';
 import 'package:github_activity_feed/services/gh_gql_query_service.dart';
-import 'package:github_activity_feed/utils/printers.dart';
 import 'package:github_activity_feed/widgets/feedback_on_error.dart';
 import 'package:github_activity_feed/widgets/gist_card.dart';
 import 'package:github_activity_feed/widgets/issue_card.dart';
