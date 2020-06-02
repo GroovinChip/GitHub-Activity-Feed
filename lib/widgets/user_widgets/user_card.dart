@@ -85,7 +85,7 @@ class UserCard extends StatelessWidget {
                   ),
                   Expanded(
                     child: Text(
-                      user.location != null || user.location != '' ? '${user.location}' : '',
+                      user.location ?? '[no location]',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
