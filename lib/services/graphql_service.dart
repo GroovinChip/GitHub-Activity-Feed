@@ -4,8 +4,8 @@ import 'package:simple_gql/simple_gql.dart';
 /// This class handles GraphQL API calls to the GitHub v4 GraphQL endpoint
 /// Some terminology:
 /// - Viewer: the currently authenticated user
-class GhGraphQLService {
-  GhGraphQLService({
+class GraphQLService {
+  GraphQLService({
     @required this.token,
   });
 

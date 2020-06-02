@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github/github.dart' hide SearchResults;
 import 'package:github_activity_feed/data/search_results.dart';
-import 'package:github_activity_feed/services/gh_gql_query_service.dart';
+import 'package:github_activity_feed/services/graphql_service.dart';
 import 'package:github_activity_feed/widgets/feedback_on_error.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_card.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_tile.dart';
@@ -72,7 +72,7 @@ class SearchScreen extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     return FutureBuilder<dynamic>(
-      future: Provider.of<GhGraphQLService>(context).searchUsers(query),
+      future: Provider.of<GraphQLService>(context).searchUsers(query),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (!snapshot.hasData && snapshot.connectionState == ConnectionState.waiting) {
           /// loading

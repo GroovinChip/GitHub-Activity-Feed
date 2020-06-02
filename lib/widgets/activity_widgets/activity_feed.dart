@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/activity_feed_models.dart';
 import 'package:github_activity_feed/data/gist.dart';
-import 'package:github_activity_feed/services/gh_gql_query_service.dart';
+import 'package:github_activity_feed/services/graphql_service.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/gist_card.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/issue_card.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/issue_comment_card.dart';
@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 class ActivityFeed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final ghGraphQLService = Provider.of<GhGraphQLService>(context, listen: false);
+    final ghGraphQLService = Provider.of<GraphQLService>(context, listen: false);
     return FutureBuilder<dynamic>(
       future: ghGraphQLService.activityFeed(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
