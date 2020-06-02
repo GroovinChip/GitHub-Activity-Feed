@@ -66,7 +66,7 @@ class PullRequestCard extends StatelessWidget {
 
                 /// fuzzy timestamp
                 trailing: Text(timeago
-                    .format(DateTime.parse(pullRequest.createdAt), locale: 'en_short')
+                    .format(pullRequest.createdAt, locale: 'en_short')
                     .replaceAll(' ', '')),
               ),
 

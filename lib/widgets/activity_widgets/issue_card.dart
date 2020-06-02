@@ -67,7 +67,7 @@ class IssueCard extends StatelessWidget {
 
                 /// fuzzy timestamp
                 trailing: Text(timeago
-                    .format(DateTime.parse(issue.createdAt), locale: 'en_short')
+                    .format(issue.createdAt, locale: 'en_short')
                     .replaceAll(' ', '')),
               ),
 

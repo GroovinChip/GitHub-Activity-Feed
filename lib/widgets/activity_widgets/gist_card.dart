@@ -55,7 +55,7 @@ class GistCard extends StatelessWidget {
                 subtitle: Text('Contains ${gist.files.length} files'),
 
                 /// Fuzzy timestamp
-                trailing: Text(timeago.format(DateTime.parse(gist.createdAt), locale: 'en_short').replaceAll(' ', '')),
+                trailing: Text(timeago.format(gist.createdAt, locale: 'en_short').replaceAll(' ', '')),
               ),
             ],
           ),

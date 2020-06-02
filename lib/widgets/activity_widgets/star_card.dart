@@ -7,14 +7,10 @@ import 'package:url_launcher/url_launcher.dart';
 class StarCard extends StatelessWidget {
   const StarCard({
     Key key,
-    this.user,
-    @required this.star,
-    @required this.starredAt,
+    @required this.starredRepoEdge,
   }) : super(key: key);
 
-  final String user;
-  final Star star;
-  final String starredAt;
+  final StarredRepoEdge starredRepoEdge;
 
   @override
   Widget build(BuildContext context) {
@@ -30,16 +26,18 @@ class StarCard extends StatelessWidget {
           customBorder: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          onTap: () => launch(star.url),
+          onTap: () => launch(starredRepoEdge.star.url),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               ListTile(
-                leading: CircleAvatar(),
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(starredRepoEdge.userActivity.userAvatarUrl),
+                ),
 
-                /// user(??) with action
+                /// User with action
                 title: Text(
-                  '___ starred repository',
+                  '${starredRepoEdge.userActivity.userLogin} starred repository',
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onBackground,
                     fontWeight: FontWeight.bold,
@@ -47,11 +45,13 @@ class StarCard extends StatelessWidget {
                   ),
                 ),
 
-                /// repository with issue number
-                subtitle: Text(star.nameWithOwner),
+                /// Repository with issue number
+                subtitle: Text(starredRepoEdge.star.nameWithOwner),
 
-                /// fuzzy timestamp
-                trailing: Text(timeago.format(DateTime.parse(starredAt), locale: 'en_short').replaceAll(' ', '')),
+                /// Fuzzy timestamp
+                trailing: Text(timeago
+                    .format(starredRepoEdge.createdAt, locale: 'en_short')
+                    .replaceAll(' ', '')),
               ),
             ],
           ),
