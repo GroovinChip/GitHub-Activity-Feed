@@ -50,6 +50,8 @@ class StarCard extends StatelessWidget {
                 /// Fuzzy timestamp
                 subtitle: Text(timeago.format(starredRepoEdge.createdAt, locale: 'en')),
               ),
+
+              /// Repo preview
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                 child: StarredRepoPreview(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:github_activity_feed/widgets/activity_widgets/pull_request_preview.dart';
 import 'package:github_activity_feed/data/activity_feed_models.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/utils/printers.dart';
@@ -30,7 +31,7 @@ class PullRequestCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ListTile(
-                /// user avatar
+                /// User avatar
                 leading: GestureDetector(
                   onTap: () => launch(pullRequest.author.url),
                   child: CircleAvatar(
@@ -64,34 +65,16 @@ class PullRequestCard extends StatelessWidget {
                   ),
                 ),
 
-                /// fuzzy timestamp
-                trailing: Text(timeago
-                    .format(pullRequest.createdAt, locale: 'en_short')
-                    .replaceAll(' ', '')),
+                /// Fuzzy timestamp
+                trailing: Text(
+                    timeago.format(pullRequest.createdAt, locale: 'en_short').replaceAll(' ', '')),
               ),
 
-              /// issue title
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                child: Text(
-                  pullRequest.title,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-
-              /// issue body text preview
+              /// PR preview
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                child: Text(
-                  pullRequest.bodyText == '' ? 'No description' : pullRequest.bodyText,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 14),
+                child: PullRequestPreview(
+                  pullRequest: pullRequest,
                 ),
               ),
             ],
