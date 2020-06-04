@@ -1,4 +1,5 @@
 import 'package:github_activity_feed/utils/annotations.dart';
+import 'package:github_activity_feed/utils/printers.dart';
 import 'package:meta/meta.dart';
 import 'package:github_activity_feed/data/gist.dart';
 
@@ -294,7 +295,7 @@ class IssueComment implements ActivityFeedItem {
   ParentIssue parentIssue;
 
   IssueComment.fromJson(Map<String, dynamic> json) {
-   databaseId = json['databaseId'];
+    databaseId = json['databaseId'];
     bodyText = json['bodyText'];
     createdAt = DateTime.parse(json['createdAt'] as String);
     url = json['url'];
@@ -471,61 +472,55 @@ class StarredRepoEdge implements ActivityFeedItem {
 }
 
 class Star {
-  Star({
-    this.sTypename,
-    this.id,
-    this.databaseId,
-    this.nameWithOwner,
-    this.description,
-    this.forkCount,
-    this.isFork,
-    this.stargazers,
-    this.updatedAt,
-    this.url,
-  });
+  Star(
+      {this.sTypename,
+      this.id,
+      this.databaseId,
+      this.nameWithOwner,
+      this.description,
+      this.forkCount,
+      this.isFork,
+      this.stargazers,
+      this.updatedAt,
+      this.url,
+      this.languages});
 
-  String sTypename;
-  String id;
-  int databaseId;
-  String nameWithOwner;
-  String description;
-  int forkCount;
-  bool isFork;
-  Stargazers stargazers;
-  String updatedAt;
-  String url;
+  final String sTypename;
+  final String id;
+  final int databaseId;
+  final String nameWithOwner;
+  final String description;
+  final int forkCount;
+  final bool isFork;
+  final Stargazers stargazers;
+  final String updatedAt;
+  final String url;
+  final List<Language> languages;
 
-  Star.fromJson(Map<String, dynamic> json) {
-    sTypename = json['__typename'];
-    id = json['id'];
-    databaseId = json['databaseId'];
-    nameWithOwner = json['nameWithOwner'];
-    description = json['description'];
-    forkCount = json['forkCount'];
-    isFork = json['isFork'];
-    stargazers = json['stargazers'] != null ? Stargazers.fromJson(json['stargazers']) : null;
-    updatedAt = json['updatedAt'];
-    url = json['url'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['__typename'] = this.sTypename;
-    data['id'] = this.id;
-    data['databaseId'] = this.databaseId;
-    data['nameWithOwner'] = this.nameWithOwner;
-    data['description'] = this.description;
-    data['forkCount'] = this.forkCount;
-    data['isFork'] = this.isFork;
-    if (this.stargazers != null) {
-      data['stargazers'] = this.stargazers.toJson();
+  factory Star.fromJson(Map<String, dynamic> json) {
+    final _languages = <Language>[];
+    if (json['languages'] != null) {
+      json['languages']['language'].forEach(
+        (l) => _languages.add(Language.fromJson(l)),
+      );
     }
-    data['updatedAt'] = this.updatedAt;
-    data['url'] = this.url;
-    return data;
+    return Star(
+      sTypename: json['__typename'],
+      id: json['id'],
+      databaseId: json['databaseId'],
+      nameWithOwner: json['nameWithOwner'],
+      description: json['description'],
+      forkCount: json['forkCount'],
+      isFork: json['isFork'],
+      stargazers: Stargazers.fromJson(json['stargazers']),
+      updatedAt: json['updatedAt'],
+      url: json['url'],
+      languages: _languages,
+    );
   }
 }
 
+/// A count of users who have starred a repository.
 class Stargazers {
   Stargazers({this.totalCount});
 
@@ -539,5 +534,26 @@ class Stargazers {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['totalCount'] = this.totalCount;
     return data;
+  }
+}
+
+/// Represents a given language found in repositories.
+class Language {
+  Language({
+    this.color,
+    this.name,
+  });
+
+  /// The color defined for the current language.
+  final String color;
+
+  /// The name of the current language.
+  final String name;
+
+  factory Language.fromJson(Map<String, dynamic> json) {
+    return Language(
+      color: json['color'],
+      name: json['name'],
+    );
   }
 }

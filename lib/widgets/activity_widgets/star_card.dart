@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/activity_feed_models.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
+import 'package:github_activity_feed/widgets/activity_widgets/starred_repo_preview.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -45,13 +47,14 @@ class StarCard extends StatelessWidget {
                   ),
                 ),
 
-                /// Repository with issue number
-                subtitle: Text(starredRepoEdge.star.nameWithOwner),
-
                 /// Fuzzy timestamp
-                trailing: Text(timeago
-                    .format(starredRepoEdge.createdAt, locale: 'en_short')
-                    .replaceAll(' ', '')),
+                subtitle: Text(timeago.format(starredRepoEdge.createdAt, locale: 'en')),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                child: StarredRepoPreview(
+                  starredRepoEdge: starredRepoEdge,
+                ),
               ),
             ],
           ),

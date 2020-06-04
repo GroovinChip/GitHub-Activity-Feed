@@ -302,6 +302,12 @@ class GraphQLService {
                         }
                         updatedAt
                         url
+                        languages(first: 3, orderBy: {field: SIZE, direction: DESC}) {
+                          language: nodes {
+                            color
+                            name
+                          }
+                        }
                       }
                     }
                   }

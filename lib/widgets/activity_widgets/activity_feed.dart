@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/activity_feed_models.dart';
 import 'package:github_activity_feed/data/gist.dart';
 import 'package:github_activity_feed/services/graphql_service.dart';
+import 'package:github_activity_feed/utils/printers.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/gist_card.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/issue_card.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/issue_comment_card.dart';
@@ -21,7 +22,7 @@ class ActivityFeed extends StatelessWidget {
           return Center(
             child: CircularProgressIndicator(),
           );
-        } else if (snapshot.hasError) {
+        } else if (snapshot.hasError || snapshot.data == null) {
           return FeedbackOnError(message: snapshot.error.toString());
         } else {
           /// lists of data
