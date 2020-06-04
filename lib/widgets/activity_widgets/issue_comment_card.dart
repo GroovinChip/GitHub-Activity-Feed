@@ -40,7 +40,7 @@ class IssueCommentCard extends StatelessWidget {
 
                 /// user with action
                 title: Text(
-                  '${comment.author.login} commented on issue',
+                  '${comment.author.login} commented',
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onBackground,
                     fontWeight: FontWeight.bold,
@@ -66,14 +66,82 @@ class IssueCommentCard extends StatelessWidget {
                 trailing: Text(timeago.format(comment.createdAt, locale: 'en_short').replaceAll(' ', '')),
               ),
 
-              /// issue body text preview
+              /// Issue comment with issue preview
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                child: Text(
-                  comment.bodyText,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 14),
+                child: Row(
+                  children: [
+                    SizedBox(width: 56),
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: context.isDarkTheme ? Colors.grey : Colors.black,
+                          ),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              comment.bodyText,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(fontSize: 14),
+                            ),
+                            SizedBox(height: 8.0),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8.0),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: context.isDarkTheme ? Colors.grey : Colors.black,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          comment.parentIssue.title,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          comment.parentIssue.bodyText ?? 'No description',
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        SizedBox(height: 8.0),
+                                        Text(
+                                          '${comment.parentIssue.commentCount} comments',
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

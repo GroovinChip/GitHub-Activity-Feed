@@ -154,6 +154,7 @@ class Issue implements ActivityFeedItem {
     this.author,
     this.repository,
     this.createdAt,
+    this.commentCount,
   });
 
   ActivityFeedItemType get type => ActivityFeedItemType.issue;
@@ -327,6 +328,7 @@ class ParentIssue {
     this.repository,
     this.id,
     this.number,
+    this.bodyText,
   });
 
   String title;
@@ -334,6 +336,8 @@ class ParentIssue {
   Repository repository;
   String id;
   int number;
+  String bodyText;
+  int commentCount;
 
   ParentIssue.fromJson(Map<String, dynamic> json) {
     title = json['title'];
@@ -341,6 +345,8 @@ class ParentIssue {
     repository = json['repository'] != null ? Repository.fromJson(json['repository']) : null;
     id = json['id'];
     number = json['number'];
+    bodyText = json['bodyText'];
+    commentCount = json['comments']['totalCount'];
   }
 
   Map<String, dynamic> toJson() {
@@ -354,6 +360,7 @@ class ParentIssue {
     }
     data['id'] = this.id;
     data['number'] = this.number;
+    data['commentCount'] = this.commentCount;
     return data;
   }
 }

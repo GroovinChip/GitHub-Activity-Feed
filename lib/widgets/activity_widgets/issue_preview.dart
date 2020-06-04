@@ -47,7 +47,7 @@ class IssuePreview extends StatelessWidget {
                 ),
                 SizedBox(height: 8.0),
                 Text(
-                  '${issue.commentCount} comments',
+                  '${issue.commentCount ?? 0} comments',
                   style: TextStyle(
                     color: Colors.grey,
                   ),

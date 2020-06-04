@@ -249,10 +249,14 @@ class GraphQLService {
                       }
                       parentIssue: issue {
                         title
+                        bodyText
                         author {
                           login
                           avatarUrl
                           url
+                        }
+                        comments {
+                          totalCount
                         }
                         repository {
                           nameWithOwner
