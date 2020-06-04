@@ -219,6 +219,9 @@ class GraphQLService {
                       url
                       number
                       bodyText
+                      comments {
+                        totalCount
+                      }
                       author {
                         login
                         avatarUrl

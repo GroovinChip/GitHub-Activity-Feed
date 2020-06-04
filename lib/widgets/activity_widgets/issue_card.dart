@@ -31,7 +31,7 @@ class IssueCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ListTile(
-                /// user avatar
+                /// User avatar
                 leading: GestureDetector(
                   onTap: () => launch(issue.author.url),
                   child: CircleAvatar(
@@ -41,7 +41,7 @@ class IssueCard extends StatelessWidget {
                   ),
                 ),
 
-                /// user with action
+                /// User with action
                 title: Text(
                   '${issue.author.login} opened issue',
                   style: TextStyle(
@@ -51,7 +51,7 @@ class IssueCard extends StatelessWidget {
                   ),
                 ),
 
-                /// repository with issue number
+                /// Repository with issue number
                 subtitle: RichText(
                   text: TextSpan(
                     children: <TextSpan>[
@@ -65,40 +65,78 @@ class IssueCard extends StatelessWidget {
                   ),
                 ),
 
-                /// fuzzy timestamp
-                trailing: Text(timeago
-                    .format(issue.createdAt, locale: 'en_short')
-                    .replaceAll(' ', '')),
+                /// Fuzzy timestamp
+                trailing: Text(timeago.format(issue.createdAt, locale: 'en_short').replaceAll(' ', '')),
               ),
 
-              /// issue title
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                child: Text(
-                  issue.title,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-
-              /// issue body text preview
+              /// Issue preview
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                child: Text(
-                  issue.bodyText ?? 'No description',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 14),
-                ),
+                child: IssuePreview(issue: issue),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class IssuePreview extends StatelessWidget {
+  const IssuePreview({
+    Key key,
+    @required this.issue,
+  }) : super(key: key);
+
+  final Issue issue;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        SizedBox(width: 56),
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: context.isDarkTheme ? Colors.grey : Colors.black,
+              ),
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  issue.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  issue.bodyText ?? 'No description',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
+                ),
+                SizedBox(height: 8.0),
+                Text(
+                  '${issue.commentCount} comments',
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
