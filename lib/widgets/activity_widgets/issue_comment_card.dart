@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/activity_feed_models.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -66,7 +67,7 @@ class IssueCommentCard extends StatelessWidget {
                 trailing: Text(timeago.format(comment.createdAt, locale: 'en_short').replaceAll(' ', '')),
               ),
 
-              /// Issue comment with issue preview
+              /// Issue comment with issue context
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                 child: Row(
@@ -85,11 +86,38 @@ class IssueCommentCard extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Icon(MdiIcons.alertCircle, size: 18),
+                                SizedBox(width: 4),
+                                Expanded(
+                                  child: Text(
+                                    comment.parentIssue.title,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                             Text(
-                              comment.bodyText,
+                              comment.parentIssue.bodyText ?? 'No description',
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(fontSize: 14),
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            SizedBox(height: 8.0),
+                            Text(
+                              '${comment.parentIssue.commentCount} comments',
+                              style: TextStyle(
+                                color: Colors.grey,
+                              ),
                             ),
                             SizedBox(height: 8.0),
                             Row(
@@ -107,29 +135,20 @@ class IssueCommentCard extends StatelessWidget {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Text(
-                                          comment.parentIssue.title,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          comment.parentIssue.bodyText ?? 'No description',
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                        SizedBox(height: 8.0),
-                                        Text(
-                                          '${comment.parentIssue.commentCount} comments',
-                                          style: TextStyle(
-                                            color: Colors.grey,
-                                          ),
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Icon(MdiIcons.commentText, size: 22,),
+                                            SizedBox(width: 4),
+                                            Expanded(
+                                              child: Text(
+                                                comment.bodyText,
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(fontSize: 14),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
