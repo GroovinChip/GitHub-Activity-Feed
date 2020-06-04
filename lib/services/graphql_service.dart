@@ -272,7 +272,11 @@ class GraphQLService {
                       headRefName
                       bodyText
                       createdAt
-                      changedFiles
+                      additions
+                      deletions
+                      comments {
+                        totalCount
+                      }
                       author {
                         login
                         avatarUrl

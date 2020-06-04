@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/activity_feed_models.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class PullRequestPreview extends StatelessWidget {
   const PullRequestPreview({
@@ -48,13 +49,38 @@ class PullRequestPreview extends StatelessWidget {
                   children: [
                     // todo: get additions/subtractions (?), style accordingly
                     Text(
-                      '${pullRequest.changedFiles} changed files',
+                      '+${pullRequest.additions}',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.grey,
+                        color: Colors.green,
                       ),
                     ),
-                    // todo: comment count
+                    SizedBox(width: 4),
+                    Text(
+                      '-${pullRequest.deletions}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.red,
+                      ),
+                    ),
+                    SizedBox(width: 16),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          MdiIcons.commentTextMultipleOutline,
+                          size: 22,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          '${pullRequest.commentCount} comments',
+                          style: TextStyle(
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ],

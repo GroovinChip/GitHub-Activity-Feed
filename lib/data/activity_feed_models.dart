@@ -1,7 +1,6 @@
-import 'package:github_activity_feed/utils/annotations.dart';
-import 'package:github_activity_feed/utils/printers.dart';
-import 'package:meta/meta.dart';
 import 'package:github_activity_feed/data/gist.dart';
+import 'package:github_activity_feed/utils/annotations.dart';
+import 'package:meta/meta.dart';
 
 /// Generated using https://javiercbk.github.io/json_to_dart/
 
@@ -87,10 +86,8 @@ class UserActivity {
       userUrl: json['url'],
       gists: json['gists'] != null ? new Gists.fromJson(json['gists']) : null,
       issues: json['issues'] != null ? Issues.fromJson(json['issues']) : null,
-      issueComments:
-          json['issueComments'] != null ? IssueComments.fromJson(json['issueComments']) : null,
-      pullRequests:
-          json['pullRequests'] != null ? PullRequests.fromJson(json['pullRequests']) : null,
+      issueComments: json['issueComments'] != null ? IssueComments.fromJson(json['issueComments']) : null,
+      pullRequests: json['pullRequests'] != null ? PullRequests.fromJson(json['pullRequests']) : null,
       starredRepositories: starredRepositories,
     );
     if (json['starredRepositories'] != null) {
@@ -391,9 +388,11 @@ class PullRequest implements ActivityFeedItem {
     this.headRefName,
     this.bodyText,
     this.createdAt,
-    this.changedFiles,
+    this.additions,
+    this.deletions,
     this.author,
     this.repository,
+    this.commentCount,
   });
 
   ActivityFeedItemType get type => ActivityFeedItemType.pullRequest;
@@ -406,9 +405,11 @@ class PullRequest implements ActivityFeedItem {
   String headRefName;
   String bodyText;
   DateTime createdAt;
-  int changedFiles;
+  int additions;
+  int deletions;
   Author author;
   Repository repository;
+  int commentCount;
 
   PullRequest.fromJson(Map<String, dynamic> json) {
     databaseId = json['databaseId'];
@@ -419,7 +420,9 @@ class PullRequest implements ActivityFeedItem {
     headRefName = json['headRefName'];
     bodyText = json['bodyText'];
     createdAt = DateTime.parse(json['createdAt'] as String);
-    changedFiles = json['changedFiles'];
+    additions = json['additions'];
+    deletions = json['deletions'];
+    commentCount = json['comments']['totalCount'];
     author = json['author'] != null ? Author.fromJson(json['author']) : null;
     repository = json['repository'] != null ? Repository.fromJson(json['repository']) : null;
   }
@@ -435,7 +438,9 @@ class PullRequest implements ActivityFeedItem {
     data['headRefName'] = this.headRefName;
     data['bodyText'] = this.bodyText;
     data['createdAt'] = this.createdAt;
-    data['changedFiles'] = this.changedFiles;
+    data['additions'] = this.additions;
+    data['deletions'] = this.deletions;
+    data['commentCount'] = this.commentCount;
     if (this.author != null) {
       data['author'] = this.author.toJson();
     }
