@@ -200,6 +200,15 @@ class GraphQLService {
                       __typename
                       description
                       createdAt
+                      comments {
+                        totalCount
+                      }
+                      forks {
+                        totalCount
+                      }
+                      stargazers {
+                        totalCount
+                      }
                       files {
                         name
                       }
@@ -219,6 +228,10 @@ class GraphQLService {
                       url
                       number
                       bodyText
+                      closed
+                      comments {
+                        totalCount
+                      }
                       author {
                         login
                         avatarUrl
@@ -245,11 +258,19 @@ class GraphQLService {
                         url
                       }
                       parentIssue: issue {
+                        databaseId
+                        url
+                        createdAt
                         title
+                        closed
+                        bodyText
                         author {
                           login
                           avatarUrl
                           url
+                        }
+                        comments {
+                          totalCount
                         }
                         repository {
                           nameWithOwner
@@ -272,7 +293,11 @@ class GraphQLService {
                       headRefName
                       bodyText
                       createdAt
-                      changedFiles
+                      additions
+                      deletions
+                      comments {
+                        totalCount
+                      }
                       author {
                         login
                         avatarUrl
@@ -283,6 +308,15 @@ class GraphQLService {
                         description
                         url
                       }
+                      merged
+                      mergedAt
+                      mergedBy {
+                        login
+                        avatarUrl
+                        url
+                      }
+                      closed
+                      closedAt
                     }
                   }
                   starredRepositories(last: 10) {
@@ -302,6 +336,15 @@ class GraphQLService {
                         }
                         updatedAt
                         url
+                        owner {
+                          avatarUrl
+                        }
+                        languages(first: 3, orderBy: {field: SIZE, direction: DESC}) {
+                          language: nodes {
+                            color
+                            name
+                          }
+                        }
                       }
                     }
                   }

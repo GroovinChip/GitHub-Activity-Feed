@@ -1,6 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/activity_feed_models.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
+import 'package:github_activity_feed/widgets/activity_widgets/issue_preview.dart';
+import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -31,68 +35,69 @@ class IssueCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ListTile(
-                /// user avatar
+                /// User avatar
                 leading: GestureDetector(
                   onTap: () => launch(issue.author.url),
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                      issue.author.avatarUrl,
+                  child: UserAvatar(
+                    avatarUrl: issue.author.avatarUrl,
+                    height: 44,
+                    width: 44,
+                  ),
+                ),
+
+                /// User with action
+                title: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    '${issue.author.login} opened issue',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
                   ),
                 ),
 
-                /// user with action
-                title: Text(
-                  '${issue.author.login} opened issue',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onBackground,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-
-                /// repository with issue number
-                subtitle: RichText(
-                  text: TextSpan(
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: '${issue.repository.nameWithOwner} ',
+                /// Repository with issue number
+                subtitle: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      MdiIcons.alertCircleOutline,
+                      color: !issue.closed ? Colors.green : Colors.red,
+                      size: 16,
+                    ),
+                    SizedBox(width: 4),
+                    Expanded(
+                      child: FittedBox(
+                        alignment: Alignment.topLeft,
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          '${issue.repository.nameWithOwner} #${issue.number}',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: context.isDarkTheme ? Colors.grey : Colors.grey.shade800,
+                          ),
+                        ),
                       ),
-
-                      /// this is here for optional styling
-                      TextSpan(text: '#${issue.number}'),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
 
-                /// fuzzy timestamp
-                trailing: Text(timeago
-                    .format(issue.createdAt, locale: 'en_short')
-                    .replaceAll(' ', '')),
-              ),
-
-              /// issue title
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                child: Text(
-                  issue.title,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                /// Fuzzy timestamp
+                trailing: Text(
+                  timeago.format(issue.createdAt, locale: 'en_short').replaceAll(' ', ''),
                 ),
               ),
 
-              /// issue body text preview
+              /// Issue preview
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                child: Text(
-                  issue.bodyText ?? 'No description',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 14),
+                child: IssuePreview(
+                  issue: issue,
+                  isComment: false,
                 ),
               ),
             ],

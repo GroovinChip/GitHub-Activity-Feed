@@ -1,4 +1,5 @@
 import 'package:github_activity_feed/data/activity_feed_models.dart';
+import 'package:github_activity_feed/data/user.dart';
 
 /// Generated using https://javiercbk.github.io/json_to_dart/
 
@@ -32,6 +33,9 @@ class Gist implements ActivityFeedItem {
     this.files,
     this.owner,
     this.url,
+    this.commentCount,
+    this.starredCount,
+    this.forkCount,
   });
 
   ActivityFeedItemType get type => ActivityFeedItemType.gist;
@@ -39,9 +43,11 @@ class Gist implements ActivityFeedItem {
   String description;
   DateTime createdAt;
   List<Files> files;
-  Owner owner;
+  User owner;
   String url;
-
+  int commentCount;
+  int starredCount;
+  int forkCount;
 
   Gist.fromJson(Map<String, dynamic> json) {
     description = json['description'];
@@ -52,8 +58,11 @@ class Gist implements ActivityFeedItem {
         files.add(new Files.fromJson(v));
       });
     }
-    owner = json['owner'] != null ? new Owner.fromJson(json['owner']) : null;
+    owner = json['owner'] != null ? new User.fromJson(json['owner']) : null;
     url = json['url'];
+    commentCount = json['comments']['totalCount'];
+    starredCount = json['stargazers']['totalCount'];
+    forkCount = json['forks']['totalCount'];
   }
 
   Map<String, dynamic> toJson() {
@@ -68,6 +77,9 @@ class Gist implements ActivityFeedItem {
       data['owner'] = this.owner.toJson();
     }
     data['url'] = this.url;
+    data['commentCount'] = this.commentCount;
+    data['starredCount'] = this.starredCount;
+    data['forkCount'] = this.forkCount;
     return data;
   }
 }
@@ -84,28 +96,6 @@ class Files {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['name'] = this.name;
-    return data;
-  }
-}
-
-class Owner {
-  String login;
-  String avatarUrl;
-  String url;
-
-  Owner({this.login, this.avatarUrl, this.url});
-
-  Owner.fromJson(Map<String, dynamic> json) {
-    login = json['login'];
-    avatarUrl = json['avatarUrl'];
-    url = json['url'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['login'] = this.login;
-    data['avatarUrl'] = this.avatarUrl;
-    data['url'] = this.url;
     return data;
   }
 }

@@ -1,6 +1,7 @@
+import 'package:github_activity_feed/data/gist.dart';
+import 'package:github_activity_feed/data/user.dart';
 import 'package:github_activity_feed/utils/annotations.dart';
 import 'package:meta/meta.dart';
-import 'package:github_activity_feed/data/gist.dart';
 
 /// Generated using https://javiercbk.github.io/json_to_dart/
 
@@ -86,10 +87,8 @@ class UserActivity {
       userUrl: json['url'],
       gists: json['gists'] != null ? new Gists.fromJson(json['gists']) : null,
       issues: json['issues'] != null ? Issues.fromJson(json['issues']) : null,
-      issueComments:
-          json['issueComments'] != null ? IssueComments.fromJson(json['issueComments']) : null,
-      pullRequests:
-          json['pullRequests'] != null ? PullRequests.fromJson(json['pullRequests']) : null,
+      issueComments: json['issueComments'] != null ? IssueComments.fromJson(json['issueComments']) : null,
+      pullRequests: json['pullRequests'] != null ? PullRequests.fromJson(json['pullRequests']) : null,
       starredRepositories: starredRepositories,
     );
     if (json['starredRepositories'] != null) {
@@ -156,6 +155,7 @@ class Issue implements ActivityFeedItem {
     this.author,
     this.repository,
     this.createdAt,
+    this.commentCount,
   });
 
   ActivityFeedItemType get type => ActivityFeedItemType.issue;
@@ -168,6 +168,8 @@ class Issue implements ActivityFeedItem {
   Author author;
   Repository repository;
   DateTime createdAt;
+  int commentCount;
+  bool closed;
 
   Issue.fromJson(Map<String, dynamic> json) {
     databaseId = json['databaseId'];
@@ -178,6 +180,8 @@ class Issue implements ActivityFeedItem {
     author = json['author'] != null ? Author.fromJson(json['author']) : null;
     repository = json['repository'] != null ? Repository.fromJson(json['repository']) : null;
     createdAt = DateTime.parse(json['createdAt'] as String);
+    commentCount = json['comments']['totalCount'];
+    closed = json['closed'];
   }
 
   Map<String, dynamic> toJson() {
@@ -195,6 +199,8 @@ class Issue implements ActivityFeedItem {
       data['repository'] = this.repository.toJson();
     }
     data['createdAt'] = this.createdAt;
+    data['commentCount'] = this.commentCount;
+    data['closed'] = this.closed;
     return data;
   }
 }
@@ -291,15 +297,15 @@ class IssueComment implements ActivityFeedItem {
   DateTime createdAt;
   String url;
   Author author;
-  ParentIssue parentIssue;
+  Issue parentIssue;
 
   IssueComment.fromJson(Map<String, dynamic> json) {
-   databaseId = json['databaseId'];
+    databaseId = json['databaseId'];
     bodyText = json['bodyText'];
     createdAt = DateTime.parse(json['createdAt'] as String);
     url = json['url'];
     author = json['author'] != null ? Author.fromJson(json['author']) : null;
-    parentIssue = json['parentIssue'] != null ? ParentIssue.fromJson(json['parentIssue']) : null;
+    parentIssue = json['parentIssue'] != null ? Issue.fromJson(json['parentIssue']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -315,44 +321,6 @@ class IssueComment implements ActivityFeedItem {
     if (this.parentIssue != null) {
       data['parentIssue'] = this.parentIssue.toJson();
     }
-    return data;
-  }
-}
-
-class ParentIssue {
-  ParentIssue({
-    this.title,
-    this.author,
-    this.repository,
-    this.id,
-    this.number,
-  });
-
-  String title;
-  Author author;
-  Repository repository;
-  String id;
-  int number;
-
-  ParentIssue.fromJson(Map<String, dynamic> json) {
-    title = json['title'];
-    author = json['author'] != null ? Author.fromJson(json['author']) : null;
-    repository = json['repository'] != null ? Repository.fromJson(json['repository']) : null;
-    id = json['id'];
-    number = json['number'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['title'] = this.title;
-    if (this.author != null) {
-      data['author'] = this.author.toJson();
-    }
-    if (this.repository != null) {
-      data['repository'] = this.repository.toJson();
-    }
-    data['id'] = this.id;
-    data['number'] = this.number;
     return data;
   }
 }
@@ -390,37 +358,60 @@ class PullRequest implements ActivityFeedItem {
     this.headRefName,
     this.bodyText,
     this.createdAt,
-    this.changedFiles,
+    this.additions,
+    this.deletions,
     this.author,
     this.repository,
+    this.commentCount,
+    this.merged,
+    this.mergedAt,
+    this.mergedBy,
+    this.closed,
+    this.closedAt,
   });
 
   ActivityFeedItemType get type => ActivityFeedItemType.pullRequest;
 
-  int databaseId;
-  String title;
-  String url;
-  int number;
-  String baseRefName;
-  String headRefName;
-  String bodyText;
-  DateTime createdAt;
-  int changedFiles;
-  Author author;
-  Repository repository;
+  final int databaseId;
+  final String title;
+  final String url;
+  final int number;
+  final String baseRefName;
+  final String headRefName;
+  final String bodyText;
+  final DateTime createdAt;
+  final int additions;
+  final int deletions;
+  final Author author;
+  final Repository repository;
+  final int commentCount;
+  final bool merged;
+  final User mergedBy;
+  final DateTime mergedAt;
+  final bool closed;
+  final DateTime closedAt;
 
-  PullRequest.fromJson(Map<String, dynamic> json) {
-    databaseId = json['databaseId'];
-    title = json['title'];
-    url = json['url'];
-    number = json['number'];
-    baseRefName = json['baseRefName'];
-    headRefName = json['headRefName'];
-    bodyText = json['bodyText'];
-    createdAt = DateTime.parse(json['createdAt'] as String);
-    changedFiles = json['changedFiles'];
-    author = json['author'] != null ? Author.fromJson(json['author']) : null;
-    repository = json['repository'] != null ? Repository.fromJson(json['repository']) : null;
+  factory PullRequest.fromJson(Map<String, dynamic> json) {
+    return PullRequest(
+      databaseId: json['databaseId'],
+      title: json['title'],
+      url: json['url'],
+      number: json['number'],
+      baseRefName: json['baseRefName'],
+      headRefName: json['headRefName'],
+      bodyText: json['bodyText'],
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      additions: json['additions'],
+      deletions: json['deletions'],
+      author: Author.fromJson(json['author']),
+      repository: Repository.fromJson(json['repository']),
+      commentCount: json['comments']['totalCount'],
+      merged: json['merged'] != null ? json['merged'] : false,
+      mergedBy: json['mergedBy'] != null ? User.fromJson(json['mergedBy']) : null,
+      mergedAt: json['mergedAt'] != null ? DateTime.parse(json['mergedAt'] as String) : null,
+      closed: json['closed'] != null ? json['closed'] : false,
+      closedAt: json['closedAt'] != null ? DateTime.parse(json['closedAt'] as String) : null,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -434,13 +425,20 @@ class PullRequest implements ActivityFeedItem {
     data['headRefName'] = this.headRefName;
     data['bodyText'] = this.bodyText;
     data['createdAt'] = this.createdAt;
-    data['changedFiles'] = this.changedFiles;
+    data['additions'] = this.additions;
+    data['deletions'] = this.deletions;
+    data['commentCount'] = this.commentCount;
     if (this.author != null) {
       data['author'] = this.author.toJson();
     }
     if (this.repository != null) {
       data['repository'] = this.repository.toJson();
     }
+    data['merged'] = this.merged;
+    data['mergedAt'] = this.mergedAt;
+    data['mergedBy'] = this.mergedBy.toJson();
+    data['closed'] = this.closed;
+    data['closedAt'] = this.closedAt;
     return data;
   }
 }
@@ -482,50 +480,48 @@ class Star {
     this.stargazers,
     this.updatedAt,
     this.url,
+    this.languages,
+    this.owner,
   });
 
-  String sTypename;
-  String id;
-  int databaseId;
-  String nameWithOwner;
-  String description;
-  int forkCount;
-  bool isFork;
-  Stargazers stargazers;
-  String updatedAt;
-  String url;
+  final String sTypename;
+  final String id;
+  final int databaseId;
+  final String nameWithOwner;
+  final String description;
+  final int forkCount;
+  final bool isFork;
+  final Stargazers stargazers;
+  final String updatedAt;
+  final String url;
+  final List<Language> languages;
+  final User owner;
 
-  Star.fromJson(Map<String, dynamic> json) {
-    sTypename = json['__typename'];
-    id = json['id'];
-    databaseId = json['databaseId'];
-    nameWithOwner = json['nameWithOwner'];
-    description = json['description'];
-    forkCount = json['forkCount'];
-    isFork = json['isFork'];
-    stargazers = json['stargazers'] != null ? Stargazers.fromJson(json['stargazers']) : null;
-    updatedAt = json['updatedAt'];
-    url = json['url'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['__typename'] = this.sTypename;
-    data['id'] = this.id;
-    data['databaseId'] = this.databaseId;
-    data['nameWithOwner'] = this.nameWithOwner;
-    data['description'] = this.description;
-    data['forkCount'] = this.forkCount;
-    data['isFork'] = this.isFork;
-    if (this.stargazers != null) {
-      data['stargazers'] = this.stargazers.toJson();
+  factory Star.fromJson(Map<String, dynamic> json) {
+    final _languages = <Language>[];
+    if (json['languages'] != null) {
+      json['languages']['language'].forEach(
+        (l) => _languages.add(Language.fromJson(l)),
+      );
     }
-    data['updatedAt'] = this.updatedAt;
-    data['url'] = this.url;
-    return data;
+    return Star(
+      sTypename: json['__typename'],
+      id: json['id'],
+      databaseId: json['databaseId'],
+      nameWithOwner: json['nameWithOwner'],
+      description: json['description'],
+      forkCount: json['forkCount'],
+      isFork: json['isFork'],
+      stargazers: Stargazers.fromJson(json['stargazers']),
+      updatedAt: json['updatedAt'],
+      url: json['url'],
+      languages: _languages,
+      owner: User.fromJson(json['owner']),
+    );
   }
 }
 
+/// A count of users who have starred a repository.
 class Stargazers {
   Stargazers({this.totalCount});
 
@@ -539,5 +535,26 @@ class Stargazers {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['totalCount'] = this.totalCount;
     return data;
+  }
+}
+
+/// Represents a given language found in repositories.
+class Language {
+  Language({
+    this.color,
+    this.name,
+  });
+
+  /// The color defined for the current language.
+  final String color;
+
+  /// The name of the current language.
+  final String name;
+
+  factory Language.fromJson(Map<String, dynamic> json) {
+    return Language(
+      color: json['color'],
+      name: json['name'],
+    );
   }
 }

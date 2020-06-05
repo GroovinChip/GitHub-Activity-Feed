@@ -22,8 +22,13 @@ class ActivityFeed extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         } else if (snapshot.hasError) {
+          print(snapshot.error);
           return FeedbackOnError(message: snapshot.error.toString());
         } else {
+          if (snapshot.data['user'] == null) {
+            return FeedbackOnError(message: 'Some activity feed data seems to be null');
+          }
+
           /// lists of data
           final Following feed = Following.fromJson(snapshot.data['user']['following']);
           List<Gist> gists = [];

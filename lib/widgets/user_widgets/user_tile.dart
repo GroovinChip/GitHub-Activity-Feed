@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:github_activity_feed/data/base_user.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
+import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// A tile that represents a User, with less detail that [UserCard]
 class UserTile extends StatelessWidget {
+  final BaseUser user;
+
   const UserTile({
     Key key,
     this.user,
   }) : super(key: key);
-
-  final BaseUser user;
 
   @override
   Widget build(BuildContext context) {
@@ -72,8 +73,10 @@ class UserInfoRow extends StatelessWidget {
       padding: const EdgeInsets.all(12.0),
       child: Row(
         children: [
-          CircleAvatar(
-            backgroundImage: NetworkImage(user.avatarUrl),
+          UserAvatar(
+            avatarUrl: user.avatarUrl,
+            height: 44,
+            width: 44,
           ),
           SizedBox(width: 8),
           Column(

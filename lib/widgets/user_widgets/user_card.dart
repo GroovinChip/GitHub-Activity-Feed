@@ -3,17 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/base_user.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/utils/printers.dart';
+import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// A card that represents a User, with more detail than [UserTile]
 class UserCard extends StatelessWidget {
+  final BaseUser user;
+
   const UserCard({
     Key key,
     @required this.user,
   }) : super(key: key);
-
-  final BaseUser user;
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +33,10 @@ class UserCard extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(user.avatarUrl ??
-                        'https://avatars1.githubusercontent.com/u/5868834?s=400&v=4'), // hack
-                    backgroundColor: Colors.grey[200],
+                  UserAvatar(
+                    avatarUrl: user.avatarUrl,
+                    height: 44,
+                    width: 44,
                   ),
                   if (user.viewerIsFollowing != null)
                     !user.viewerIsFollowing

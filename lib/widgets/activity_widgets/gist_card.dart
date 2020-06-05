@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/gist.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
+import 'package:github_activity_feed/widgets/activity_widgets/gist_preview.dart';
+import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -34,10 +36,10 @@ class GistCard extends StatelessWidget {
                 /// Owner avatar
                 leading: GestureDetector(
                   onTap: () => launch(gist.owner.url),
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                      gist.owner.avatarUrl,
-                    ),
+                  child: UserAvatar(
+                    avatarUrl: gist.owner.avatarUrl,
+                    height: 44,
+                    width: 44,
                   ),
                 ),
 
@@ -51,11 +53,16 @@ class GistCard extends StatelessWidget {
                   ),
                 ),
 
-                /// Gist file count
-                subtitle: Text('Contains ${gist.files.length} files'),
+                subtitle: Text(''),
 
                 /// Fuzzy timestamp
                 trailing: Text(timeago.format(gist.createdAt, locale: 'en_short').replaceAll(' ', '')),
+              ),
+
+              /// Gist preview
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                child: GistPreview(gist: gist),
               ),
             ],
           ),
