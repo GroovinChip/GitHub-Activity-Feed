@@ -4,8 +4,8 @@ import 'package:simple_gql/simple_gql.dart';
 /// This class handles GraphQL API calls to the GitHub v4 GraphQL endpoint
 /// Some terminology:
 /// - Viewer: the currently authenticated user
-class GhGraphQLService {
-  GhGraphQLService({
+class GraphQLService {
+  GraphQLService({
     @required this.token,
   });
 
@@ -184,6 +184,7 @@ class GhGraphQLService {
   }
 
   /// Get the main activity feed
+  /// todo: pagination
   Future<dynamic> activityFeed() async {
     final GQLResponse response = await client.query(
       query: r'''
@@ -191,6 +192,34 @@ class GhGraphQLService {
             user: viewer {
               following(last: 10) {
                 user: nodes {
+                  login
+                  avatarUrl
+                  url
+                  gists(last: 10, privacy: PUBLIC) {
+                    gist: nodes {
+                      __typename
+                      description
+                      createdAt
+                      comments {
+                        totalCount
+                      }
+                      forks {
+                        totalCount
+                      }
+                      stargazers {
+                        totalCount
+                      }
+                      files {
+                        name
+                      }
+                      owner {
+                        login
+                        avatarUrl
+                        url
+                      }
+                      url
+                    }
+                  }
                   issues(last: 10) {
                     issue: nodes {
                       __typename
@@ -199,6 +228,10 @@ class GhGraphQLService {
                       url
                       number
                       bodyText
+                      closed
+                      comments {
+                        totalCount
+                      }
                       author {
                         login
                         avatarUrl
@@ -225,11 +258,19 @@ class GhGraphQLService {
                         url
                       }
                       parentIssue: issue {
+                        databaseId
+                        url
+                        createdAt
                         title
+                        closed
+                        bodyText
                         author {
                           login
                           avatarUrl
                           url
+                        }
+                        comments {
+                          totalCount
                         }
                         repository {
                           nameWithOwner
@@ -252,7 +293,11 @@ class GhGraphQLService {
                       headRefName
                       bodyText
                       createdAt
-                      changedFiles
+                      additions
+                      deletions
+                      comments {
+                        totalCount
+                      }
                       author {
                         login
                         avatarUrl
@@ -263,6 +308,15 @@ class GhGraphQLService {
                         description
                         url
                       }
+                      merged
+                      mergedAt
+                      mergedBy {
+                        login
+                        avatarUrl
+                        url
+                      }
+                      closed
+                      closedAt
                     }
                   }
                   starredRepositories(last: 10) {
@@ -282,6 +336,15 @@ class GhGraphQLService {
                         }
                         updatedAt
                         url
+                        owner {
+                          avatarUrl
+                        }
+                        languages(first: 3, orderBy: {field: SIZE, direction: DESC}) {
+                          language: nodes {
+                            color
+                            name
+                          }
+                        }
                       }
                     }
                   }

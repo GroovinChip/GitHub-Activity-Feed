@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/keys.dart';
-
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as pp;
 import 'package:uuid/uuid.dart';

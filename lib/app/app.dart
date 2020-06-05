@@ -3,8 +3,9 @@ import 'package:github_activity_feed/keys.dart';
 import 'package:github_activity_feed/screens/home_screen.dart';
 import 'package:github_activity_feed/screens/login_page.dart';
 import 'package:github_activity_feed/services/auth_service.dart';
-import 'package:github_activity_feed/services/gh_gql_query_service.dart';
 import 'package:github_activity_feed/services/github_service.dart';
+import 'package:github_activity_feed/services/graphql_service.dart';
+import 'package:github_activity_feed/state/prefs_bloc.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -16,10 +17,12 @@ class GitHubActivityFeedApp extends StatefulWidget {
     Key key,
     @required this.authService,
     @required this.githubService,
+    @required this.prefsBloc,
   }) : super(key: key);
 
   final AuthService authService;
   final GitHubService githubService;
+  final PrefsBloc prefsBloc;
 
   @override
   _GitHubActivityFeedAppState createState() => _GitHubActivityFeedAppState();
@@ -27,13 +30,13 @@ class GitHubActivityFeedApp extends StatefulWidget {
 
 class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
   final _navigatorKey = GlobalKey<NavigatorState>();
-  GhGraphQLService ghQueryService;
+  GraphQLService graphQLService;
 
   @override
   void initState() {
     super.initState();
     widget.githubService.currentUser.addListener(_onCurrentUserChanged);
-    ghQueryService = GhGraphQLService(token: widget.githubService.github.auth.token);
+    graphQLService = GraphQLService(token: widget.githubService.github.auth.token);
   }
 
   void _onCurrentUserChanged() {
@@ -61,7 +64,8 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
         Provider<AuthService>.value(value: widget.authService),
         Provider<GitHubService>.value(value: widget.githubService),
         ValueListenableProvider.value(value: widget.githubService.currentUser),
-        Provider<GhGraphQLService>.value(value: ghQueryService),
+        Provider<GraphQLService>.value(value: graphQLService),
+        Provider<PrefsBloc>.value(value: widget.prefsBloc),
       ],
       child: Wiredash(
         navigatorKey: _navigatorKey,
@@ -72,64 +76,72 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
           primaryColor: Color(0xff2962FF),
           secondaryColor: Color(0xff3BACFF),
         ),
-        child: MaterialApp(
-          navigatorKey: _navigatorKey,
-          title: 'GitHub Activity Feed',
-          theme: ThemeData(
-            brightness: Brightness.light,
-            colorScheme: ColorScheme.light().copyWith(
-              primary: Color(0xff2962FF),
-              primaryVariant: Color(0xff0039cb),
-              secondary: Color(0xff3BACFF),
-              secondaryVariant: Color(0xff007ecb),
-            ),
-            primaryColor: Color(0xff2962FF),
-            // for CircularProgressIndicator and material scroll color
-            accentColor: Color(0xff3BACFF),
-            textTheme: GoogleFonts.interTextTheme(
-              ThemeData.light().textTheme,
-            ),
-            appBarTheme: AppBarTheme(
-              color: Color(0xff2962FF),
-            ),
-            bottomNavigationBarTheme: BottomNavigationBarThemeData(
-              selectedItemColor: context.colorScheme.primary,
-              unselectedItemColor: context.colorScheme.onSurface,
-            ),
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-          ),
-          darkTheme: ThemeData(
-            brightness: Brightness.dark,
-            colorScheme: ColorScheme.dark().copyWith(
-              primary: Color(0xff2962FF),
-              primaryVariant: Color(0xff0039cb),
-              secondary: Color(0xff3BACFF),
-              secondaryVariant: Color(0xff007ecb),
-            ),
-            primaryColor: Color(0xff2962FF),
-            // for CircularProgressIndicator and material scroll color
-            accentColor: Color(0xff3BACFF),
-            canvasColor: ColorScheme.dark().background,
-            textTheme: GoogleFonts.interTextTheme(
-              ThemeData.dark().textTheme,
-            ),
-            appBarTheme: AppBarTheme(
-              color: Colors.black,
-            ),
-            bottomNavigationBarTheme: BottomNavigationBarThemeData(
-              selectedItemColor: context.colorScheme.primary,
-              unselectedItemColor: context.colorScheme.onBackground,
-            ),
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-          ),
-          themeMode: ThemeMode.system,
-          initialRoute: widget.githubService.currentUser.value == null ? LoginPage.routeName : HomeScreen.routeName,
-          onGenerateInitialRoutes: (String initialRoute) => [
-            _onGenerateRoute(RouteSettings(name: initialRoute)),
-          ],
-          onGenerateRoute: _onGenerateRoute,
-          debugShowCheckedModeBanner: false,
+        options: WiredashOptionsData(
+          showDebugFloatingEntryPoint: false,
         ),
+        child: StreamBuilder<ThemeMode>(
+            stream: widget.prefsBloc.themeModeSubject,
+            initialData: widget.prefsBloc.themeModeSubject.value,
+            builder: (context, snapshot) {
+              return MaterialApp(
+                navigatorKey: _navigatorKey,
+                title: 'GitHub Activity Feed',
+                theme: ThemeData(
+                  brightness: Brightness.light,
+                  colorScheme: ColorScheme.light().copyWith(
+                    primary: Color(0xff2962FF),
+                    primaryVariant: Color(0xff0039cb),
+                    secondary: Color(0xff3BACFF),
+                    secondaryVariant: Color(0xff007ecb),
+                  ),
+                  primaryColor: Color(0xff2962FF),
+                  // for CircularProgressIndicator and material scroll color
+                  accentColor: Color(0xff3BACFF),
+                  textTheme: GoogleFonts.interTextTheme(
+                    ThemeData.light().textTheme,
+                  ),
+                  appBarTheme: AppBarTheme(
+                    color: Color(0xff2962FF),
+                  ),
+                  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+                    selectedItemColor: context.colorScheme.primary,
+                    unselectedItemColor: context.colorScheme.onSurface,
+                  ),
+                  visualDensity: VisualDensity.adaptivePlatformDensity,
+                ),
+                darkTheme: ThemeData(
+                  brightness: Brightness.dark,
+                  colorScheme: ColorScheme.dark().copyWith(
+                    primary: Color(0xff2962FF),
+                    primaryVariant: Color(0xff0039cb),
+                    secondary: Color(0xff3BACFF),
+                    secondaryVariant: Color(0xff007ecb),
+                  ),
+                  primaryColor: Color(0xff2962FF),
+                  // for CircularProgressIndicator and material scroll color
+                  accentColor: Color(0xff3BACFF),
+                  canvasColor: ColorScheme.dark().background,
+                  textTheme: GoogleFonts.interTextTheme(
+                    ThemeData.dark().textTheme,
+                  ),
+                  appBarTheme: AppBarTheme(
+                    color: Colors.black,
+                  ),
+                  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+                    selectedItemColor: context.colorScheme.primary,
+                    unselectedItemColor: context.colorScheme.onBackground,
+                  ),
+                  visualDensity: VisualDensity.adaptivePlatformDensity,
+                ),
+                themeMode: snapshot.data,
+                initialRoute: widget.githubService.currentUser.value == null ? LoginPage.routeName : HomeScreen.routeName,
+                onGenerateInitialRoutes: (String initialRoute) => [
+                  _onGenerateRoute(RouteSettings(name: initialRoute)),
+                ],
+                onGenerateRoute: _onGenerateRoute,
+                debugShowCheckedModeBanner: false,
+              );
+            }),
       ),
     );
   }

@@ -2,40 +2,39 @@ name: github_activity_feed
 description: A Flutter application for viewing a rich feed of GitHub activity.
 publish_to: 'none'
 
-version: 0.2.3
+version: 0.3.0
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.7.0 <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
 
+  cloud_firestore: ^0.13.6
+  crypto: ^2.1.5
   cupertino_icons: ^0.1.3
-  google_fonts: ^1.1.0
-  url_launcher: ^5.4.7
   github: ^6.2.2
-  provider: ^4.1.2
-  uuid: ^2.0.4
-  path_provider: ^1.6.8
-  crypto: any
-  cloud_firestore: ^0.13.5
-  material_design_icons_flutter: ^4.0.5245
-  rxdart: ^0.24.1
-  groovin_widgets: ^1.5.0+1
-  animations: ^1.0.0+5
-  flutter_markdown: ^0.4.0
+  google_fonts: ^1.1.0
+  groovin_widgets: ^1.5.0+2
   intl: ^0.16.1
-  timeago: ^2.0.26
-  wiredash: ^0.0.1+1
+  material_design_icons_flutter: ^4.0.5345
+  meta: ^1.1.8
+  package_info: ^0.4.0+18
+  path_provider: ^1.6.9
+  provider: ^4.1.2
+  rxdart: ^0.24.1
+  shared_preferences: ^0.5.7+3
+  simple_gql: ^1.1.0+1
   syntax_highlighter: ^0.1.0
-  simple_gql:
-  package_info:
+  timeago: ^2.0.26
+  url_launcher: ^5.4.10
+  uuid: ^2.0.4
+  wiredash: ^0.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
 flutter:
-
   uses-material-design: true

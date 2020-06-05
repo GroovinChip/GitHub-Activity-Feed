@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/search_screen.dart';
-import 'package:github_activity_feed/widgets/activity_feed.dart';
-import 'package:github_activity_feed/widgets/following_users.dart';
+import 'package:github_activity_feed/state/prefs_bloc.dart';
+import 'package:github_activity_feed/widgets/activity_widgets/activity_feed.dart';
 import 'package:github_activity_feed/widgets/menu_bottom_sheet_content.dart';
+import 'package:github_activity_feed/widgets/user_widgets/following_users.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = Navigator.defaultRouteName;
@@ -26,8 +28,18 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with ProvidedState {
+  PrefsBloc prefsbloc;
   int _currentIndex = 0;
-  final List<Widget> titles = [Text('Activity Feed'), Text('You Follow'), Text('Discover More')];
+  final List<Widget> titles = [
+    Text('Activity Feed'),
+    Text('You Follow'),
+  ];
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    prefsbloc = Provider.of<PrefsBloc>(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,14 +68,21 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
           child: titles[_currentIndex],
         ),
         actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () => showSearch(
-              context: context,
-              delegate: SearchScreen(
-                gitHub: githubService.github,
-              ),
-            ),
+          StreamBuilder<bool>(
+            stream: prefsbloc.cardOrTileSubject,
+            initialData: prefsbloc.cardOrTileSubject.value,
+            builder: (context, snapshot) {
+              return IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () => showSearch(
+                  context: context,
+                  delegate: SearchScreen(
+                    gitHub: githubService.github,
+                    showCardsOrTiles: snapshot.data,
+                  ),
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -72,9 +91,6 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
         children: [
           ActivityFeed(),
           ViewerFollowingList(),
-          Center(
-            child: Text('Discovery Service'),
-          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -90,10 +106,6 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
           BottomNavigationBarItem(
             icon: Icon(Icons.people_outline),
             title: Text('Following'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(MdiIcons.featureSearchOutline),
-            title: Text('Discover'),
           ),
         ],
       ),
