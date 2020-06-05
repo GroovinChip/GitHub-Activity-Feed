@@ -15,7 +15,6 @@ class PullRequestPreview extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(width: 56),
         Expanded(
           child: Container(
             padding: const EdgeInsets.all(8.0),
@@ -70,7 +69,7 @@ class PullRequestPreview extends StatelessWidget {
                       children: [
                         Icon(
                           MdiIcons.commentTextMultipleOutline,
-                          size: 22,
+                          size: 18,
                           color: Colors.grey,
                         ),
                         SizedBox(width: 8),

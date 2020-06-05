@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/activity_feed_models.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
+import 'package:github_activity_feed/widgets/activity_widgets/issue_preview.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -44,116 +46,64 @@ class IssueCard extends StatelessWidget {
                 ),
 
                 /// User with action
-                title: Text(
-                  '${issue.author.login} opened issue',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onBackground,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                title: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    '${issue.author.login} opened issue',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
 
                 /// Repository with issue number
-                subtitle: RichText(
-                  text: TextSpan(
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: '${issue.repository.nameWithOwner} ',
+                subtitle: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      MdiIcons.alertCircleOutline,
+                      color: !issue.closed ? Colors.green : Colors.red,
+                      size: 16,
+                    ),
+                    SizedBox(width: 4),
+                    Expanded(
+                      child: FittedBox(
+                        alignment: Alignment.topLeft,
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          '${issue.repository.nameWithOwner} #${issue.number}',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ),
                       ),
-
-                      /// this is here for optional styling
-                      TextSpan(text: '#${issue.number}'),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
 
                 /// Fuzzy timestamp
-                trailing:
-                    Text(timeago.format(issue.createdAt, locale: 'en_short').replaceAll(' ', '')),
+                trailing: Text(
+                  timeago.format(issue.createdAt, locale: 'en_short').replaceAll(' ', ''),
+                ),
               ),
 
               /// Issue preview
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                child: IssuePreview(issue: issue),
+                child: IssuePreview(
+                  issue: issue,
+                  isComment: false,
+                ),
               ),
             ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class IssuePreview extends StatelessWidget {
-  const IssuePreview({
-    Key key,
-    @required this.issue,
-  }) : super(key: key);
-
-  final Issue issue;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: context.isDarkTheme ? Colors.grey : Colors.black,
-              ),
-              borderRadius: BorderRadius.circular(8.0),
-              color: context.isDarkTheme
-                  ? context.colorScheme.background
-                  : Colors.grey, // update for light theme
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  issue.title,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  issue.bodyText ?? 'No description',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey,
-                  ),
-                ),
-                SizedBox(height: 8.0),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      MdiIcons.commentMultiple,
-                      color: Colors.grey,
-                      size: 16,
-                    ),
-                    SizedBox(width: 4),
-                    Text(
-                      '${issue.commentCount ?? 0} comments',
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

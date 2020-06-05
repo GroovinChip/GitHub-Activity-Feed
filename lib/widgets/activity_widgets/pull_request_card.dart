@@ -50,21 +50,17 @@ class PullRequestCard extends StatelessWidget {
                 ),
 
                 /// repository with issue number
-                subtitle: RichText(
-                  text: TextSpan(
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: '${pullRequest.repository.nameWithOwner} ',
-                      ),
-
-                      /// this is here for optional styling
-                      TextSpan(text: '#${pullRequest.number}'),
-                    ],
+                subtitle: Text(
+                  '${pullRequest.repository.nameWithOwner} #${pullRequest.number}',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
                   ),
                 ),
 
                 /// Fuzzy timestamp
-                trailing: Text(timeago.format(pullRequest.createdAt, locale: 'en_short').replaceAll(' ', '')),
+                trailing: Text(
+                    timeago.format(pullRequest.createdAt, locale: 'en_short').replaceAll(' ', '')),
               ),
 
               /// PR preview

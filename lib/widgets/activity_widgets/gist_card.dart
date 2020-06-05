@@ -95,20 +95,7 @@ class GistCard extends StatelessWidget {
                                 ),
                                 SizedBox(width: 4),
                                 Text(
-                                  '${gist.files.length}',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                SizedBox(width: 16),
-                                Icon(
-                                  MdiIcons.sourceFork,
-                                  size: 18,
-                                  color: Colors.grey,
-                                ),
-                                SizedBox(width: 4),
-                                Text(
-                                  '${gist.forkCount}',
+                                  '${gist.files.length} files',
                                   style: TextStyle(
                                     color: Colors.grey,
                                   ),
@@ -121,7 +108,20 @@ class GistCard extends StatelessWidget {
                                 ),
                                 SizedBox(width: 4),
                                 Text(
-                                  '${gist.commentCount}',
+                                  '${gist.commentCount} comments',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                SizedBox(width: 16),
+                                Icon(
+                                  MdiIcons.sourceFork,
+                                  size: 18,
+                                  color: Colors.grey,
+                                ),
+                                SizedBox(width: 4),
+                                Text(
+                                  '${gist.forkCount} forks',
                                   style: TextStyle(
                                     color: Colors.grey,
                                   ),

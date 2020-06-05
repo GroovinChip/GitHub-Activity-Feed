@@ -228,6 +228,7 @@ class GraphQLService {
                       url
                       number
                       bodyText
+                      closed
                       comments {
                         totalCount
                       }
@@ -261,6 +262,7 @@ class GraphQLService {
                         url
                         createdAt
                         title
+                        closed
                         bodyText
                         author {
                           login

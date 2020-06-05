@@ -168,6 +168,7 @@ class Issue implements ActivityFeedItem {
   Repository repository;
   DateTime createdAt;
   int commentCount;
+  bool closed;
 
   Issue.fromJson(Map<String, dynamic> json) {
     databaseId = json['databaseId'];
@@ -179,6 +180,7 @@ class Issue implements ActivityFeedItem {
     repository = json['repository'] != null ? Repository.fromJson(json['repository']) : null;
     createdAt = DateTime.parse(json['createdAt'] as String);
     commentCount = json['comments']['totalCount'];
+    closed = json['closed'];
   }
 
   Map<String, dynamic> toJson() {
@@ -197,6 +199,7 @@ class Issue implements ActivityFeedItem {
     }
     data['createdAt'] = this.createdAt;
     data['commentCount'] = this.commentCount;
+    data['closed'] = this.closed;
     return data;
   }
 }

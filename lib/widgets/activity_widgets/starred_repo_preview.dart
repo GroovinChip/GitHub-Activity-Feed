@@ -81,7 +81,7 @@ class StarredRepoPreview extends StatelessWidget {
                         ),
                         SizedBox(width: 4),
                         Text(
-                          '${starredRepoEdge.star.stargazers.totalCount}',
+                          '${starredRepoEdge.star.stargazers.totalCount} stars',
                           style: TextStyle(
                             color: Colors.grey,
                           ),
@@ -94,7 +94,7 @@ class StarredRepoPreview extends StatelessWidget {
                         ),
                         SizedBox(width: 4),
                         Text(
-                          '${starredRepoEdge.star.forkCount}',
+                          '${starredRepoEdge.star.forkCount} forks',
                           style: TextStyle(
                             color: Colors.grey,
                           ),

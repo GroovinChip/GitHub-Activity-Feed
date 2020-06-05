@@ -8,9 +8,11 @@ class IssuePreview extends StatelessWidget {
   const IssuePreview({
     Key key,
     @required this.issue,
+    @required this.isComment,
   }) : super(key: key);
 
   final Issue issue;
+  final bool isComment;
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +37,14 @@ class IssuePreview extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    UserAvatar(
-                      avatarUrl: issue.author.avatarUrl,
-                      height: 32,
-                      width: 32,
-                    ),
-                    SizedBox(width: 12),
+                    isComment
+                        ? UserAvatar(
+                            avatarUrl: issue.author.avatarUrl,
+                            height: 32,
+                            width: 32,
+                          )
+                        : Container(),
+                    isComment ? SizedBox(width: 12) : Container(),
                     Expanded(
                       child: Text(
                         issue.title,
@@ -56,7 +60,7 @@ class IssuePreview extends StatelessWidget {
                 SizedBox(height: 8),
                 Text(
                   issue.bodyText ?? 'No description',
-                  maxLines: 2,
+                  maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 14,

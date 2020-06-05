@@ -3,6 +3,7 @@ import 'package:github_activity_feed/data/activity_feed_models.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/issue_preview.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -30,7 +31,7 @@ class IssueCommentCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ListTile(
-                /// user avatar
+                /// User avatar
                 leading: GestureDetector(
                   onTap: () => launch(comment.author.url),
                   child: UserAvatar(
@@ -40,7 +41,7 @@ class IssueCommentCard extends StatelessWidget {
                   ),
                 ),
 
-                /// user with action
+                /// User with action
                 title: Text(
                   '${comment.author.login} commented',
                   style: TextStyle(
@@ -50,16 +51,30 @@ class IssueCommentCard extends StatelessWidget {
                   ),
                 ),
 
-                /// repository with issue number
-                subtitle: Text(
-                  '${comment.parentIssue.repository.nameWithOwner} #${comment.parentIssue.number}',
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
+                /// Repository with issue number
+                subtitle: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      MdiIcons.alertCircleOutline,
+                      color: !comment.parentIssue.closed ? Colors.green : Colors.red,
+                      size: 16,
+                    ),
+                    SizedBox(width: 4),
+                    Text(
+                      '${comment.parentIssue.repository.nameWithOwner} #${comment.parentIssue.number}',
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
                 ),
 
                 /// fuzzy timestamp
-                trailing: Text(timeago.format(comment.createdAt, locale: 'en_short').replaceAll(' ', '')),
+                trailing: Text(
+                  timeago.format(comment.createdAt, locale: 'en_short').replaceAll(' ', ''),
+                ),
               ),
 
               /// Issue comment with issue preview
@@ -86,6 +101,7 @@ class IssueCommentCard extends StatelessWidget {
                     /// Issue preview
                     IssuePreview(
                       issue: comment.parentIssue,
+                      isComment: true,
                     ),
                   ],
                 ),
