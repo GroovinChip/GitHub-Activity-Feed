@@ -46,10 +46,10 @@ class _PullRequestPreviewState extends State<PullRequestPreview> {
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               border: Border.all(
-                color: context.isDarkTheme ? Colors.grey : Colors.black,
+                color: Colors.grey,
               ),
               borderRadius: BorderRadius.circular(8.0),
-              color: context.isDarkTheme ? context.colorScheme.background : Colors.grey, // update for light theme
+              color: context.isDarkTheme ? context.colorScheme.background : Colors.white,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,7 +81,7 @@ class _PullRequestPreviewState extends State<PullRequestPreview> {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.grey,
+                    color: context.isDarkTheme ? Colors.grey : Colors.grey.shade800,
                   ),
                 ),
                 SizedBox(height: 8),
@@ -110,13 +110,13 @@ class _PullRequestPreviewState extends State<PullRequestPreview> {
                         Icon(
                           MdiIcons.commentMultiple,
                           size: 18,
-                          color: Colors.grey,
+                          color: context.isDarkTheme ? Colors.grey : Colors.grey.shade800,
                         ),
                         SizedBox(width: 8),
                         Text(
                           '${widget.pullRequest.commentCount} comments',
                           style: TextStyle(
-                            color: Colors.grey,
+                            color: context.isDarkTheme ? Colors.grey : Colors.grey.shade800,
                           ),
                         ),
                       ],

@@ -78,7 +78,7 @@ class IssueCard extends StatelessWidget {
                           '${issue.repository.nameWithOwner} #${issue.number}',
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.grey,
+                            color: context.isDarkTheme ? Colors.grey : Colors.grey.shade800,
                           ),
                         ),
                       ),

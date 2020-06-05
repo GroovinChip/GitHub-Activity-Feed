@@ -51,7 +51,12 @@ class StarCard extends StatelessWidget {
                 ),
 
                 /// Fuzzy timestamp
-                subtitle: Text(timeago.format(starredRepoEdge.createdAt, locale: 'en')),
+                subtitle: Text(
+                  timeago.format(starredRepoEdge.createdAt, locale: 'en'),
+                  style: TextStyle(
+                    color: context.isDarkTheme ? Colors.grey : Colors.grey.shade800,
+                  ),
+                ),
               ),
 
               /// Repo preview

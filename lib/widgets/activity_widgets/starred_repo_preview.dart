@@ -23,10 +23,10 @@ class StarredRepoPreview extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               border: Border.all(
-                color: context.isDarkTheme ? Colors.grey : Colors.black,
+                color: Colors.grey,
               ),
               borderRadius: BorderRadius.circular(8.0),
-              color: context.isDarkTheme ? context.colorScheme.background : Colors.grey, // update for light theme
+              color: context.isDarkTheme ? context.colorScheme.background : Colors.white,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,14 +57,14 @@ class StarredRepoPreview extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    color: Colors.grey,
+                    color: context.isDarkTheme ? Colors.grey : Colors.grey.shade800,
                   ),
                 ),
                 Row(
                   children: [
                     if (starredRepoEdge.star.languages.length > 0)
                       Chip(
-                        label: Text(starredRepoEdge.star.languages.first.name),
+                        label: Text(starredRepoEdge.star.languages.first.name), // todo: adjust color based on background
                         backgroundColor: HexColor(
                           starredRepoEdge.star.languages.first.color,
                         ),
@@ -76,26 +76,26 @@ class StarredRepoPreview extends StatelessWidget {
                         Icon(
                           Icons.star_border,
                           size: 22,
-                          color: Colors.grey,
+                          color: context.isDarkTheme ? Colors.grey : Colors.grey.shade800,
                         ),
                         SizedBox(width: 4),
                         Text(
                           '${starredRepoEdge.star.stargazers.totalCount} stars',
                           style: TextStyle(
-                            color: Colors.grey,
+                            color: context.isDarkTheme ? Colors.grey : Colors.grey.shade800,
                           ),
                         ),
                         SizedBox(width: 16),
                         Icon(
                           MdiIcons.sourceFork,
                           size: 20,
-                          color: Colors.grey,
+                          color: context.isDarkTheme ? Colors.grey : Colors.grey.shade800,
                         ),
                         SizedBox(width: 4),
                         Text(
                           '${starredRepoEdge.star.forkCount} forks',
                           style: TextStyle(
-                            color: Colors.grey,
+                            color: context.isDarkTheme ? Colors.grey : Colors.grey.shade800,
                           ),
                         ),
                       ],

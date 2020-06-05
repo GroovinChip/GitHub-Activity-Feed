@@ -65,7 +65,7 @@ class IssueCommentCard extends StatelessWidget {
                     Text(
                       '${comment.parentIssue.repository.nameWithOwner} #${comment.parentIssue.number}',
                       style: TextStyle(
-                        color: Colors.grey,
+                        color: context.isDarkTheme ? Colors.grey : Colors.grey.shade800,
                       ),
                     ),
                   ],
@@ -91,7 +91,10 @@ class IssueCommentCard extends StatelessWidget {
                             comment.bodyText,
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 14),
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: context.isDarkTheme ? Colors.white : Colors.black,
+                            ),
                           ),
                         ),
                       ],

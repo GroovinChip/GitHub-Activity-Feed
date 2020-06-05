@@ -55,13 +55,12 @@ class PullRequestCard extends StatelessWidget {
                   '${pullRequest.repository.nameWithOwner} #${pullRequest.number}',
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.grey,
+                    color: context.isDarkTheme ? Colors.grey : Colors.grey.shade800,
                   ),
                 ),
 
                 /// Fuzzy timestamp
-                trailing: Text(
-                    timeago.format(pullRequest.createdAt, locale: 'en_short').replaceAll(' ', '')),
+                trailing: Text(timeago.format(pullRequest.createdAt, locale: 'en_short').replaceAll(' ', '')),
               ),
 
               /// PR preview

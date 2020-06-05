@@ -23,12 +23,10 @@ class IssuePreview extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               border: Border.all(
-                color: context.isDarkTheme ? Colors.grey : Colors.black,
+                color: Colors.grey,
               ),
               borderRadius: BorderRadius.circular(8.0),
-              color: context.isDarkTheme
-                  ? context.colorScheme.background
-                  : Colors.grey, // update for light theme
+              color: context.isDarkTheme ? context.colorScheme.background : Colors.white,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,7 +62,7 @@ class IssuePreview extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.grey,
+                    color: context.isDarkTheme ? Colors.grey : Colors.grey.shade800,
                   ),
                 ),
                 SizedBox(height: 8.0),
@@ -74,14 +72,14 @@ class IssuePreview extends StatelessWidget {
                   children: [
                     Icon(
                       MdiIcons.commentMultiple,
-                      color: Colors.grey,
+                      color: context.isDarkTheme ? Colors.grey : Colors.grey.shade800,
                       size: 16,
                     ),
                     SizedBox(width: 4),
                     Text(
                       '${issue.commentCount ?? 0} comments',
                       style: TextStyle(
-                        color: Colors.grey,
+                        color: context.isDarkTheme ? Colors.grey : Colors.grey.shade800,
                       ),
                     ),
                   ],
