@@ -32,6 +32,9 @@ class Gist implements ActivityFeedItem {
     this.files,
     this.owner,
     this.url,
+    this.commentCount,
+    this.starredCount,
+    this.forkCount,
   });
 
   ActivityFeedItemType get type => ActivityFeedItemType.gist;
@@ -41,6 +44,9 @@ class Gist implements ActivityFeedItem {
   List<Files> files;
   Owner owner;
   String url;
+  int commentCount;
+  int starredCount;
+  int forkCount;
 
   Gist.fromJson(Map<String, dynamic> json) {
     description = json['description'];
@@ -53,6 +59,9 @@ class Gist implements ActivityFeedItem {
     }
     owner = json['owner'] != null ? new Owner.fromJson(json['owner']) : null;
     url = json['url'];
+    commentCount = json['comments']['totalCount'];
+    starredCount = json['stargazers']['totalCount'];
+    forkCount = json['forks']['totalCount'];
   }
 
   Map<String, dynamic> toJson() {
@@ -67,6 +76,9 @@ class Gist implements ActivityFeedItem {
       data['owner'] = this.owner.toJson();
     }
     data['url'] = this.url;
+    data['commentCount'] = this.commentCount;
+    data['starredCount'] = this.starredCount;
+    data['forkCount'] = this.forkCount;
     return data;
   }
 }

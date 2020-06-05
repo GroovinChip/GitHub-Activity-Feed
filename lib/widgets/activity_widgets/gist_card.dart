@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/gist.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -56,7 +57,83 @@ class GistCard extends StatelessWidget {
                 subtitle: Text('Contains ${gist.files.length} files'),
 
                 /// Fuzzy timestamp
-                trailing: Text(timeago.format(gist.createdAt, locale: 'en_short').replaceAll(' ', '')),
+                trailing:
+                    Text(timeago.format(gist.createdAt, locale: 'en_short').replaceAll(' ', '')),
+              ),
+
+              /// Gist preview
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: context.isDarkTheme ? Colors.grey : Colors.black,
+                          ),
+                          borderRadius: BorderRadius.circular(8.0),
+                          color: context.isDarkTheme
+                              ? context.colorScheme.background
+                              : Colors.grey, // update for light theme
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('${gist.description}'),
+                            SizedBox(height: 8),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Icon(
+                                  MdiIcons.codeNotEqualVariant,
+                                  size: 18,
+                                  color: Colors.grey,
+                                ),
+                                SizedBox(width: 4),
+                                Text(
+                                  '${gist.files.length}',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                SizedBox(width: 16),
+                                Icon(
+                                  MdiIcons.sourceFork,
+                                  size: 18,
+                                  color: Colors.grey,
+                                ),
+                                SizedBox(width: 4),
+                                Text(
+                                  '${gist.forkCount}',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                SizedBox(width: 16),
+                                Icon(
+                                  MdiIcons.commentMultiple,
+                                  size: 18,
+                                  color: Colors.grey,
+                                ),
+                                SizedBox(width: 4),
+                                Text(
+                                  '${gist.commentCount}',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

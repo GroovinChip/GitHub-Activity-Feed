@@ -200,6 +200,15 @@ class GraphQLService {
                       __typename
                       description
                       createdAt
+                      comments {
+                        totalCount
+                      }
+                      forks {
+                        totalCount
+                      }
+                      stargazers {
+                        totalCount
+                      }
                       files {
                         name
                       }
