@@ -4,6 +4,7 @@ import 'package:github_activity_feed/data/activity_feed_models.dart';
 import 'package:github_activity_feed/utils/color_from_string.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class StarredRepoPreview extends StatelessWidget {
   final StarredRepoEdge starredRepoEdge;
@@ -25,7 +26,9 @@ class StarredRepoPreview extends StatelessWidget {
                 color: context.isDarkTheme ? Colors.grey : Colors.black,
               ),
               borderRadius: BorderRadius.circular(8.0),
-              color: context.isDarkTheme ? context.colorScheme.background : Colors.grey, // update for light theme
+              color: context.isDarkTheme
+                  ? context.colorScheme.background
+                  : Colors.grey, // update for light theme
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,6 +82,19 @@ class StarredRepoPreview extends StatelessWidget {
                         SizedBox(width: 4),
                         Text(
                           '${starredRepoEdge.star.stargazers.totalCount}',
+                          style: TextStyle(
+                            color: Colors.grey,
+                          ),
+                        ),
+                        SizedBox(width: 16),
+                        Icon(
+                          MdiIcons.sourceFork,
+                          size: 20,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(width: 4),
+                        Text(
+                          '${starredRepoEdge.star.forkCount}',
                           style: TextStyle(
                             color: Colors.grey,
                           ),

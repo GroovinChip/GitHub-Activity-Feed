@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/activity_feed_models.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -67,7 +68,8 @@ class IssueCard extends StatelessWidget {
                 ),
 
                 /// Fuzzy timestamp
-                trailing: Text(timeago.format(issue.createdAt, locale: 'en_short').replaceAll(' ', '')),
+                trailing:
+                    Text(timeago.format(issue.createdAt, locale: 'en_short').replaceAll(' ', '')),
               ),
 
               /// Issue preview
@@ -103,7 +105,9 @@ class IssuePreview extends StatelessWidget {
                 color: context.isDarkTheme ? Colors.grey : Colors.black,
               ),
               borderRadius: BorderRadius.circular(8.0),
-              color: context.isDarkTheme ? context.colorScheme.background : Colors.grey, // update for light theme
+              color: context.isDarkTheme
+                  ? context.colorScheme.background
+                  : Colors.grey, // update for light theme
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,11 +131,23 @@ class IssuePreview extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 8.0),
-                Text(
-                  '${issue.commentCount} comments',
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      MdiIcons.commentMultiple,
+                      color: Colors.grey,
+                      size: 16,
+                    ),
+                    SizedBox(width: 4),
+                    Text(
+                      '${issue.commentCount ?? 0} comments',
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
