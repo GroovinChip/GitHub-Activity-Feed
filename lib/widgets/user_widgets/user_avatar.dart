@@ -21,7 +21,7 @@ class UserAvatar extends StatelessWidget {
       child: Container(
         color: Colors.grey.shade200, // neat!
         child: Image.network(
-          avatarUrl,
+          avatarUrl ?? 'https://avatars1.githubusercontent.com/u/5868834?s=400&v=4',
           height: height,
           width: width,
           fit: BoxFit.cover,

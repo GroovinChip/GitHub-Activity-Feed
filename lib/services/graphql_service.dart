@@ -308,6 +308,15 @@ class GraphQLService {
                         description
                         url
                       }
+                      merged
+                      mergedAt
+                      mergedBy {
+                        login
+                        avatarUrl
+                        url
+                      }
+                      closed
+                      closedAt
                     }
                   }
                   starredRepositories(last: 10) {

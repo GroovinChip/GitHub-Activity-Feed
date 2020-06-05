@@ -57,8 +57,7 @@ class GistCard extends StatelessWidget {
                 subtitle: Text('Contains ${gist.files.length} files'),
 
                 /// Fuzzy timestamp
-                trailing:
-                    Text(timeago.format(gist.createdAt, locale: 'en_short').replaceAll(' ', '')),
+                trailing: Text(timeago.format(gist.createdAt, locale: 'en_short').replaceAll(' ', '')),
               ),
 
               /// Gist preview
@@ -74,15 +73,18 @@ class GistCard extends StatelessWidget {
                             color: context.isDarkTheme ? Colors.grey : Colors.black,
                           ),
                           borderRadius: BorderRadius.circular(8.0),
-                          color: context.isDarkTheme
-                              ? context.colorScheme.background
-                              : Colors.grey, // update for light theme
+                          color: context.isDarkTheme ? context.colorScheme.background : Colors.grey, // update for light theme
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text('${gist.description}'),
+                            Text(
+                              '${gist.description != '' ? gist.description : ['No description']}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                             SizedBox(height: 8),
                             Row(
                               mainAxisSize: MainAxisSize.min,

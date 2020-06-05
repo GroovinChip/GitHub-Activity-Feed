@@ -26,9 +26,7 @@ class StarredRepoPreview extends StatelessWidget {
                 color: context.isDarkTheme ? Colors.grey : Colors.black,
               ),
               borderRadius: BorderRadius.circular(8.0),
-              color: context.isDarkTheme
-                  ? context.colorScheme.background
-                  : Colors.grey, // update for light theme
+              color: context.isDarkTheme ? context.colorScheme.background : Colors.grey, // update for light theme
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,13 +62,14 @@ class StarredRepoPreview extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Chip(
-                      label: Text(starredRepoEdge.star.languages.first.name),
-                      backgroundColor: HexColor(
-                        starredRepoEdge.star.languages.first.color,
+                    if (starredRepoEdge.star.languages.length > 0)
+                      Chip(
+                        label: Text(starredRepoEdge.star.languages.first.name),
+                        backgroundColor: HexColor(
+                          starredRepoEdge.star.languages.first.color,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 16),
+                    if (starredRepoEdge.star.languages.length > 0) SizedBox(width: 16),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [

@@ -1,4 +1,5 @@
 import 'package:github_activity_feed/data/gist.dart';
+import 'package:github_activity_feed/data/user.dart';
 import 'package:github_activity_feed/utils/annotations.dart';
 import 'package:meta/meta.dart';
 
@@ -362,38 +363,55 @@ class PullRequest implements ActivityFeedItem {
     this.author,
     this.repository,
     this.commentCount,
+    this.merged,
+    this.mergedAt,
+    this.mergedBy,
+    this.closed,
+    this.closedAt,
   });
 
   ActivityFeedItemType get type => ActivityFeedItemType.pullRequest;
 
-  int databaseId;
-  String title;
-  String url;
-  int number;
-  String baseRefName;
-  String headRefName;
-  String bodyText;
-  DateTime createdAt;
-  int additions;
-  int deletions;
-  Author author;
-  Repository repository;
-  int commentCount;
+  final int databaseId;
+  final String title;
+  final String url;
+  final int number;
+  final String baseRefName;
+  final String headRefName;
+  final String bodyText;
+  final DateTime createdAt;
+  final int additions;
+  final int deletions;
+  final Author author;
+  final Repository repository;
+  final int commentCount;
+  final bool merged;
+  final User mergedBy;
+  final DateTime mergedAt;
+  final bool closed;
+  final DateTime closedAt;
 
-  PullRequest.fromJson(Map<String, dynamic> json) {
-    databaseId = json['databaseId'];
-    title = json['title'];
-    url = json['url'];
-    number = json['number'];
-    baseRefName = json['baseRefName'];
-    headRefName = json['headRefName'];
-    bodyText = json['bodyText'];
-    createdAt = DateTime.parse(json['createdAt'] as String);
-    additions = json['additions'];
-    deletions = json['deletions'];
-    commentCount = json['comments']['totalCount'];
-    author = json['author'] != null ? Author.fromJson(json['author']) : null;
-    repository = json['repository'] != null ? Repository.fromJson(json['repository']) : null;
+  factory PullRequest.fromJson(Map<String, dynamic> json) {
+    return PullRequest(
+      databaseId: json['databaseId'],
+      title: json['title'],
+      url: json['url'],
+      number: json['number'],
+      baseRefName: json['baseRefName'],
+      headRefName: json['headRefName'],
+      bodyText: json['bodyText'],
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      additions: json['additions'],
+      deletions: json['deletions'],
+      author: Author.fromJson(json['author']),
+      repository: Repository.fromJson(json['repository']),
+      commentCount: json['comments']['totalCount'],
+      merged: json['merged'] != null ? json['merged'] : false,
+      mergedBy: json['mergedBy'] != null ? User.fromJson(json['mergedBy']) : null,
+      mergedAt: json['mergedAt'] != null ? DateTime.parse(json['mergedAt'] as String) : null,
+      closed: json['closed'] != null ? json['closed'] : false,
+      closedAt: json['closedAt'] != null ? DateTime.parse(json['closedAt'] as String) : null,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -416,6 +434,11 @@ class PullRequest implements ActivityFeedItem {
     if (this.repository != null) {
       data['repository'] = this.repository.toJson();
     }
+    data['merged'] = this.merged;
+    data['mergedAt'] = this.mergedAt;
+    data['mergedBy'] = this.mergedBy.toJson();
+    data['closed'] = this.closed;
+    data['closedAt'] = this.closedAt;
     return data;
   }
 }
@@ -472,7 +495,7 @@ class Star {
   final String updatedAt;
   final String url;
   final List<Language> languages;
-  final Owner owner;
+  final User owner;
 
   factory Star.fromJson(Map<String, dynamic> json) {
     final _languages = <Language>[];
@@ -493,7 +516,7 @@ class Star {
       updatedAt: json['updatedAt'],
       url: json['url'],
       languages: _languages,
-      owner: Owner.fromJson(json['owner']),
+      owner: User.fromJson(json['owner']),
     );
   }
 }

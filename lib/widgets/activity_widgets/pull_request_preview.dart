@@ -3,13 +3,39 @@ import 'package:github_activity_feed/data/activity_feed_models.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-class PullRequestPreview extends StatelessWidget {
+class PullRequestPreview extends StatefulWidget {
   const PullRequestPreview({
     Key key,
     @required this.pullRequest,
   }) : super(key: key);
 
   final PullRequest pullRequest;
+
+  @override
+  _PullRequestPreviewState createState() => _PullRequestPreviewState();
+}
+
+class _PullRequestPreviewState extends State<PullRequestPreview> {
+  Color prIconColor;
+  IconData prIcon;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.pullRequest.merged && widget.pullRequest.closed) {
+      prIcon = MdiIcons.sourceMerge;
+      prIconColor = Color(0xff9878D3);
+    } else if (!widget.pullRequest.merged && !widget.pullRequest.closed) {
+      prIcon = MdiIcons.sourcePull;
+      prIconColor = Color(0xff7EE195);
+    } else if (!widget.pullRequest.merged && widget.pullRequest.closed) {
+      prIcon = MdiIcons.sourcePull;
+      prIconColor = Color(0xffD7616B);
+    } else {
+      prIcon = MdiIcons.sourcePull;
+      prIconColor = Color(0xff7EE195);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,14 +55,28 @@ class PullRequestPreview extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  pullRequest.title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      prIcon,
+                      size: 18,
+                      color: prIconColor,
+                    ),
+                    SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        widget.pullRequest.title,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 Text(
-                  pullRequest.bodyText == '' ? 'No description' : pullRequest.bodyText,
+                  widget.pullRequest.bodyText == '' ? 'No description' : widget.pullRequest.bodyText,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -49,7 +89,7 @@ class PullRequestPreview extends StatelessWidget {
                   children: [
                     // todo: get additions/subtractions (?), style accordingly
                     Text(
-                      '+${pullRequest.additions}',
+                      '+${widget.pullRequest.additions}',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.green,
@@ -57,7 +97,7 @@ class PullRequestPreview extends StatelessWidget {
                     ),
                     SizedBox(width: 4),
                     Text(
-                      '-${pullRequest.deletions}',
+                      '-${widget.pullRequest.deletions}',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.red,
@@ -68,13 +108,13 @@ class PullRequestPreview extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
-                          MdiIcons.commentTextMultipleOutline,
+                          MdiIcons.commentMultiple,
                           size: 18,
                           color: Colors.grey,
                         ),
                         SizedBox(width: 8),
                         Text(
-                          '${pullRequest.commentCount} comments',
+                          '${widget.pullRequest.commentCount} comments',
                           style: TextStyle(
                             color: Colors.grey,
                           ),
@@ -83,6 +123,8 @@ class PullRequestPreview extends StatelessWidget {
                     ),
                   ],
                 ),
+
+                // todo: mergedAt/closedAt time?
               ],
             ),
           ),
