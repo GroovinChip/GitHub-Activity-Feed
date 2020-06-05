@@ -25,7 +25,7 @@ class ActivityFeed extends StatelessWidget {
           print(snapshot.error);
           return FeedbackOnError(message: snapshot.error.toString());
         } else {
-          if (snapshot.data['user'] == null) {
+          if (snapshot.data == null) {
             return FeedbackOnError(message: 'Some activity feed data seems to be null');
           }
 
