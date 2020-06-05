@@ -42,7 +42,6 @@ class Gist implements ActivityFeedItem {
   Owner owner;
   String url;
 
-
   Gist.fromJson(Map<String, dynamic> json) {
     description = json['description'];
     createdAt = DateTime.parse(json['createdAt'] as String);
@@ -93,7 +92,11 @@ class Owner {
   String avatarUrl;
   String url;
 
-  Owner({this.login, this.avatarUrl, this.url});
+  Owner({
+    this.login,
+    this.avatarUrl,
+    this.url,
+  });
 
   Owner.fromJson(Map<String, dynamic> json) {
     login = json['login'];

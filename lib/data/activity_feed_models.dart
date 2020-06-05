@@ -293,7 +293,7 @@ class IssueComment implements ActivityFeedItem {
   DateTime createdAt;
   String url;
   Author author;
-  ParentIssue parentIssue;
+  Issue parentIssue;
 
   IssueComment.fromJson(Map<String, dynamic> json) {
     databaseId = json['databaseId'];
@@ -301,7 +301,7 @@ class IssueComment implements ActivityFeedItem {
     createdAt = DateTime.parse(json['createdAt'] as String);
     url = json['url'];
     author = json['author'] != null ? Author.fromJson(json['author']) : null;
-    parentIssue = json['parentIssue'] != null ? ParentIssue.fromJson(json['parentIssue']) : null;
+    parentIssue = json['parentIssue'] != null ? Issue.fromJson(json['parentIssue']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -317,50 +317,6 @@ class IssueComment implements ActivityFeedItem {
     if (this.parentIssue != null) {
       data['parentIssue'] = this.parentIssue.toJson();
     }
-    return data;
-  }
-}
-
-class ParentIssue {
-  ParentIssue({
-    this.title,
-    this.author,
-    this.repository,
-    this.id,
-    this.number,
-    this.bodyText,
-  });
-
-  String title;
-  Author author;
-  Repository repository;
-  String id;
-  int number;
-  String bodyText;
-  int commentCount;
-
-  ParentIssue.fromJson(Map<String, dynamic> json) {
-    title = json['title'];
-    author = json['author'] != null ? Author.fromJson(json['author']) : null;
-    repository = json['repository'] != null ? Repository.fromJson(json['repository']) : null;
-    id = json['id'];
-    number = json['number'];
-    bodyText = json['bodyText'];
-    commentCount = json['comments']['totalCount'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['title'] = this.title;
-    if (this.author != null) {
-      data['author'] = this.author.toJson();
-    }
-    if (this.repository != null) {
-      data['repository'] = this.repository.toJson();
-    }
-    data['id'] = this.id;
-    data['number'] = this.number;
-    data['commentCount'] = this.commentCount;
     return data;
   }
 }
@@ -487,18 +443,20 @@ class StarredRepoEdge implements ActivityFeedItem {
 }
 
 class Star {
-  Star(
-      {this.sTypename,
-      this.id,
-      this.databaseId,
-      this.nameWithOwner,
-      this.description,
-      this.forkCount,
-      this.isFork,
-      this.stargazers,
-      this.updatedAt,
-      this.url,
-      this.languages});
+  Star({
+    this.sTypename,
+    this.id,
+    this.databaseId,
+    this.nameWithOwner,
+    this.description,
+    this.forkCount,
+    this.isFork,
+    this.stargazers,
+    this.updatedAt,
+    this.url,
+    this.languages,
+    this.owner,
+  });
 
   final String sTypename;
   final String id;
@@ -511,6 +469,7 @@ class Star {
   final String updatedAt;
   final String url;
   final List<Language> languages;
+  final Owner owner;
 
   factory Star.fromJson(Map<String, dynamic> json) {
     final _languages = <Language>[];
@@ -531,6 +490,7 @@ class Star {
       updatedAt: json['updatedAt'],
       url: json['url'],
       languages: _languages,
+      owner: Owner.fromJson(json['owner']),
     );
   }
 }

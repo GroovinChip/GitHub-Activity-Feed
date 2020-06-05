@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/activity_feed_models.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
+import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -34,10 +35,10 @@ class IssueCard extends StatelessWidget {
                 /// User avatar
                 leading: GestureDetector(
                   onTap: () => launch(issue.author.url),
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                      issue.author.avatarUrl,
-                    ),
+                  child: UserAvatar(
+                    avatarUrl: issue.author.avatarUrl,
+                    height: 44,
+                    width: 44,
                   ),
                 ),
 
@@ -94,7 +95,6 @@ class IssuePreview extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(width: 56),
         Expanded(
           child: Container(
             padding: const EdgeInsets.all(8.0),
@@ -103,6 +103,7 @@ class IssuePreview extends StatelessWidget {
                 color: context.isDarkTheme ? Colors.grey : Colors.black,
               ),
               borderRadius: BorderRadius.circular(8.0),
+              color: context.isDarkTheme ? context.colorScheme.background : Colors.grey, // update for light theme
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

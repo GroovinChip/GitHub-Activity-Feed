@@ -24,6 +24,7 @@ class PullRequestPreview extends StatelessWidget {
                 color: context.isDarkTheme ? Colors.grey : Colors.black,
               ),
               borderRadius: BorderRadius.circular(8.0),
+              color: context.isDarkTheme ? context.colorScheme.background : Colors.grey, // update for light theme
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
