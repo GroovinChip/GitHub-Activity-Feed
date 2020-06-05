@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/activity_feed_models.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
+import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
 
 class IssuePreview extends StatelessWidget {
   const IssuePreview({
@@ -14,7 +15,6 @@ class IssuePreview extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(width: 56),
         Expanded(
           child: Container(
             padding: const EdgeInsets.all(8.0),
@@ -23,19 +23,34 @@ class IssuePreview extends StatelessWidget {
                 color: context.isDarkTheme ? Colors.grey : Colors.black,
               ),
               borderRadius: BorderRadius.circular(8.0),
+              color: context.isDarkTheme ? context.colorScheme.background : Colors.grey, // update for light theme
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  issue.title,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    UserAvatar(
+                      avatarUrl: issue.author.avatarUrl,
+                      height: 32,
+                      width: 32,
+                    ),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        issue.title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
+                SizedBox(height: 8),
                 Text(
                   issue.bodyText ?? 'No description',
                   maxLines: 2,

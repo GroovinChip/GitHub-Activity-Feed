@@ -248,6 +248,9 @@ class GraphQLService {
                         url
                       }
                       parentIssue: issue {
+                        databaseId
+                        url
+                        createdAt
                         title
                         bodyText
                         author {
@@ -313,6 +316,9 @@ class GraphQLService {
                         }
                         updatedAt
                         url
+                        owner {
+                          avatarUrl
+                        }
                         languages(first: 3, orderBy: {field: SIZE, direction: DESC}) {
                           language: nodes {
                             color

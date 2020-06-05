@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/activity_feed_models.dart';
 import 'package:github_activity_feed/utils/color_from_string.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
+import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
 
 class StarredRepoPreview extends StatelessWidget {
   final StarredRepoEdge starredRepoEdge;
@@ -15,7 +17,6 @@ class StarredRepoPreview extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(width: 56),
         Expanded(
           child: Container(
             padding: const EdgeInsets.all(8.0),
@@ -24,17 +25,32 @@ class StarredRepoPreview extends StatelessWidget {
                 color: context.isDarkTheme ? Colors.grey : Colors.black,
               ),
               borderRadius: BorderRadius.circular(8.0),
+              color: context.isDarkTheme ? context.colorScheme.background : Colors.grey, // update for light theme
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  starredRepoEdge.star.nameWithOwner,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    UserAvatar(
+                      avatarUrl: starredRepoEdge.star.owner.avatarUrl,
+                      height: 30,
+                      width: 30,
+                    ),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        starredRepoEdge.star.nameWithOwner,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
+                SizedBox(height: 8),
                 Text(
                   starredRepoEdge.star.description,
                   maxLines: 2,
