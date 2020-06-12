@@ -21,8 +21,14 @@ class TrendingRepositoryCard extends StatelessWidget {
       width: 275,
       child: Card(
         color: context.isDarkTheme ? Colors.grey.shade900 : Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
         child: InkWell(
           onTap: () => launch(repo.url),
+          customBorder: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -75,18 +81,21 @@ class TrendingRepositoryCard extends StatelessWidget {
                 Expanded(
                   child: Container(),
                 ),
-                Row(
-                  children: [
-                    StarIndicator(
-                      starCount: repo.stars,
-                    ),
-                    SizedBox(width: 8),
-                    if (repo.languageColor != null)
-                      LanguageIndicator(
-                        languageColor: repo.languageColor,
-                        language: repo.language,
+                Padding(
+                  padding: const EdgeInsets.only(left: 6.0),
+                  child: Row(
+                    children: [
+                      StarIndicator(
+                        starCount: repo.stars,
                       ),
-                  ],
+                      SizedBox(width: 8),
+                      if (repo.languageColor != null)
+                        LanguageIndicator(
+                          languageColor: repo.languageColor,
+                          language: repo.language,
+                        ),
+                    ],
+                  ),
                 ),
               ],
             ),
