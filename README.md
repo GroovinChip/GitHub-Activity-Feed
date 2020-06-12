@@ -5,7 +5,7 @@ A Flutter application for viewing a rich feed of GitHub activity.
 [![Generic badge](https://badgen.net/badge/support/GitHub%20Spronsors/blue?icon=github())](https://github.com/sponsors/GroovinChip)
 
 ## Project status:
-**Public Preview**: Version 0.3.0
+**Public Preview**: Version 0.4.0
 
 **Supported platforms**: Android (iOS support coming later this year)
 
@@ -18,7 +18,6 @@ open that item in the browser (or another github application installed on your d
 - Send direct feedback to the developer within the app
 
 ### General Roadmap:
-- [ ] Follow/unfollow users (being tracked by [#52](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/52))
 - [X] [ThemeMode switcher](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/8)
 - [ ] [Discovery service](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/56)
 - [ ] Paginated activity feed ([#57](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/57) , [#58](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/58))
