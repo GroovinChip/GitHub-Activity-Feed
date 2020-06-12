@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/trending_repositories.dart';
 import 'package:github_activity_feed/utils/color_from_string.dart';
+import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -19,7 +20,7 @@ class TrendingRepositoryCard extends StatelessWidget {
       height: 225,
       width: 275,
       child: Card(
-        color: Colors.grey.shade900,
+        color: context.isDarkTheme ? Colors.grey.shade900 : Colors.white,
         child: InkWell(
           onTap: () => launch(repo.url),
           child: Padding(
@@ -45,7 +46,7 @@ class TrendingRepositoryCard extends StatelessWidget {
                             repo.author,
                             style: TextStyle(
                               fontSize: 18,
-                              color: Colors.grey,
+                              color: context.isDarkTheme ? Colors.grey : Colors.grey.shade800,
                             ),
                           ),
                           FittedBox(
