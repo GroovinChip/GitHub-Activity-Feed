@@ -91,6 +91,7 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
       ),
       body: FadeIndexedStack(
         index: _currentIndex,
+        duration: Duration(milliseconds: 100),
         children: [
           ActivityFeed(),
           Discovery(),
