@@ -3,6 +3,7 @@ import 'package:github_activity_feed/keys.dart';
 import 'package:github_activity_feed/screens/home_screen.dart';
 import 'package:github_activity_feed/screens/login_page.dart';
 import 'package:github_activity_feed/services/auth_service.dart';
+import 'package:github_activity_feed/services/discovery_service.dart';
 import 'package:github_activity_feed/services/github_service.dart';
 import 'package:github_activity_feed/services/graphql_service.dart';
 import 'package:github_activity_feed/state/prefs_bloc.dart';
@@ -18,11 +19,13 @@ class GitHubActivityFeedApp extends StatefulWidget {
     @required this.authService,
     @required this.githubService,
     @required this.prefsBloc,
+    @required this.discoveryService,
   }) : super(key: key);
 
   final AuthService authService;
   final GitHubService githubService;
   final PrefsBloc prefsBloc;
+  final DiscoveryService discoveryService;
 
   @override
   _GitHubActivityFeedAppState createState() => _GitHubActivityFeedAppState();
@@ -66,6 +69,7 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
         ValueListenableProvider.value(value: widget.githubService.currentUser),
         Provider<GraphQLService>.value(value: graphQLService),
         Provider<PrefsBloc>.value(value: widget.prefsBloc),
+        Provider<DiscoveryService>.value(value: widget.discoveryService),
       ],
       child: Wiredash(
         navigatorKey: _navigatorKey,
