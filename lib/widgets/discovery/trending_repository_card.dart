@@ -62,6 +62,7 @@ class TrendingRepositoryCard extends StatelessWidget {
                     ],
                   ),
                 ),
+                SizedBox(height: 8),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
@@ -69,6 +70,9 @@ class TrendingRepositoryCard extends StatelessWidget {
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),
+                ),
+                Expanded(
+                  child: Container(),
                 ),
                 Row(
                   children: [
