@@ -53,7 +53,7 @@ class StarredRepoPreview extends StatelessWidget {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  starredRepoEdge.star.description,
+                  starredRepoEdge.star.description ?? '',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
