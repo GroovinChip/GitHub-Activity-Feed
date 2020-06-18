@@ -44,27 +44,34 @@ class TrendingRepositoryCard extends StatelessWidget {
                         avatarUrl: repo.avatar,
                       ),
                       SizedBox(width: 16),
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            repo.author,
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: context.isDarkTheme ? Colors.grey : Colors.grey.shade800,
-                            ),
-                          ),
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              repo.name,
-                              style: TextStyle(
-                                fontSize: 18,
+                      Expanded(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                repo.author,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: context.isDarkTheme
+                                      ? Colors.grey
+                                      : Colors.grey.shade800,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                repo.name,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
