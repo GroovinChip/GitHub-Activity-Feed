@@ -7,9 +7,11 @@ A Flutter application for viewing a rich feed of GitHub activity.
 ## Project status:
 **Public Preview**: Version 0.4.0
 
-**Supported platforms**: Android (iOS support coming later this year)
+**Supported platforms**: Android, iOS (see notes)
 
 Please note that apk's posted to [releases](https://github.com/GroovinChip/GitHub-Activity-Feed/releases) are not signed during the public preview phase.
+
+Please note that in order to use this application on iOS you will need to build it yourself. I do not yet have an Apple Developer Account and so I cannot put the app on Testflight.
 
 ### Implemented Features:
 - View the activity for all users you follow in one place. Tapping on an activity card or a user will
@@ -19,7 +21,7 @@ open that item in the browser (or another github application installed on your d
 
 ### General Roadmap:
 - [X] [ThemeMode switcher](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/8)
-- [ ] [Discovery service](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/56)
+- [ ] [Discovery service](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/56) (in progress)
 - [ ] Paginated activity feed ([#57](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/57) , [#58](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/58))
 - [ ] [Filter activity feed](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/51)
 - [ ] [Actionable markdown](https://github.com/GroovinChip/GitHub-Activity-Feed/issues/48)
