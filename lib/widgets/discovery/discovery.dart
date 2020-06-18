@@ -46,7 +46,7 @@ class _DiscoveryState extends State<Discovery> {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 8),
             ],
           ),
         ),
@@ -83,13 +83,13 @@ class _DiscoveryState extends State<Discovery> {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 8),
             ],
           ),
         ),
         SliverToBoxAdapter(
           child: Container(
-            height: 200,
+            height: 225,
             child: ListView.builder(
               padding: const EdgeInsets.only(left: 8, right: 8),
               scrollDirection: Axis.horizontal,
@@ -98,7 +98,7 @@ class _DiscoveryState extends State<Discovery> {
                 TrendingUser trendingUser =
                     discoveryService.trendingUsers[index];
                 return Container(
-                  height: 325,
+                  //height: 275,
                   width: 275,
                   child: Card(
                     color: context.isDarkTheme
@@ -162,7 +162,7 @@ class _DiscoveryState extends State<Discovery> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.fromLTRB(4, 8, 8, 8),
                               child: Row(
                                 children: [
                                   Icon(
@@ -176,18 +176,20 @@ class _DiscoveryState extends State<Discovery> {
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.only(left: 8.0, right: 8.0),
+                                  const EdgeInsets.only(left: 4.0, right: 8.0),
                               child: Row(
                                 children: [
                                   Icon(MdiIcons.sourceRepository),
                                   SizedBox(width: 8),
-                                  Text(trendingUser.repo.name),
+                                  Expanded(
+                                    child: Text(trendingUser.repo.name),
+                                  ),
                                 ],
                               ),
                             ),
                             Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 8.0, right: 8.0),
+                              padding: const EdgeInsets.only(
+                                  left: 8.0, right: 8.0, top: 8.0),
                               child: Text(
                                 trendingUser.repo.description,
                                 maxLines: 3,

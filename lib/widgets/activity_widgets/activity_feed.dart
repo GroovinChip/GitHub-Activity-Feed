@@ -32,12 +32,14 @@ class _ActivityFeedState extends State<ActivityFeed> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    futureFeed = Provider.of<GraphQLService>(context).activityFeed();
     getFeedData();
   }
 
   Future<void> getFeedData() async {
-    feedData = await futureFeed;
+    feedData = await Provider.of<GraphQLService>(context).activityFeed();
+
+    // hack to ensure things don't happen too fast
+    await Future.delayed(Duration(milliseconds: 250));
     setState(() => feed = Following.fromJson(feedData['user']['following']));
     buildActivityFeed();
   }
