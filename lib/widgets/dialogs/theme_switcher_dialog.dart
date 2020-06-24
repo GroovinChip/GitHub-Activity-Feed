@@ -34,6 +34,7 @@ class _ThemeSwitcherDialogState extends State<ThemeSwitcherDialog> {
           value: ThemeMode.system,
           selected: widget.themeMode == ThemeMode.system ? true : false,
           groupValue: widget.themeMode,
+          activeColor: Theme.of(context).accentColor,
           onChanged: (themeMode) {
             prefsbloc.setThemeModePref(themeMode);
             setState(() {});
@@ -45,6 +46,7 @@ class _ThemeSwitcherDialogState extends State<ThemeSwitcherDialog> {
           value: ThemeMode.light,
           selected: widget.themeMode == ThemeMode.light ? true : false,
           groupValue: widget.themeMode,
+          activeColor: Theme.of(context).accentColor,
           onChanged: (themeMode) {
             prefsbloc.setThemeModePref(themeMode);
             setState(() {});
@@ -56,6 +58,7 @@ class _ThemeSwitcherDialogState extends State<ThemeSwitcherDialog> {
           value: ThemeMode.dark,
           selected: widget.themeMode == ThemeMode.dark ? true : false,
           groupValue: widget.themeMode,
+          activeColor: Theme.of(context).accentColor,
           onChanged: (themeMode) {
             prefsbloc.setThemeModePref(themeMode);
             setState(() {});

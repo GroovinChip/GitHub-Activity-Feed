@@ -13,7 +13,8 @@ class MenuBottomSheetContent extends StatefulWidget {
   _MenuBottomSheetContentState createState() => _MenuBottomSheetContentState();
 }
 
-class _MenuBottomSheetContentState extends State<MenuBottomSheetContent> with ProvidedState {
+class _MenuBottomSheetContentState extends State<MenuBottomSheetContent>
+    with ProvidedState {
   PackageInfo _packageInfo;
   PrefsBloc prefsbloc;
 
@@ -92,14 +93,16 @@ class _MenuBottomSheetContentState extends State<MenuBottomSheetContent> with Pr
           stream: prefsbloc.cardOrTileSubject,
           initialData: prefsbloc.cardOrTileSubject.value,
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            return SwitchListTile(
+            return SwitchListTile.adaptive(
               value: snapshot.data,
               onChanged: (bool) {
                 prefsbloc.setCardOrTilePref(bool);
                 setState(() {});
               },
               activeColor: Theme.of(context).accentColor,
-              title: Text(snapshot.data == true ? 'Switch to tiles' : 'Switch to cards'),
+              title: Text(snapshot.data == true
+                  ? 'Switch to tiles'
+                  : 'Switch to cards'),
               subtitle: Text(snapshot.data == true
                   ? 'Show users as tiles instead of cards'
                   : 'Show users as cards instead of tiles'),
