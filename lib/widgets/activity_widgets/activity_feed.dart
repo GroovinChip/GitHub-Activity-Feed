@@ -48,11 +48,6 @@ class _ActivityFeedState extends State<ActivityFeed> with ProvidedState {
           itemBuilder: (context, index) {
             switch (activityFeed[index].type) {
               case 'CreateEvent':
-                //printFormattedJson(activityFeed[index].toJson());
-                /*return ListTile(
-                  title: Text(activityFeed[index].type),
-                  subtitle: Text(activityFeed[index].createdAt.toString()),
-                );*/
                 return CreateEventCard(
                   createEvent: activityFeed[index],
                 );

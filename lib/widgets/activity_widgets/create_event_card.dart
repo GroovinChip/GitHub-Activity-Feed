@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
+import 'package:github_activity_feed/widgets/activity_widgets/count_item.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/event_card.dart';
+import 'package:github_activity_feed/widgets/activity_widgets/language_label.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+//todo: some graphQL trickery to get the repo, or language info, etc?
 class CreateEventCard extends StatefulWidget {
   const CreateEventCard({
     Key key,
@@ -96,23 +99,24 @@ class _CreateEventCardState extends State<CreateEventCard> with ProvidedState {
               SizedBox(height: 8),
               Row(
                 children: [
-                  //todo: create specific widgets for below
-
-                  Icon(Icons.remove_red_eye),
-                  SizedBox(width: 8),
-                  Text('${snapshot.data?.watchersCount ?? '-'}'),
+                  CountItem(
+                    iconData: Icons.remove_red_eye_outlined,
+                    countItem: snapshot.data?.watchersCount,
+                  ),
                   SizedBox(width: 16),
-                  Icon(Icons.star_outline),
-                  SizedBox(width: 8),
-                  Text('${snapshot.data?.stargazersCount ?? '-'}'),
+                  CountItem(
+                    iconData: Icons.star_outline,
+                    countItem: snapshot.data?.stargazersCount,
+                  ),
                   SizedBox(width: 16),
-                  Icon(MdiIcons.sourceFork),
-                  SizedBox(width: 8),
-                  Text('${snapshot.data?.forksCount ?? '-'}'),
+                  CountItem(
+                    iconData: MdiIcons.sourceFork,
+                    countItem: snapshot.data?.forksCount,
+                  ),
                   SizedBox(width: 16),
-                  Icon(Icons.language),
-                  SizedBox(width: 8),
-                  Text('${snapshot.data?.language ?? '-'}'),
+                  LanguageLabel(
+                    language: snapshot.data?.language,
+                  ),
                 ],
               ),
             ],
