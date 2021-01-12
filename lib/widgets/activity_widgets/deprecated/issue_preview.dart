@@ -4,6 +4,7 @@ import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+@deprecated
 class IssuePreview extends StatelessWidget {
   const IssuePreview({
     Key key,

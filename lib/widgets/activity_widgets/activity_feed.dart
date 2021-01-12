@@ -42,42 +42,44 @@ class _ActivityFeedState extends State<ActivityFeed> with ProvidedState {
       );
     } else {
       //print(snapshot.data.length);
-      return ListView.builder(
-        itemCount: activityFeed.length,
-        itemBuilder: (context, index) {
-          switch (activityFeed[index].type) {
-            case 'CreateEvent':
-              //printFormattedJson(activityFeed[index].toJson());
-              /*return ListTile(
-                title: Text(activityFeed[index].type),
-                subtitle: Text(activityFeed[index].createdAt.toString()),
-              );*/
-              return CreateEventCard(
-                createEvent: activityFeed[index],
-              );
-            case 'ForkEvent':
-              return Container();
-              //return Text(activityFeed[index].type);
-            case 'MemberEvent':
-              return Container();
-              //return Text(activityFeed[index].type);
-            case 'PublicEvent':
-              return Container();
-              //return Text(activityFeed[index].type);
-            case 'PushEvent':
-              return Container();
-              //return Text(activityFeed[index].type);
-            case 'ReleaseEvent':
-              return Container();
-              //return Text(activityFeed[index].type);
-            case 'WatchEvent':
-              return Container();
-              //return Text(activityFeed[index].type);
-            default:
-              return Container();
-              //return Text(activityFeed[index].type);
-          }
-        },
+      return Scrollbar(
+        child: ListView.builder(
+          itemCount: activityFeed.length,
+          itemBuilder: (context, index) {
+            switch (activityFeed[index].type) {
+              case 'CreateEvent':
+                //printFormattedJson(activityFeed[index].toJson());
+                /*return ListTile(
+                  title: Text(activityFeed[index].type),
+                  subtitle: Text(activityFeed[index].createdAt.toString()),
+                );*/
+                return CreateEventCard(
+                  createEvent: activityFeed[index],
+                );
+              case 'ForkEvent':
+                return Container();
+                //return Text(activityFeed[index].type);
+              case 'MemberEvent':
+                return Container();
+                //return Text(activityFeed[index].type);
+              case 'PublicEvent':
+                return Container();
+                //return Text(activityFeed[index].type);
+              case 'PushEvent':
+                return Container();
+                //return Text(activityFeed[index].type);
+              case 'ReleaseEvent':
+                return Container();
+                //return Text(activityFeed[index].type);
+              case 'WatchEvent':
+                return Container();
+                //return Text(activityFeed[index].type);
+              default:
+                return Container();
+                //return Text(activityFeed[index].type);
+            }
+          },
+        ),
       );
     }
     /*return Scrollbar(

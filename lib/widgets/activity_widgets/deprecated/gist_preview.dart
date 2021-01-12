@@ -3,6 +3,7 @@ import 'package:github_activity_feed/data/gist.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+@deprecated
 class GistPreview extends StatelessWidget {
   const GistPreview({
     Key key,

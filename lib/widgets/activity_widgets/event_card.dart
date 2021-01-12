@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 typedef LaunchRepoInBrowserCallback = Future<void> Function();
 
 class EventCard extends StatelessWidget {
   const EventCard({
     Key key,
-    @required this.launchInBrowser,
     @required this.eventHeader,
     @required this.eventPreview,
+    @required this.eventPreviewWebUrl,
   }) : super(key: key);
 
-  final VoidCallback launchInBrowser;
   final Widget eventHeader;
   final Widget eventPreview;
+  final String eventPreviewWebUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -25,37 +26,42 @@ class EventCard extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        child: InkWell(
-          customBorder: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          onTap: () => launchInBrowser,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              eventHeader,
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.all(8.0),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.grey,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                          color: context.isDarkTheme ? context.colorScheme.background : Colors.white, // update for light theme
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            eventHeader,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Material(
+                      color: context.isDarkTheme ? context.colorScheme.background : Colors.white, // update for light theme
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: InkWell(
+                        customBorder: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        child: eventPreview,
+                        onTap: () => url_launcher.launch(eventPreviewWebUrl),
+                        child: Container(
+                          padding: const EdgeInsets.all(8.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.grey,
+                            ),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: eventPreview,
+                        ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

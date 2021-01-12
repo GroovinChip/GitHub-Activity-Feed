@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/activity_feed_models.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
-import 'package:github_activity_feed/widgets/activity_widgets/pull_request_preview.dart';
+import 'package:github_activity_feed/widgets/activity_widgets/deprecated/pull_request_preview.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 
+@deprecated
 class PullRequestCard extends StatelessWidget {
   const PullRequestCard({
     Key key,
