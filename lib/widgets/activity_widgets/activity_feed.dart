@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/utils/printers.dart';
+import 'package:github_activity_feed/widgets/activity_widgets/create_event_card.dart';
 
 class ActivityFeed extends StatefulWidget {
   @override
@@ -26,7 +27,6 @@ class _ActivityFeedState extends State<ActivityFeed> with ProvidedState {
     }).onDone(() {
       print('Finished loading feed');
       setState(() => loading = false);
-      print(loading);
     });
   }
 
@@ -48,9 +48,12 @@ class _ActivityFeedState extends State<ActivityFeed> with ProvidedState {
           switch (activityFeed[index].type) {
             case 'CreateEvent':
               //printFormattedJson(activityFeed[index].toJson());
-              return ListTile(
+              /*return ListTile(
                 title: Text(activityFeed[index].type),
                 subtitle: Text(activityFeed[index].createdAt.toString()),
+              );*/
+              return CreateEventCard(
+                createEvent: activityFeed[index],
               );
             case 'ForkEvent':
               return Container();
