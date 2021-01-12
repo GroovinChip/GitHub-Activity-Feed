@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
+import 'package:github/hooks.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/utils/printers.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/create_event_card.dart';
+import 'package:github_activity_feed/widgets/activity_widgets/fork_event_card.dart';
 
 class ActivityFeed extends StatefulWidget {
   @override
@@ -41,7 +43,6 @@ class _ActivityFeedState extends State<ActivityFeed> with ProvidedState {
         child: CircularProgressIndicator(),
       );
     } else {
-      //print(snapshot.data.length);
       return Scrollbar(
         child: ListView.builder(
           itemCount: activityFeed.length,
@@ -52,8 +53,11 @@ class _ActivityFeedState extends State<ActivityFeed> with ProvidedState {
                   createEvent: activityFeed[index],
                 );
               case 'ForkEvent':
-                return Container();
-                //return Text(activityFeed[index].type);
+                String forkedFrom = activityFeed[index].repo.name.split('/').first;
+                return ForkEventCard(
+                  forkEvent: ForkEvent.fromJson(activityFeed[index].payload),
+                  forkedFrom: forkedFrom,
+                );
               case 'MemberEvent':
                 return Container();
                 //return Text(activityFeed[index].type);
