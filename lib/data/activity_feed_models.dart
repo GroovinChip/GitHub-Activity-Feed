@@ -15,7 +15,8 @@ class ActivityFeedItemType {
   static const issue = ActivityFeedItemType._('Issue');
   static const issueComment = ActivityFeedItemType._('IssueComment');
   static const pullRequest = ActivityFeedItemType._('PullRequest');
-  static const starredRepoEdge = ActivityFeedItemType._('StarredRepositoryEdge');
+  static const starredRepoEdge =
+      ActivityFeedItemType._('StarredRepositoryEdge');
 
   static const values = [
     gist,
@@ -41,7 +42,7 @@ class Following {
 
   Following.fromJson(Map<String, dynamic> json) {
     if (json['user'] != null) {
-      userActivity = List<UserActivity>();
+      userActivity = <UserActivity>[];
       json['user'].forEach((v) {
         userActivity.add(UserActivity.fromJson(v));
       });
@@ -85,15 +86,20 @@ class UserActivity {
       userLogin: json['login'],
       userAvatarUrl: json['avatarUrl'],
       userUrl: json['url'],
-      gists: json['gists'] != null ? new Gists.fromJson(json['gists']) : null,
+      gists: json['gists'] != null ? Gists.fromJson(json['gists']) : null,
       issues: json['issues'] != null ? Issues.fromJson(json['issues']) : null,
-      issueComments: json['issueComments'] != null ? IssueComments.fromJson(json['issueComments']) : null,
-      pullRequests: json['pullRequests'] != null ? PullRequests.fromJson(json['pullRequests']) : null,
+      issueComments: json['issueComments'] != null
+          ? IssueComments.fromJson(json['issueComments'])
+          : null,
+      pullRequests: json['pullRequests'] != null
+          ? PullRequests.fromJson(json['pullRequests'])
+          : null,
       starredRepositories: starredRepositories,
     );
     if (json['starredRepositories'] != null) {
       if (json['starredRepositories']['srEdges'] != null) {
-        for (Map<String, dynamic> edge in json['starredRepositories']['srEdges']) {
+        for (Map<String, dynamic> edge in json['starredRepositories']
+            ['srEdges']) {
           starredRepositories.add(StarredRepoEdge.fromJson(edge, activity));
         }
       }
@@ -129,7 +135,7 @@ class Issues {
 
   Issues.fromJson(Map<String, dynamic> json) {
     if (json['issue'] != null) {
-      issues = List<Issue>();
+      issues = <Issue>[];
       json['issue'].forEach((v) {
         issues.add(Issue.fromJson(v));
       });
@@ -178,7 +184,9 @@ class Issue implements ActivityFeedItem {
     number = json['number'];
     bodyText = json['bodyText'];
     author = json['author'] != null ? Author.fromJson(json['author']) : null;
-    repository = json['repository'] != null ? Repository.fromJson(json['repository']) : null;
+    repository = json['repository'] != null
+        ? Repository.fromJson(json['repository'])
+        : null;
     createdAt = DateTime.parse(json['createdAt'] as String);
     commentCount = json['comments']['totalCount'];
     closed = json['closed'];
@@ -264,7 +272,7 @@ class IssueComments {
 
   IssueComments.fromJson(Map<String, dynamic> json) {
     if (json['issueComment'] != null) {
-      issueComments = List<IssueComment>();
+      issueComments = <IssueComment>[];
       json['issueComment'].forEach((v) {
         issueComments.add(IssueComment.fromJson(v));
       });
@@ -305,7 +313,9 @@ class IssueComment implements ActivityFeedItem {
     createdAt = DateTime.parse(json['createdAt'] as String);
     url = json['url'];
     author = json['author'] != null ? Author.fromJson(json['author']) : null;
-    parentIssue = json['parentIssue'] != null ? Issue.fromJson(json['parentIssue']) : null;
+    parentIssue = json['parentIssue'] != null
+        ? Issue.fromJson(json['parentIssue'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -332,7 +342,7 @@ class PullRequests {
 
   PullRequests.fromJson(Map<String, dynamic> json) {
     if (json['pullRequest'] != null) {
-      pullRequests = List<PullRequest>();
+      pullRequests = <PullRequest>[];
       json['pullRequest'].forEach((v) {
         pullRequests.add(PullRequest.fromJson(v));
       });
@@ -407,10 +417,15 @@ class PullRequest implements ActivityFeedItem {
       repository: Repository.fromJson(json['repository']),
       commentCount: json['comments']['totalCount'],
       merged: json['merged'] != null ? json['merged'] : false,
-      mergedBy: json['mergedBy'] != null ? User.fromJson(json['mergedBy']) : null,
-      mergedAt: json['mergedAt'] != null ? DateTime.parse(json['mergedAt'] as String) : null,
+      mergedBy:
+          json['mergedBy'] != null ? User.fromJson(json['mergedBy']) : null,
+      mergedAt: json['mergedAt'] != null
+          ? DateTime.parse(json['mergedAt'] as String)
+          : null,
       closed: json['closed'] != null ? json['closed'] : false,
-      closedAt: json['closedAt'] != null ? DateTime.parse(json['closedAt'] as String) : null,
+      closedAt: json['closedAt'] != null
+          ? DateTime.parse(json['closedAt'] as String)
+          : null,
     );
   }
 
@@ -459,7 +474,8 @@ class StarredRepoEdge implements ActivityFeedItem {
   @transient
   final UserActivity userActivity;
 
-  factory StarredRepoEdge.fromJson(Map<String, dynamic> json, UserActivity userActivity) {
+  factory StarredRepoEdge.fromJson(
+      Map<String, dynamic> json, UserActivity userActivity) {
     return StarredRepoEdge(
       createdAt: DateTime.parse(json['createdAt'] as String),
       star: json['star'] != null ? Star.fromJson(json['star']) : null,

@@ -106,15 +106,15 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
         items: [
           BottomNavigationBarItem(
             icon: Icon(MdiIcons.github),
-            title: Text('Feed'),
+            label: 'Feed',
           ),
           BottomNavigationBarItem(
             icon: Icon(MdiIcons.featureSearch),
-            title: Text('Discover'),
+            label: 'Discover',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.people_outline),
-            title: Text('Following'),
+            label: 'Following',
           ),
         ],
       ),

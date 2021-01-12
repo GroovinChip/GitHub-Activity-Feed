@@ -11,10 +11,12 @@ Future<void> main() async {
   final githubService = await GitHubService.init(authService);
   final prefsBloc = await PrefsBloc.init();
   final discoveryService = await DiscoveryService.init();
-  runApp(GitHubActivityFeedApp(
-    authService: authService,
-    githubService: githubService,
-    prefsBloc: prefsBloc,
-    discoveryService: discoveryService,
-  ));
+  runApp(
+    GitHubActivityFeedApp(
+      authService: authService,
+      githubService: githubService,
+      prefsBloc: prefsBloc,
+      discoveryService: discoveryService,
+    ),
+  );
 }

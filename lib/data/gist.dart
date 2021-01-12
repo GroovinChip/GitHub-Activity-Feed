@@ -10,15 +10,15 @@ class Gists {
 
   Gists.fromJson(Map<String, dynamic> json) {
     if (json['gist'] != null) {
-      gist = new List<Gist>();
+      gist = <Gist>[];
       json['gist'].forEach((v) {
-        gist.add(new Gist.fromJson(v));
+        gist.add(Gist.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.gist != null) {
       data['gist'] = this.gist.map((v) => v.toJson()).toList();
     }
@@ -53,12 +53,12 @@ class Gist implements ActivityFeedItem {
     description = json['description'];
     createdAt = DateTime.parse(json['createdAt'] as String);
     if (json['files'] != null) {
-      files = new List<Files>();
+      files = <Files>[];
       json['files'].forEach((v) {
-        files.add(new Files.fromJson(v));
+        files.add(Files.fromJson(v));
       });
     }
-    owner = json['owner'] != null ? new User.fromJson(json['owner']) : null;
+    owner = json['owner'] != null ? User.fromJson(json['owner']) : null;
     url = json['url'];
     commentCount = json['comments']['totalCount'];
     starredCount = json['stargazers']['totalCount'];
@@ -66,7 +66,7 @@ class Gist implements ActivityFeedItem {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['__typename'] = this.type;
     data['description'] = this.description;
     data['createdAt'] = this.createdAt;

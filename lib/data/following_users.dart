@@ -31,7 +31,7 @@ class Following {
   Following.fromJson(Map<String, dynamic> json) {
     totalCount = json['totalCount'];
     if (json['users'] != null) {
-      users = List<FollowingUser>();
+      users = <FollowingUser>[];
       json['users'].forEach((v) {
         users.add(FollowingUser.fromJson(v));
       });
