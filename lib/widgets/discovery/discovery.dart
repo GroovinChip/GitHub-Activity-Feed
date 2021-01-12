@@ -22,11 +22,8 @@ class _DiscoveryState extends State<Discovery> {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        // remember SliverToBoxAdapter()
         SliverToBoxAdapter(
-          child: Center(
-            child: Text('Coming soon'),
-          ),
+          child: Container(),
         ),
       ],
     );

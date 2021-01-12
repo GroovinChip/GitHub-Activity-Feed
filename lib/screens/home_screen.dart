@@ -94,7 +94,10 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
         duration: Duration(milliseconds: 100),
         children: [
           ActivityFeed(),
-          Discovery(),
+          //Discovery(),
+          Center(
+            child: Text('Coming soon'),
+          ),
           ViewerFollowingList(),
         ],
       ),
