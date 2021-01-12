@@ -31,7 +31,8 @@ class GitHubService {
 
   Future<void> _onAuthStateChanged(AuthState authState) async {
     _github.auth = _githubAuthForState(authState);
-    currentUser.value = _github.auth.isAnonymous ? null : await _github.users.getCurrentUser();
+    currentUser.value =
+        _github.auth.isAnonymous ? null : await _github.users.getCurrentUser();
   }
 
   Authentication _githubAuthForState(AuthState authState) {
@@ -40,6 +41,15 @@ class GitHubService {
     } else {
       return Authentication.anonymous();
     }
+  }
+
+  Stream<Event> listAuthUserReceivedEvents({int pages}) {
+    return PaginationHelper(github).objects(
+      'GET',
+      '/users/${currentUser.value.login}/received_events',
+      (i) => Event.fromJson(i),
+      pages: pages,
+    );
   }
 
   Future<void> logOut() async {

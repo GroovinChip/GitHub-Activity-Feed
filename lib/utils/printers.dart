@@ -4,10 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:github_activity_feed/data/base_user.dart';
 import 'package:intl/intl.dart';
 
-void printPrettyJson(Object json) {
+void printFormattedJson(Object json) {
   JsonEncoder encoder = new JsonEncoder.withIndent('  ');
-  String prettyJson = encoder.convert(json);
-  debugPrint(prettyJson);
+  String formattedJson = encoder.convert(json);
+  debugPrint(formattedJson);
 }
 
 void printFormattedBaseUser(BaseUser user) {
