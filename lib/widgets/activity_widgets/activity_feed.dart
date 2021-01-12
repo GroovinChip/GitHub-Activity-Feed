@@ -1,13 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:github_activity_feed/data/activity_feed_models.dart';
-import 'package:github_activity_feed/data/gist.dart';
-import 'package:github_activity_feed/services/graphql_service.dart';
-import 'package:github_activity_feed/widgets/activity_widgets/gist_card.dart';
-import 'package:github_activity_feed/widgets/activity_widgets/issue_card.dart';
-import 'package:github_activity_feed/widgets/activity_widgets/issue_comment_card.dart';
-import 'package:github_activity_feed/widgets/activity_widgets/pull_request_card.dart';
-import 'package:github_activity_feed/widgets/activity_widgets/star_card.dart';
-import 'package:provider/provider.dart';
 
 class ActivityFeed extends StatefulWidget {
   @override
