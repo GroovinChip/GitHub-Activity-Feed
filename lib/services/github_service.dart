@@ -2,7 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart' show ValueNotifier;
 import 'package:github/github.dart';
+import 'package:github_activity_feed/data/activity_create_event.dart';
+import 'package:github_activity_feed/data/activity_feed_item.dart';
 import 'package:github_activity_feed/services/auth_service.dart';
+import 'package:github_activity_feed/utils/printers.dart';
 import 'package:rxdart/rxdart.dart';
 
 class GitHubService {
@@ -25,8 +28,7 @@ class GitHubService {
 
   Future<void> _init() async {
     await _onAuthStateChanged(_authService.authState);
-    _authStateSub =
-        _authService.onAuthStateChanged.listen(_onAuthStateChanged);
+    _authStateSub = _authService.onAuthStateChanged.listen(_onAuthStateChanged);
   }
 
   void dispose() {
@@ -60,9 +62,34 @@ class GitHubService {
     );
   }
 
+  List<ActivityFeedItem> feedV2 = [];
+
   void loadActivityFeed() {
     loadingFeed.add(true);
     _listAuthUserReceivedEvents(pages: 30).listen((event) {
+      switch (event.type) {
+        case 'CreateEvent':
+          ActivityCreateEvent createEvent = ActivityCreateEvent(
+            createdAt: event.createdAt,
+            event: event,
+          );
+          github.repositories
+              .getRepository(RepositorySlug.full(event.repo.name))
+              .asStream()
+              .listen((repo) {
+            createEvent.repository = repo;
+          }).onDone(() {
+            if (createEvent.repository != null) {
+              feedV2.add(createEvent);
+            }
+          });
+          print(feedV2.length);
+          //createEvent.repository = repo;
+          //print(createEvent.repository);
+          break;
+        default:
+          break;
+      }
       activityFeed.add(event);
     }).onDone(() {
       loadingFeed.add(false);

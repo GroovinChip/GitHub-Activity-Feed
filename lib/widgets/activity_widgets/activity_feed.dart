@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:github/hooks.dart';
 import 'package:github_activity_feed/app/provided.dart';
+import 'package:github_activity_feed/data/activity_feed_item.dart';
+import 'package:github_activity_feed/utils/printers.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/create_event_card.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/fork_event_card.dart';
 import 'package:github_activity_feed/widgets/watch_event_card.dart';
@@ -28,6 +30,7 @@ class _ActivityFeedState extends State<ActivityFeed> with ProvidedState {
               itemBuilder: (context, index) {
                 switch (githubService.activityFeed[index].type) {
                   case 'CreateEvent':
+                    //printFormattedJson(githubService.activityFeed[index].toJson());
                     return CreateEventCard(
                       createEvent: githubService.activityFeed[index],
                     );
@@ -65,6 +68,23 @@ class _ActivityFeedState extends State<ActivityFeed> with ProvidedState {
               },
             ),
           );
+
+          /*return Scrollbar(
+            child: ListView.builder(
+              itemCount: githubService.feedV2.length,
+              itemBuilder: (context, index) {
+                switch (githubService.feedV2[index].type) {
+                  case ActivityFeedItemType.createEvent:
+                    return ListTile(
+                      title: Text(githubService.feedV2[index].repository.name),
+                    );
+                  default:
+                    return Container();
+                  //return Text(activityFeed[index].type);
+                }
+              },
+            ),
+          );*/
         }
       },
     );
