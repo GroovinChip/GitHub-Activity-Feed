@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:github/hooks.dart';
-import 'package:github_activity_feed/utils/printers.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/count_item.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/event_card.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
@@ -9,6 +8,7 @@ import 'package:timeago/timeago.dart' as timeago;
 
 import 'language_label.dart';
 
+//todo: get parent repo, show that instead, or both?
 class ForkEventCard extends StatefulWidget {
   ForkEventCard({
     Key key,
@@ -26,7 +26,6 @@ class ForkEventCard extends StatefulWidget {
 class _ForkEventCardState extends State<ForkEventCard> {
   @override
   Widget build(BuildContext context) {
-    //printFormattedJson(widget.forkEvent.toJson());
     return EventCard(
       eventHeader: ListTile(
         /// Owner avatar

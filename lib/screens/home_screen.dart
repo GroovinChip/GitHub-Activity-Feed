@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
   int _currentIndex = 0;
   final List<Widget> titles = [
     Text('Activity Feed'),
-    Text('Discover'),
+    //Text('Discover'),
     Text('You Follow'),
   ];
 
@@ -95,9 +95,6 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
         children: [
           ActivityFeed(),
           //Discovery(),
-          Center(
-            child: Text('Coming soon'),
-          ),
           ViewerFollowingList(),
         ],
       ),
@@ -111,10 +108,10 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
             icon: Icon(MdiIcons.github),
             label: 'Feed',
           ),
-          BottomNavigationBarItem(
+          /*BottomNavigationBarItem(
             icon: Icon(MdiIcons.featureSearch),
             label: 'Discover',
-          ),
+          ),*/
           BottomNavigationBarItem(
             icon: Icon(Icons.people_outline),
             label: 'Following',
