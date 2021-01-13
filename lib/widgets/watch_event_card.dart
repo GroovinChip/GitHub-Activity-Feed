@@ -101,9 +101,9 @@ class _WatchEventCardState extends State<WatchEventCard> {
                 countItem: widget.watchEvent.repo.forksCount,
               ),
               SizedBox(width: 16),
-              LanguageLabel(
+              /*LanguageLabel(
                 language: widget.watchEvent.repo.language,
-              ),
+              ),*/
             ],
           ),
         ],

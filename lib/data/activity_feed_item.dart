@@ -1,9 +1,6 @@
-import 'package:github/github.dart';
-
 abstract class ActivityFeedItem {
   ActivityFeedItemType get type;
   DateTime get createdAt;
-  Repository get repository;
 }
 
 class ActivityFeedItemType {

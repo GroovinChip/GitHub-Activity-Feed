@@ -2,9 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart' show ValueNotifier;
 import 'package:github/github.dart';
-import 'package:github_activity_feed/data/activity_create_event.dart';
+import 'package:github/hooks.dart';
+import 'package:github_activity_feed/data/activity_events.dart';
 import 'package:github_activity_feed/data/activity_feed_item.dart';
+import 'package:github_activity_feed/data/parent_repo.dart';
 import 'package:github_activity_feed/services/auth_service.dart';
+import 'package:github_activity_feed/services/graphql_service.dart';
 import 'package:github_activity_feed/utils/printers.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -69,7 +72,7 @@ class GitHubService {
     _listAuthUserReceivedEvents(pages: 30).listen((event) {
       switch (event.type) {
         case 'CreateEvent':
-          ActivityCreateEvent createEvent = ActivityCreateEvent(
+          ActivityCreate activityCreate = ActivityCreate(
             createdAt: event.createdAt,
             event: event,
           );
@@ -77,15 +80,37 @@ class GitHubService {
               .getRepository(RepositorySlug.full(event.repo.name))
               .asStream()
               .listen((repo) {
-            createEvent.repository = repo;
+            activityCreate.repository = repo;
           }).onDone(() {
-            if (createEvent.repository != null) {
-              feedV2.add(createEvent);
+            if (activityCreate.repository != null) {
+              feedV2.add(activityCreate);
             }
           });
-          print(feedV2.length);
-          //createEvent.repository = repo;
-          //print(createEvent.repository);
+          break;
+        case 'ForkEvent':
+          ActivityFork activityFork = ActivityFork(
+            createdAt: event.createdAt,
+            forkEvent: ForkEvent.fromJson(event.payload),
+          );
+          GraphQLService graphQLService =
+              GraphQLService(token: github.auth.token);
+          graphQLService
+              .getParentRepo(activityFork.forkEvent.forkee.name,
+                  activityFork.forkEvent.forkee.fullName.split('/').first)
+              .asStream()
+              .listen((parent) {
+            activityFork.parent = parent;
+          }).onDone(() {
+            github.users
+                .getUser(
+                    activityFork.parent.nameWithOwner.split('/').first)
+                .asStream()
+                .listen((user) {
+              activityFork.parentOwner = user;
+            }).onDone(() {
+              feedV2.add(activityFork);
+            });
+          });
           break;
         default:
           break;

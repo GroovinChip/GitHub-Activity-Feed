@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
+import 'package:github_activity_feed/data/activity_events.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/count_item.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/event_card.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/language_label.dart';
@@ -15,114 +15,101 @@ class CreateEventCard extends StatefulWidget {
     this.createEvent,
   }) : super(key: key);
 
-  final Event createEvent;
+  final ActivityCreate createEvent;
 
   @override
   _CreateEventCardState createState() => _CreateEventCardState();
 }
 
 class _CreateEventCardState extends State<CreateEventCard> with ProvidedState {
-  RepositorySlug repositorySlug;
-  Repository repository;
-  Future<Repository> _getRepository;
-
-  @override
-  void initState() {
-    super.initState();
-    _getRepository = getRepository();
-  }
-
-  Future<Repository> getRepository() async {
-    try {
-      repositorySlug = RepositorySlug.full(widget.createEvent.repo.name);
-    } catch (e) {
-      print('$e');
-    }
-
-    if (repositorySlug == null) {
-      return null;
-    }
-
-    repository = await github.repositories.getRepository(repositorySlug);
-    return repository;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Repository>(
-      future: _getRepository,
-      initialData: repository,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            !snapshot.hasData) {
-          return Container();
-        }
+    return EventCard(
+      eventHeader: ListTile(
+        /// Owner avatar
+        leading: UserAvatar(
+          avatarUrl: widget.createEvent.owner.avatarUrl,
+          userUrl: widget.createEvent.owner.htmlUrl,
+          height: 44,
+          width: 44,
+        ),
 
-        UserInformation owner = snapshot.data?.owner;
-        return EventCard(
-          eventHeader: ListTile(
-            /// Owner avatar
-            leading: UserAvatar(
-              avatarUrl: owner?.avatarUrl,
-              userUrl: owner?.htmlUrl,
-              height: 44,
-              width: 44,
-            ),
-
-            /// Actor with action
-            title: Text(
-              '${widget.createEvent.actor.login} created a repository',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onBackground,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
-
-            /// Fuzzy timestamp
-            subtitle: Text(
-                timeago.format(widget.createEvent.createdAt, locale: 'en')),
-          ),
-          eventPreviewWebUrl: snapshot.data?.htmlUrl,
-          eventPreview: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
+        /// Actor with action
+        title: RichText(
+          text: TextSpan(
             children: [
-              Text(
-                widget.createEvent.repo.name,
+              TextSpan(
+                text: widget.createEvent.actor.login,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 4),
-              Text(snapshot.data?.description ?? 'No description'),
-              SizedBox(height: 8),
-              Row(
-                children: [
-                  CountItem(
-                    iconData: Icons.remove_red_eye_outlined,
-                    countItem: snapshot.data?.watchersCount,
+              TextSpan(
+                text: ' created repository ',
+              ),
+              WidgetSpan(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    widget.createEvent.repository.name,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  SizedBox(width: 16),
-                  CountItem(
-                    iconData: Icons.star_outline,
-                    countItem: snapshot.data?.stargazersCount,
-                  ),
-                  SizedBox(width: 16),
-                  CountItem(
-                    iconData: MdiIcons.sourceFork,
-                    countItem: snapshot.data?.forksCount,
-                  ),
-                  SizedBox(width: 16),
-                  LanguageLabel(
-                    language: snapshot.data?.language,
-                  ),
-                ],
+                ),
               ),
             ],
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onBackground,
+              fontSize: 16,
+            ),
           ),
-        );
-      },
+        ),
+
+        /// Fuzzy timestamp
+        subtitle:
+            Text(timeago.format(widget.createEvent.createdAt, locale: 'en')),
+      ),
+      eventPreviewWebUrl: widget.createEvent.repository.htmlUrl,
+      eventPreview: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            widget.createEvent.repository.fullName,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 4),
+          Text(widget.createEvent.repository.description ?? 'No description'),
+          SizedBox(height: 8),
+          Row(
+            children: [
+              CountItem(
+                iconData: Icons.remove_red_eye_outlined,
+                countItem: widget.createEvent.repository.watchersCount,
+              ),
+              SizedBox(width: 16),
+              CountItem(
+                iconData: Icons.star_outline,
+                countItem: widget.createEvent.repository.stargazersCount,
+              ),
+              SizedBox(width: 16),
+              CountItem(
+                iconData: MdiIcons.sourceFork,
+                countItem: widget.createEvent.repository.forksCount,
+              ),
+              SizedBox(width: 16),
+
+              /*LanguageLabel(
+                language: widget.createEvent.repository.language,
+              ),*/
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

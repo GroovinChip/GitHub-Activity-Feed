@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github/hooks.dart';
 import 'package:github_activity_feed/app/provided.dart';
+import 'package:github_activity_feed/data/activity_events.dart';
 import 'package:github_activity_feed/data/activity_feed_item.dart';
 import 'package:github_activity_feed/utils/printers.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/create_event_card.dart';
@@ -24,7 +25,7 @@ class _ActivityFeedState extends State<ActivityFeed> with ProvidedState {
             child: CircularProgressIndicator(),
           );
         } else {
-          return Scrollbar(
+          /*return Scrollbar(
             child: ListView.builder(
               itemCount: githubService.activityFeed.length,
               itemBuilder: (context, index) {
@@ -67,24 +68,31 @@ class _ActivityFeedState extends State<ActivityFeed> with ProvidedState {
                 }
               },
             ),
-          );
+          );*/
 
-          /*return Scrollbar(
+          return Scrollbar(
             child: ListView.builder(
               itemCount: githubService.feedV2.length,
               itemBuilder: (context, index) {
                 switch (githubService.feedV2[index].type) {
                   case ActivityFeedItemType.createEvent:
-                    return ListTile(
-                      title: Text(githubService.feedV2[index].repository.name),
+                    ActivityCreate activityCreate = githubService.feedV2[index];
+                    return CreateEventCard(
+                      createEvent: activityCreate,
                     );
+                  case ActivityFeedItemType.forkEvent:
+                    ActivityFork activityFork = githubService.feedV2[index];
+                    return ForkEventCard(
+                      activityFork: activityFork,
+                    );
+                    return Container();
                   default:
                     return Container();
                   //return Text(activityFeed[index].type);
                 }
               },
             ),
-          );*/
+          );
         }
       },
     );

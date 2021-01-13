@@ -32,9 +32,9 @@ class UserAvatar extends StatelessWidget {
           fit: BoxFit.cover,
           height: height,
           width: width,
-          child: InkWell(
-            onTap: () => userUrl != null ? url_launcher.launch(userUrl) : {},
-          ),
+          child: userUrl != null ? InkWell(
+            onTap: () => url_launcher.launch(userUrl),
+          ) : null,
         ),
       ),
     );

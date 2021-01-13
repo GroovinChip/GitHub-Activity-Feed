@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:github_activity_feed/data/parent_repo.dart';
 import 'package:simple_gql/simple_gql.dart';
 
 /// This class handles GraphQL API calls to the GitHub v4 GraphQL endpoint
@@ -217,51 +218,38 @@ class GraphQLService {
     return searchResponse.data;
   }
 
-  //--- Mutations ---//
-
-  /// Follow a user and return whether the operation was successful
-  Future<bool> followUser(String userId) async {
-    final GQLResponse followUserResponse = await client.mutation(
-      mutation: r'''
-        mutation FollowUser($input: FollowUserInput!) {
-          followUser(input: $input) {
-            clientMutationId
-            user {
-              viewerIsFollowing
+  Future<ParentRepo> getParentRepo(String name, String owner) async {
+    GQLResponse response;
+    response = await client.query(
+      query: r'''
+        query getParentRepo($name: String!, $owner: String!) {
+          repository(name: $name, owner: $owner) {
+            parent {
+              url
+              description
+              nameWithOwner
+              forkCount
+              stargazerCount
+              watchers {
+                totalCount
+              }
+              languages(first: 3, orderBy: {field: SIZE, direction: DESC}) {
+                pageInfo {
+                  hasNextPage
+                }
+                edges {
+                  language: node {
+                    name
+                    color
+                  }
+                }
+              }
             }
           }
-        }
-      ''',
+        }''',
       headers: {'Authorization': 'Bearer $token'},
-      variables: {
-        'input': {
-          "userId": userId,
-        },
-      },
+      variables: {"name": name, "owner": owner},
     );
-    return followUserResponse.data['followUser']['user']['viewerIsFollowing'];
-  }
-
-  /// Unfollow a user and return whether the operation was successful
-  Future<bool> unfollowUser(String userId) async {
-    final GQLResponse unfollowUserResponse = await client.mutation(
-      mutation: r'''
-        mutation UnollowUser($input: UnfollowUserInput!) {
-          unfollowUser(input: $input) {
-            clientMutationId
-            user {
-              viewerIsFollowing
-            }
-          }
-        }
-      ''',
-      headers: {'Authorization': 'Bearer $token'},
-      variables: {
-        'input': {
-          "userId": userId,
-        },
-      },
-    );
-    return unfollowUserResponse.data['unfollowUser']['user']['viewerIsFollowing'];
+    return ParentRepo.fromJson(response.data);
   }
 }
