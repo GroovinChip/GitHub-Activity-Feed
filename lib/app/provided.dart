@@ -11,7 +11,6 @@ export 'package:github_activity_feed/services/github_service.dart' show GitHubSe
 mixin ProvidedState<T extends StatefulWidget> on State<T> {
   AuthService _authService;
   GitHubService _gitHubService;
-  GitHub _github;
   CurrentUser _currentUser;
 
   AuthService get auth => _authService ??= Provider.of<AuthService>(context, listen: false);
