@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/state/prefs_bloc.dart';
-import 'package:github_activity_feed/widgets/dialogs/log_out_confirm_dialog.dart';
+import 'package:github_activity_feed/widgets/dialogs/logout_dialog.dart';
 import 'package:github_activity_feed/widgets/dialogs/theme_switcher_dialog.dart';
 import 'package:groovin_widgets/groovin_widgets.dart';
 import 'package:package_info/package_info.dart';
@@ -55,7 +55,7 @@ class _MenuBottomSheetContentState extends State<MenuBottomSheetContent>
             child: Text('Log out'),
             onPressed: () => showDialog(
               context: context,
-              builder: (_) => LogOutConfirmDialog(
+              builder: (_) => LogOutDialog(
                 githubService: githubService,
               ),
             ),
