@@ -19,7 +19,7 @@ dependencies:
   google_fonts: ^1.1.1
   groovin_widgets: ^1.6.0
   intl: ^0.16.1
-  material_design_icons_flutter: ^4.0.5345
+  material_design_icons_flutter: ^4.0.5855
   meta: ^1.1.8
   package_info: ^0.4.1
   path_provider: ^1.6.11
