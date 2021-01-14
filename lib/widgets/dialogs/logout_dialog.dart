@@ -13,12 +13,6 @@ class LogOutDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(
-        'Log out',
-        style: TextStyle(
-          color: context.colorScheme.onBackground,
-        ),
-      ),
       content: Text(
         'Would you like to log out?',
         style: TextStyle(
