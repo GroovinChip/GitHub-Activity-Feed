@@ -26,7 +26,6 @@ class _ThemeSwitcherDialogState extends State<ThemeSwitcherDialog> {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      backgroundColor: Theme.of(context).canvasColor,
       title: Text('Change app theme'),
       children: [
         RadioListTile(
