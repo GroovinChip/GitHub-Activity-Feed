@@ -6,7 +6,7 @@ import 'package:github_activity_feed/state/prefs_bloc.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/activity_feed.dart';
 import 'package:github_activity_feed/widgets/discovery/discovery.dart';
 import 'package:github_activity_feed/widgets/fade_indexed_stack.dart';
-import 'package:github_activity_feed/widgets/menu_bottom_sheet_content.dart';
+import 'package:github_activity_feed/widgets/menu_sheet_content.dart';
 import 'package:github_activity_feed/widgets/user_widgets/following_users.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8.0),
             ),
-            builder: (_) => MenuBottomSheetContent(),
+            builder: (_) => MenuSheetContent(),
           ),
         ),
         title: DefaultTextStyle(

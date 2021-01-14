@@ -8,12 +8,12 @@ import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:wiredash/wiredash.dart';
 
-class MenuBottomSheetContent extends StatefulWidget {
+class MenuSheetContent extends StatefulWidget {
   @override
-  _MenuBottomSheetContentState createState() => _MenuBottomSheetContentState();
+  _MenuSheetContentState createState() => _MenuSheetContentState();
 }
 
-class _MenuBottomSheetContentState extends State<MenuBottomSheetContent>
+class _MenuSheetContentState extends State<MenuSheetContent>
     with ProvidedState {
   PackageInfo _packageInfo;
   PrefsBloc prefsbloc;
