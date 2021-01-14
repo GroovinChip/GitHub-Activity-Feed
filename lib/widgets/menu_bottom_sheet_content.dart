@@ -3,7 +3,7 @@ import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/state/prefs_bloc.dart';
 import 'package:github_activity_feed/widgets/dialogs/log_out_confirm_dialog.dart';
 import 'package:github_activity_feed/widgets/dialogs/theme_switcher_dialog.dart';
-import 'package:groovin_widgets/modal_drawer_handle.dart';
+import 'package:groovin_widgets/groovin_widgets.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:wiredash/wiredash.dart';
