@@ -4,7 +4,7 @@ abstract class ActivityFeedItem {
 }
 
 class ActivityFeedItemType {
-  static const createEvent = ActivityFeedItemType._('CreateEvent');
+  static const repoEvent = ActivityFeedItemType._('RepoEvent');
   static const forkEvent = ActivityFeedItemType._('ForkEvent');
   static const memberEvent = ActivityFeedItemType._('MemberEvent');
   static const publicEvent = ActivityFeedItemType._('PublicEvent');
@@ -13,7 +13,7 @@ class ActivityFeedItemType {
   static const watchEvent = ActivityFeedItemType._('WatchEvent');
 
   static const values = [
-    createEvent,
+    repoEvent,
     forkEvent,
     memberEvent,
     publicEvent,

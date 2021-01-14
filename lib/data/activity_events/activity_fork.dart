@@ -1,29 +1,8 @@
 import 'package:github/github.dart';
 import 'package:github/hooks.dart';
-import 'package:github_activity_feed/data/activity_feed_item.dart';
+import 'package:github_activity_feed/data/activity_events/activity_feed_item.dart';
 import 'package:github_activity_feed/data/custom_repos.dart';
 
-/// Defines a CreateEvent.
-class ActivityCreate implements ActivityFeedItem {
-  ActivityCreate({
-    this.event,
-    this.createdAt,
-    this.repo,
-  });
-
-  /// The event itself, defined by the github package.
-  Event event;
-
-  /// Event timestamp
-  DateTime createdAt;
-
-  /// Custom details for the created repository
-  Repo repo;
-
-  ActivityFeedItemType get type => ActivityFeedItemType.createEvent;
-  User get actor => event.actor;
-  Owner get owner => repo.owner;
-}
 
 /// Defines a ForkEvent
 class ActivityFork implements ActivityFeedItem {

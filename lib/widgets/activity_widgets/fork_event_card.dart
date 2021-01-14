@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:github_activity_feed/data/activity_events.dart';
+import 'package:github_activity_feed/data/activity_events/activity_fork.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/count_item.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/event_card.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';

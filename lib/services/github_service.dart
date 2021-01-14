@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:flutter/foundation.dart' show ValueNotifier;
 import 'package:github/github.dart';
 import 'package:github/hooks.dart';
-import 'package:github_activity_feed/data/activity_events.dart';
-import 'package:github_activity_feed/data/activity_feed_item.dart';
+import 'package:github_activity_feed/data/activity_events/activity_fork.dart';
+import 'package:github_activity_feed/data/activity_events/activity_repo.dart';
+import 'package:github_activity_feed/data/activity_events/activity_feed_item.dart';
 import 'package:github_activity_feed/services/auth_service.dart';
 import 'package:github_activity_feed/services/graphql_service.dart';
+import 'package:groovin_widgets/groovin_widgets.dart';
 import 'package:rxdart/rxdart.dart';
 
 class GitHubService {
@@ -42,7 +44,7 @@ class GitHubService {
     currentUser.value =
         _github.auth.isAnonymous ? null : await _github.users.getCurrentUser();
     if (currentUser.value != null) {
-      _loadActivityFeed();
+      loadActivityFeed();
     }
   }
 
@@ -56,13 +58,13 @@ class GitHubService {
 
   List<ActivityFeedItem> feedV2 = [];
 
-  void _loadActivityFeed() {
+  void loadActivityFeed() {
     GraphQLService graphQLService = GraphQLService(token: github.auth.token);
     loadingFeed.add(true);
     github.activity
         .listEventsReceivedByUser(currentUser.value.login, pages: 30)
         .listen((event) {
-      ActivityCreate activityCreate = ActivityCreate(
+      ActivityRepo activityRepo = ActivityRepo(
         createdAt: event.createdAt,
         event: event,
       );
@@ -76,10 +78,16 @@ class GitHubService {
         case 'CreateEvent':
           repoQuery = event.repo.name.split('/').first;
           userQuery = event.actor.login;
+          activityRepo.action = 'created';
           break;
         case 'ForkEvent':
           repoQuery = activityFork.forkEvent.forkee.name;
           userQuery = activityFork.forkEvent.forkee.fullName.split('/').first;
+          break;
+        case 'WatchEvent':
+          repoQuery = event.repo.name.split('/').last;
+          userQuery = event.repo.name.split('/').first;
+          activityRepo.action = 'starred';
           break;
         default:
           break;
@@ -88,7 +96,8 @@ class GitHubService {
         graphQLService.getRepo(repoQuery, userQuery).asStream().listen((repo) {
           switch (event.type) {
             case 'CreateEvent':
-              activityCreate.repo = repo;
+            case 'WatchEvent':
+              activityRepo.repo = repo;
               break;
             case 'ForkEvent':
               activityFork.repo = repo;
@@ -97,8 +106,13 @@ class GitHubService {
               break;
           }
         }).onDone(() {
-          if (activityFork.repo != null) {
+          if (activityRepo.repo != null) {
+            feedV2.add(activityRepo);
+          } else if (activityFork.repo != null) {
             feedV2.add(activityFork);
+          } else {
+            print(activityRepo);
+            print(activityFork);
           }
         });
       }
