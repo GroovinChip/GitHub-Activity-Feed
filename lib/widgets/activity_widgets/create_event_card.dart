@@ -29,7 +29,7 @@ class _CreateEventCardState extends State<CreateEventCard> with ProvidedState {
         /// Owner avatar
         leading: UserAvatar(
           avatarUrl: widget.createEvent.owner.avatarUrl,
-          userUrl: widget.createEvent.owner.htmlUrl,
+          userUrl: widget.createEvent.owner.url,
           height: 44,
           width: 44,
         ),
@@ -51,7 +51,7 @@ class _CreateEventCardState extends State<CreateEventCard> with ProvidedState {
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
-                    widget.createEvent.repository.name,
+                    widget.createEvent.repo.name,
                     maxLines: 1,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -71,35 +71,35 @@ class _CreateEventCardState extends State<CreateEventCard> with ProvidedState {
         subtitle:
             Text(timeago.format(widget.createEvent.createdAt, locale: 'en')),
       ),
-      eventPreviewWebUrl: widget.createEvent.repository.htmlUrl,
+      eventPreviewWebUrl: widget.createEvent.repo.url,
       eventPreview: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            widget.createEvent.repository.fullName,
+            widget.createEvent.repo.nameWithOwner,
             style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),
           SizedBox(height: 4),
-          Text(widget.createEvent.repository.description ?? 'No description'),
+          Text(widget.createEvent.repo.description ?? 'No description'),
           SizedBox(height: 8),
           Row(
             children: [
               CountItem(
                 iconData: Icons.remove_red_eye_outlined,
-                countItem: widget.createEvent.repository.watchersCount,
+                countItem: widget.createEvent.repo.watcherCount,
               ),
               SizedBox(width: 16),
               CountItem(
                 iconData: Icons.star_outline,
-                countItem: widget.createEvent.repository.stargazersCount,
+                countItem: widget.createEvent.repo.stargazerCount,
               ),
               SizedBox(width: 16),
               CountItem(
                 iconData: MdiIcons.sourceFork,
-                countItem: widget.createEvent.repository.forksCount,
+                countItem: widget.createEvent.repo.forkCount,
               ),
               SizedBox(width: 16),
 

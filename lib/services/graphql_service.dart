@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:github_activity_feed/data/parent_repo.dart';
+import 'package:github_activity_feed/data/custom_repos.dart';
 import 'package:simple_gql/simple_gql.dart';
 
 /// This class handles GraphQL API calls to the GitHub v4 GraphQL endpoint
@@ -218,19 +218,56 @@ class GraphQLService {
     return searchResponse.data;
   }
 
-  Future<ParentRepo> getParentRepo(String name, String owner) async {
+  Future<Repo> getRepo(String name, String owner) async {
     GQLResponse response;
     response = await client.query(
       query: r'''
         query getParentRepo($name: String!, $owner: String!) {
           repository(name: $name, owner: $owner) {
+            owner {
+              avatarUrl
+              login
+              url
+            }
+            url
+            description
+            name
+            nameWithOwner
+            forkCount
+            stargazerCount
+            watchers {
+              totalCount
+            }
+            issues {
+              totalCount
+            }
+            languages(first: 3, orderBy: {field: SIZE, direction: DESC}) {
+              pageInfo {
+                hasNextPage
+              }
+              edges {
+                language: node {
+                  name
+                  color
+                }
+              }
+            }
             parent {
+              owner {
+                avatarUrl
+                login
+                url
+              }
               url
               description
+              name
               nameWithOwner
               forkCount
               stargazerCount
               watchers {
+                totalCount
+              }
+              issues {
                 totalCount
               }
               languages(first: 3, orderBy: {field: SIZE, direction: DESC}) {
@@ -250,6 +287,6 @@ class GraphQLService {
       headers: {'Authorization': 'Bearer $token'},
       variables: {"name": name, "owner": owner},
     );
-    return ParentRepo.fromJson(response.data);
+    return Repo.fromJson(response.data);
   }
 }

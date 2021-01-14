@@ -52,7 +52,7 @@ class _ForkEventCardState extends State<ForkEventCard> {
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
-                    widget.activityFork.forked.name,
+                    widget.activityFork.repo.name,
                     maxLines: 1,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -75,8 +75,7 @@ class _ForkEventCardState extends State<ForkEventCard> {
         trailing: IconButton(
           tooltip: 'See this fork',
           icon: Icon(MdiIcons.sourceFork),
-          onPressed: () =>
-              url_launcher.launch(widget.activityFork.forked.htmlUrl),
+          onPressed: () => url_launcher.launch(widget.activityFork.repo.url),
         ),
       ),
       eventPreview: Column(

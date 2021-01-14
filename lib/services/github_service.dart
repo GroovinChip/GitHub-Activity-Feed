@@ -57,6 +57,7 @@ class GitHubService {
   List<ActivityFeedItem> feedV2 = [];
 
   void loadActivityFeed() {
+    GraphQLService graphQLService = GraphQLService(token: github.auth.token);
     loadingFeed.add(true);
     github.activity
         .listEventsReceivedByUser(currentUser.value.login, pages: 30)
@@ -67,13 +68,15 @@ class GitHubService {
             createdAt: event.createdAt,
             event: event,
           );
-          github.repositories
-              .getRepository(RepositorySlug.full(event.repo.name))
+          graphQLService
+              .getRepo(event.repo.name, event.actor.login)
               .asStream()
               .listen((repo) {
-            activityCreate.repository = repo;
-          }).onDone(() {
-            if (activityCreate.repository != null) {
+            activityCreate.repo = repo;
+          })..onError((error) {
+            //print(error);
+          })..onDone(() {
+            if (activityCreate.repo != null) {
               feedV2.add(activityCreate);
             }
           });
@@ -83,23 +86,19 @@ class GitHubService {
             createdAt: event.createdAt,
             forkEvent: ForkEvent.fromJson(event.payload),
           );
-          GraphQLService graphQLService =
-              GraphQLService(token: github.auth.token);
+
           graphQLService
-              .getParentRepo(activityFork.forkEvent.forkee.name,
+              .getRepo(activityFork.forkEvent.forkee.name,
                   activityFork.forkEvent.forkee.fullName.split('/').first)
               .asStream()
-              .listen((parent) {
-            activityFork.parent = parent;
-          }).onDone(() {
-            github.users
-                .getUser(activityFork.parent.nameWithOwner.split('/').first)
-                .asStream()
-                .listen((user) {
-              activityFork.parentOwner = user;
-            }).onDone(() {
+              .listen((repo) {
+            activityFork.repo = repo;
+          })..onError((error) {
+            //print(error);
+          })..onDone(() {
+            if (activityFork.repo != null) {
               feedV2.add(activityFork);
-            });
+            }
           });
           break;
         default:
