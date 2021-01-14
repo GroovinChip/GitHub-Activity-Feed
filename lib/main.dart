@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/app/app.dart';
 import 'package:github_activity_feed/services/auth_service.dart';
@@ -7,6 +8,7 @@ import 'package:github_activity_feed/state/prefs_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   final authService = await AuthService.init();
   final githubService = await GitHubService.init(authService);
   final prefsBloc = await PrefsBloc.init();

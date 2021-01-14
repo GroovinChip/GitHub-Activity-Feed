@@ -114,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
           ),*/
           BottomNavigationBarItem(
             icon: Icon(Icons.group_outlined),
-            label: '${githubService.currentUser.value.followingCount} Following',
+            label: '${githubService.currentUser.value?.followingCount} Following',
           ),
         ],
       ),
