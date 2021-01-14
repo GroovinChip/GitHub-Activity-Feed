@@ -125,6 +125,7 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
                   secondaryVariant: Color(0xff007ecb),
                 ),
                 dialogBackgroundColor: Colors.grey.shade900,
+                dividerColor: Colors.grey,
                 primaryColor: Color(0xff2962FF),
                 // for CircularProgressIndicator and material scroll color
                 accentColor: Color(0xff3BACFF),
