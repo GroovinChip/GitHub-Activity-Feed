@@ -42,7 +42,7 @@ class GitHubService {
     currentUser.value =
         _github.auth.isAnonymous ? null : await _github.users.getCurrentUser();
     if (currentUser.value != null) {
-      loadActivityFeed();
+      _loadActivityFeed();
     }
   }
 
@@ -56,56 +56,58 @@ class GitHubService {
 
   List<ActivityFeedItem> feedV2 = [];
 
-  void loadActivityFeed() {
+  void _loadActivityFeed() {
     GraphQLService graphQLService = GraphQLService(token: github.auth.token);
     loadingFeed.add(true);
     github.activity
         .listEventsReceivedByUser(currentUser.value.login, pages: 30)
         .listen((event) {
+      ActivityCreate activityCreate = ActivityCreate(
+        createdAt: event.createdAt,
+        event: event,
+      );
+      ActivityFork activityFork = ActivityFork(
+        createdAt: event.createdAt,
+        forkEvent: ForkEvent.fromJson(event.payload),
+      );
+      String repoQuery;
+      String userQuery;
       switch (event.type) {
         case 'CreateEvent':
-          ActivityCreate activityCreate = ActivityCreate(
-            createdAt: event.createdAt,
-            event: event,
-          );
-          graphQLService
-              .getRepo(event.repo.name, event.actor.login)
-              .asStream()
-              .listen((repo) {
-            activityCreate.repo = repo;
-          })..onError((error) {
-            //print(error);
-          })..onDone(() {
-            if (activityCreate.repo != null) {
-              feedV2.add(activityCreate);
-            }
-          });
+          repoQuery = event.repo.name.split('/').first;
+          userQuery = event.actor.login;
           break;
         case 'ForkEvent':
-          ActivityFork activityFork = ActivityFork(
-            createdAt: event.createdAt,
-            forkEvent: ForkEvent.fromJson(event.payload),
-          );
-
-          graphQLService
-              .getRepo(activityFork.forkEvent.forkee.name,
-                  activityFork.forkEvent.forkee.fullName.split('/').first)
-              .asStream()
-              .listen((repo) {
-            activityFork.repo = repo;
-          })..onError((error) {
-            //print(error);
-          })..onDone(() {
-            if (activityFork.repo != null) {
-              feedV2.add(activityFork);
-            }
-          });
+          repoQuery = activityFork.forkEvent.forkee.name;
+          userQuery = activityFork.forkEvent.forkee.fullName.split('/').first;
           break;
         default:
           break;
       }
+      if (repoQuery != null && userQuery != null) {
+        graphQLService.getRepo(repoQuery, userQuery).asStream().listen((repo) {
+          switch (event.type) {
+            case 'CreateEvent':
+              activityCreate.repo = repo;
+              break;
+            case 'ForkEvent':
+              activityFork.repo = repo;
+              break;
+            default:
+              break;
+          }
+        }).onDone(() {
+          if (activityFork.repo != null) {
+            feedV2.add(activityFork);
+          }
+        });
+      }
+
       activityFeed.add(event);
     }).onDone(() {
+      feedV2.sort((ActivityFeedItem item1, ActivityFeedItem item2) {
+        return item2.createdAt.compareTo(item1.createdAt);
+      });
       loadingFeed.add(false);
       print('Finished loading feed');
       print(activityFeed.length);

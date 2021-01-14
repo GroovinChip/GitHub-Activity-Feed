@@ -47,6 +47,6 @@ class ActivityFork implements ActivityFeedItem {
 
   ActivityFeedItemType get type => ActivityFeedItemType.forkEvent;
   UserInformation get actor => forkEvent.forkee.owner;
-  Owner get parentOwner => repo.owner;
   ParentRepo get parent => repo.parent;
+  Owner get parentOwner => repo.parent.owner;
 }

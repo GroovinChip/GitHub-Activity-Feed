@@ -86,15 +86,21 @@ class _ForkEventCardState extends State<ForkEventCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               UserAvatar(
-                avatarUrl: widget.activityFork.parentOwner.avatarUrl,
+                avatarUrl: widget.activityFork.repo.parent.owner.avatarUrl,
                 height: 25,
                 width: 25,
               ),
               SizedBox(width: 8),
-              Text(
-                widget.activityFork.parent.nameWithOwner,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
+              Expanded(
+                child: FittedBox(
+                  alignment: Alignment.topLeft,
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    widget.activityFork.parent.nameWithOwner,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
             ],

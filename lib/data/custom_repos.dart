@@ -31,6 +31,7 @@ class Repo {
 
   factory Repo.fromJson(Map<String, dynamic> json) {
     List<Language> _languages = [];
+    ParentRepo _parent;
     if (List<dynamic>.from(json['repository']['languages']['edges']).isEmpty) {
       _languages.add(Language(
         name: 'N/A',
@@ -40,6 +41,10 @@ class Repo {
       _languages = List<dynamic>.from(json['repository']['languages']['edges'])
           .map((e) => Language.fromJson(e))
           .toList();
+    }
+
+    if (json['repository']['parent'] != null) {
+      _parent = ParentRepo.fromJson(json['repository']['parent']);
     }
 
     return Repo(
@@ -53,7 +58,7 @@ class Repo {
       watcherCount: json['repository']['watchers']['totalCount'],
       issueCount: json['repository']['issues']['totalCount'],
       languages: _languages,
-      parent: ParentRepo.fromJson(json['repository']['parent']),
+      parent: _parent,
     );
   }
 }
