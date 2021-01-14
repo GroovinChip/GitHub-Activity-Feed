@@ -11,6 +11,28 @@ extension DateTimeFormattingX on DateTime {
   String get asMonthDayYear => DateFormat.yMMMMd('en_US').format(this);
 }
 
+extension ThemeModeX on ThemeMode {
+  String format() {
+    String themeModeString;
+    switch (this) {
+      case ThemeMode.system:
+        themeModeString = 'System theme';
+        break;
+      case ThemeMode.light:
+        themeModeString = 'Light theme';
+        break;
+      case ThemeMode.dark:
+        themeModeString = 'Dark theme';
+        break;
+    }
+    return themeModeString;
+  }
+
+  bool get isSystemMode => this == ThemeMode.system;
+  bool get isDarkMode => this == ThemeMode.dark;
+  bool get isLightMode => this == ThemeMode.light;
+}
+
 extension StringX on String {
   bool get isNullOrEmpty => this == null || this.isEmpty;
 

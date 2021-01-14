@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/state/prefs_bloc.dart';
+import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/widgets/dialogs/logout_dialog.dart';
 import 'package:github_activity_feed/widgets/dialogs/theme_switcher_dialog.dart';
 import 'package:groovin_widgets/groovin_widgets.dart';
@@ -38,89 +39,91 @@ class _MenuSheetContentState extends State<MenuSheetContent>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ModalDrawerHandle(),
-        ),
-        ListTile(
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage(user.avatarUrl),
+    return SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ModalDrawerHandle(),
           ),
-          title: Text(user.login),
-          subtitle: Text(user.email ?? user.login),
-          trailing: FlatButton(
-            child: Text('Log out'),
-            onPressed: () => showDialog(
-              context: context,
-              builder: (_) => LogOutDialog(
-                githubService: githubService,
+          ListTile(
+            leading: CircleAvatar(
+              backgroundImage: NetworkImage(user.avatarUrl),
+            ),
+            title: Text(user.login),
+            subtitle: Text(user.email ?? user.login),
+            trailing: OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                shape: StadiumBorder(),
+                side: BorderSide(
+                  color: context.isDarkTheme ? Colors.white : Colors.black,
+                ),
+              ),
+              child: Text(
+                'Log out',
+                style: TextStyle(
+                  color: context.isDarkTheme ? Colors.white : Colors.black,
+                ),
+              ),
+              onPressed: () => showDialog(
+                context: context,
+                builder: (_) => LogOutDialog(
+                  githubService: githubService,
+                ),
               ),
             ),
           ),
-        ),
-        StreamBuilder<ThemeMode>(
-          stream: prefsbloc.themeModeSubject,
-          initialData: prefsbloc.themeModeSubject.value,
-          builder: (BuildContext context, AsyncSnapshot<ThemeMode> snapshot) {
-            String currentThemeMode;
-            switch (snapshot.data) {
-              case ThemeMode.system:
-                currentThemeMode = 'System theme';
-                break;
-              case ThemeMode.light:
-                currentThemeMode = 'Light theme';
-                break;
-              case ThemeMode.dark:
-                currentThemeMode = 'Dark theme';
-                break;
-            }
-            return ListTile(
-              title: Text("Change app theme"),
-              subtitle: Text(currentThemeMode),
-              onTap: () => showDialog(
-                context: context,
-                builder: (_) => ThemeSwitcherDialog(
-                  themeMode: snapshot.data,
+          StreamBuilder<ThemeMode>(
+            stream: prefsbloc.themeModeSubject,
+            initialData: prefsbloc.themeModeSubject.value,
+            builder: (BuildContext context, AsyncSnapshot<ThemeMode> snapshot) {
+              return ListTile(
+                title: Text("Change app theme"),
+                subtitle: Text(snapshot.data.format()),
+                onTap: () => showDialog(
+                  context: context,
+                  builder: (_) => ThemeSwitcherDialog(
+                    themeMode: snapshot.data,
+                  ),
                 ),
-              ),
-            );
-          },
-        ),
-        StreamBuilder<bool>(
-          stream: prefsbloc.cardOrTileSubject,
-          initialData: prefsbloc.cardOrTileSubject.value,
-          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            return SwitchListTile.adaptive(
-              value: snapshot.data,
-              onChanged: (bool) {
-                prefsbloc.setCardOrTilePref(bool);
-                setState(() {});
-              },
-              activeColor: Theme.of(context).accentColor,
-              title: Text(snapshot.data == true
-                  ? 'Switch to tiles'
-                  : 'Switch to cards'),
-              subtitle: Text(snapshot.data == true
-                  ? 'Show users as tiles instead of cards'
-                  : 'Show users as cards instead of tiles'),
-            );
-          },
-        ),
-        Divider(height: 0.0),
-        ListTile(
-          title: Text('Share feedback'),
-          onTap: () {
-            Navigator.pop(context);
-            Wiredash.of(context).show();
-          },
-        ),
-        ListTile(
-          title: Text('Version ${_packageInfo?.version}'),
-        ),
-      ],
+              );
+            },
+          ),
+          StreamBuilder<bool>(
+            stream: prefsbloc.cardOrTileSubject,
+            initialData: prefsbloc.cardOrTileSubject.value,
+            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+              return SwitchListTile.adaptive(
+                value: snapshot.data,
+                onChanged: (bool) {
+                  prefsbloc.setCardOrTilePref(bool);
+                  setState(() {});
+                },
+                activeColor: Theme.of(context).primaryColor,
+                title: Text(
+                  snapshot.data == true ? 'Switch to tiles' : 'Switch to cards',
+                ),
+                subtitle: Text(snapshot.data == true
+                    ? 'Show users as tiles instead of cards'
+                    : 'Show users as cards instead of tiles'),
+              );
+            },
+          ),
+          Divider(height: 0.0),
+          ListTile(
+            title: Text('GitHub Activity Feed'),
+            subtitle: Text('Version ${_packageInfo?.version}'),
+          ),
+          ListTile(
+            title: Text('Share feedback'),
+            onTap: () {
+              Navigator.pop(context);
+              Wiredash.of(context).show();
+            },
+          ),
+        ],
+      ),
     );
   }
 }
