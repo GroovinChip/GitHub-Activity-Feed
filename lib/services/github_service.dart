@@ -5,10 +5,8 @@ import 'package:github/github.dart';
 import 'package:github/hooks.dart';
 import 'package:github_activity_feed/data/activity_events.dart';
 import 'package:github_activity_feed/data/activity_feed_item.dart';
-import 'package:github_activity_feed/data/parent_repo.dart';
 import 'package:github_activity_feed/services/auth_service.dart';
 import 'package:github_activity_feed/services/graphql_service.dart';
-import 'package:github_activity_feed/utils/printers.dart';
 import 'package:rxdart/rxdart.dart';
 
 class GitHubService {
@@ -56,20 +54,13 @@ class GitHubService {
     }
   }
 
-  Stream<Event> _listAuthUserReceivedEvents({int pages}) {
-    return PaginationHelper(github).objects(
-      'GET',
-      '/users/${currentUser.value.login}/received_events',
-      (i) => Event.fromJson(i),
-      pages: pages,
-    );
-  }
-
   List<ActivityFeedItem> feedV2 = [];
 
   void loadActivityFeed() {
     loadingFeed.add(true);
-    _listAuthUserReceivedEvents(pages: 30).listen((event) {
+    github.activity
+        .listEventsReceivedByUser(currentUser.value.login, pages: 30)
+        .listen((event) {
       switch (event.type) {
         case 'CreateEvent':
           ActivityCreate activityCreate = ActivityCreate(
@@ -102,8 +93,7 @@ class GitHubService {
             activityFork.parent = parent;
           }).onDone(() {
             github.users
-                .getUser(
-                    activityFork.parent.nameWithOwner.split('/').first)
+                .getUser(activityFork.parent.nameWithOwner.split('/').first)
                 .asStream()
                 .listen((user) {
               activityFork.parentOwner = user;
