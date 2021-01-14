@@ -14,11 +14,6 @@ extension DateTimeFormattingX on DateTime {
 extension StringX on String {
   bool get isNullOrEmpty => this == null || this.isEmpty;
 
-  String replaceAfter(String delimiter, String replacement, [String defaultValue]) {
-    final index = indexOf(delimiter);
-    return (index == -1) ? defaultValue.isNullOrEmpty ? this : defaultValue : replaceRange(index + 1, length, replacement);
-  }
-
   String capitalize() {
     return "${this[0].toUpperCase()}${this.substring(1)}";
   }
