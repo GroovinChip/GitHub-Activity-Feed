@@ -29,7 +29,7 @@ dependencies:
   shared_preferences: ^0.5.12+4
   simple_gql: ^1.1.1
   syntax_highlighter: ^0.1.1
-  timeago: ^2.0.26
+  timeago: ^2.0.29
   url_launcher: ^5.7.10
   uuid: ^2.2.2
   wiredash: ^0.2.0
