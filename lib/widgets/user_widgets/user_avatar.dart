@@ -28,13 +28,16 @@ class UserAvatar extends StatelessWidget {
         color: Colors.grey.shade200, // neat!
         child: Ink.image(
           //todo: use cached_network_image package
-          image: NetworkImage(avatarUrl ?? 'https://avatars1.githubusercontent.com/u/5868834?s=400&v=4'),
+          image: NetworkImage(avatarUrl ??
+              'https://avatars1.githubusercontent.com/u/5868834?s=400&v=4'),
           fit: BoxFit.cover,
           height: height,
           width: width,
-          child: userUrl != null ? InkWell(
-            onTap: () => url_launcher.launch(userUrl),
-          ) : null,
+          child: userUrl != null
+              ? InkWell(
+                  onTap: () => url_launcher.launch(userUrl),
+                )
+              : null,
         ),
       ),
     );

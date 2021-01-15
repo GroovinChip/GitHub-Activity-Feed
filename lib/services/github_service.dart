@@ -25,8 +25,8 @@ class GitHubService {
   }
 
   GitHub get github => _github;
-  List<Event> activityFeed = [];
   BehaviorSubject<bool> loadingFeed = BehaviorSubject<bool>.seeded(false);
+  List<ActivityFeedItem> activityFeed = [];
 
   Future<void> _init() async {
     await _onAuthStateChanged(_authService.authState);
@@ -54,8 +54,6 @@ class GitHubService {
       return Authentication.anonymous();
     }
   }
-
-  List<ActivityFeedItem> feedV2 = [];
 
   void loadActivityFeed() {
     GraphQLService graphQLService = GraphQLService(token: github.auth.token);
@@ -89,7 +87,6 @@ class GitHubService {
           activityRepo.action = 'starred';
           break;
         default:
-          print(event.type);
           break;
       }
       if (repoQuery != null && userQuery != null) {
@@ -107,21 +104,18 @@ class GitHubService {
           }
         }).onDone(() {
           if (activityRepo.repo != null) {
-            feedV2.add(activityRepo);
+            activityFeed.add(activityRepo);
           } else if (activityFork.repo != null) {
-            feedV2.add(activityFork);
+            activityFeed.add(activityFork);
           }
         });
       }
-
-      activityFeed.add(event);
     }).onDone(() {
-      feedV2.sort((ActivityFeedItem item1, ActivityFeedItem item2) {
+      activityFeed.sort((ActivityFeedItem item1, ActivityFeedItem item2) {
         return item2.createdAt.compareTo(item1.createdAt);
       });
       loadingFeed.add(false);
       print('Finished loading feed');
-      print(activityFeed.length);
     });
   }
 

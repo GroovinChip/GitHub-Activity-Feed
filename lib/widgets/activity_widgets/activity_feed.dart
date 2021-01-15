@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/app/provided.dart';
-import 'package:github_activity_feed/data/activity_events/activity_repo.dart';
 import 'package:github_activity_feed/data/activity_events/activity_feed_item.dart';
 import 'package:github_activity_feed/data/activity_events/activity_fork.dart';
-import 'package:github_activity_feed/widgets/activity_widgets/repo_event_card.dart';
+import 'package:github_activity_feed/data/activity_events/activity_repo.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/fork_event_card.dart';
+import 'package:github_activity_feed/widgets/activity_widgets/repo_event_card.dart';
 
 class ActivityFeed extends StatefulWidget {
   @override
@@ -23,70 +23,25 @@ class _ActivityFeedState extends State<ActivityFeed> with ProvidedState {
             child: CircularProgressIndicator(),
           );
         } else {
-          /*return Scrollbar(
+          return Scrollbar(
             child: ListView.builder(
               itemCount: githubService.activityFeed.length,
               itemBuilder: (context, index) {
                 switch (githubService.activityFeed[index].type) {
-                  case 'CreateEvent':
-                    //printFormattedJson(githubService.activityFeed[index].toJson());
-                    return CreateEventCard(
-                      createEvent: githubService.activityFeed[index],
-                    );
-                  case 'ForkEvent':
-                    String forkedFrom = githubService.activityFeed[index].repo.name
-                        .split('/')
-                        .first;
-                    return ForkEventCard(
-                      forkEvent: ForkEvent.fromJson(
-                          githubService.activityFeed[index].payload),
-                      forkedFrom: forkedFrom,
-                    );
-                  case 'MemberEvent':
-                  //printFormattedJson(activityFeed[index].toJson());
-                    return Container();
-                //return Text(activityFeed[index].type);
-                  case 'PublicEvent':
-                    return Container();
-                //return Text(activityFeed[index].type);
-                  case 'PushEvent':
-                    return Container();
-                //return Text(activityFeed[index].type);
-                  case 'ReleaseEvent':
-                    return Container();
-                //return Text(activityFeed[index].type);
-                  case 'WatchEvent':
-                    return WatchEventCard(
-                      watchEvent: githubService.activityFeed[index],
-                    );
-                //return Text(activityFeed[index].type);
-                  default:
-                    return Container();
-                //return Text(activityFeed[index].type);
-                }
-              },
-            ),
-          );*/
-
-          return Scrollbar(
-            child: ListView.builder(
-              itemCount: githubService.feedV2.length,
-              itemBuilder: (context, index) {
-                switch (githubService.feedV2[index].type) {
                   case ActivityFeedItemType.repoEvent:
-                    ActivityRepo activityRepo = githubService.feedV2[index];
+                    ActivityRepo activityRepo =
+                        githubService.activityFeed[index];
                     return RepoEventCard(
                       repoEvent: activityRepo,
                     );
                   case ActivityFeedItemType.forkEvent:
-                    ActivityFork activityFork = githubService.feedV2[index];
+                    ActivityFork activityFork =
+                        githubService.activityFeed[index];
                     return ForkEventCard(
                       activityFork: activityFork,
                     );
-                    return Container();
                   default:
                     return Container();
-                  //return Text(activityFeed[index].type);
                 }
               },
             ),
