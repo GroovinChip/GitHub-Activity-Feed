@@ -3,12 +3,11 @@ import 'dart:async';
 import 'package:flutter/foundation.dart' show ValueNotifier;
 import 'package:github/github.dart';
 import 'package:github/hooks.dart';
+import 'package:github_activity_feed/data/activity_events/activity_feed_item.dart';
 import 'package:github_activity_feed/data/activity_events/activity_fork.dart';
 import 'package:github_activity_feed/data/activity_events/activity_repo.dart';
-import 'package:github_activity_feed/data/activity_events/activity_feed_item.dart';
 import 'package:github_activity_feed/services/auth_service.dart';
 import 'package:github_activity_feed/services/graphql_service.dart';
-import 'package:groovin_widgets/groovin_widgets.dart';
 import 'package:rxdart/rxdart.dart';
 
 class GitHubService {
@@ -90,6 +89,7 @@ class GitHubService {
           activityRepo.action = 'starred';
           break;
         default:
+          print(event.type);
           break;
       }
       if (repoQuery != null && userQuery != null) {
@@ -110,9 +110,6 @@ class GitHubService {
             feedV2.add(activityRepo);
           } else if (activityFork.repo != null) {
             feedV2.add(activityFork);
-          } else {
-            print(activityRepo);
-            print(activityFork);
           }
         });
       }
