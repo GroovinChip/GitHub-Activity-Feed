@@ -26,8 +26,6 @@ class _ViewerFollowingListState extends State<ViewerFollowingList> {
   void initState() {
     super.initState();
     graphQLService = Provider.of<GraphQLService>(context, listen: false);
-
-    /// prevent FutureBuilder from rebuilding on setState() calls
     _viewerFollowing = graphQLService.getViewerFollowing();
   }
 
@@ -35,10 +33,10 @@ class _ViewerFollowingListState extends State<ViewerFollowingList> {
   Widget build(BuildContext context) {
     return StreamBuilder<bool>(
       stream: Provider.of<PrefsBloc>(context).cardOrTileSubject,
-      builder: (BuildContext context, AsyncSnapshot<bool> isCardOrTile) {
+      builder: (context, isCardOrTile) {
         return FutureBuilder<dynamic>(
           future: _viewerFollowing,
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
+          builder: (context, snapshot) {
             if (snapshot.hasError) {
               return ErrorWidget(snapshot.error);
             } else if (!snapshot.hasData) {
@@ -48,36 +46,39 @@ class _ViewerFollowingListState extends State<ViewerFollowingList> {
             } else if (snapshot.data.isEmpty && widget.emptyBuilder != null) {
               return widget.emptyBuilder(context);
             } else {
-              FollowingUsers viewerFollowing = FollowingUsers.fromJson(snapshot.data['user']);
-              return Scrollbar(
-                child: isCardOrTile.data == true
-                    ? GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 8,
-                          mainAxisSpacing: 8,
-                          childAspectRatio: 1.1,
-                        ),
-                        itemCount: viewerFollowing.following.users.length,
-                        padding: EdgeInsets.all(8.0),
-                        itemBuilder: (BuildContext context, int index) {
-                          final FollowingUser user = viewerFollowing.following.users[index];
-                          return UserCard(
-                            user: user,
-                          );
-                        },
-                      )
-                    : ListView.builder(
-                        itemCount: viewerFollowing.following.users.length,
-                        padding: const EdgeInsets.all(8.0),
-                        itemBuilder: (context, index) {
-                          final FollowingUser user = viewerFollowing.following.users[index];
-                          return UserTile(
-                            user: user,
-                          );
-                        },
-                      ),
-              );
+              FollowingUsers viewerFollowing =
+                  FollowingUsers.fromJson(snapshot.data['user']);
+              if (isCardOrTile.data) {
+                return Scrollbar(
+                  child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 8,
+                      mainAxisSpacing: 8,
+                      childAspectRatio: 1.1,
+                    ),
+                    itemCount: viewerFollowing.following.users.length,
+                    padding: EdgeInsets.all(8.0),
+                    itemBuilder: (BuildContext context, int index) {
+                      return UserCard(
+                        user: viewerFollowing.following.users[index],
+                      );
+                    },
+                  ),
+                );
+              } else {
+                return Scrollbar(
+                  child: ListView.builder(
+                    itemCount: viewerFollowing.following.users.length,
+                    padding: const EdgeInsets.all(8.0),
+                    itemBuilder: (context, index) {
+                      return UserTile(
+                        user: viewerFollowing.following.users[index],
+                      );
+                    },
+                  ),
+                );
+              }
             }
           },
         );

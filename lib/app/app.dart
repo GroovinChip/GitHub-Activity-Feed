@@ -39,16 +39,19 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
   void initState() {
     super.initState();
     widget.githubService.currentUser.addListener(_onCurrentUserChanged);
-    graphQLService = GraphQLService(token: widget.githubService.github.auth.token);
+    graphQLService =
+        GraphQLService(token: widget.githubService.github.auth.token);
   }
 
   void _onCurrentUserChanged() {
     final currentUser = widget.githubService.currentUser.value;
     if (currentUser == null) {
-      _navigatorKey.currentState.pushAndRemoveUntil(LoginPage.route(), (route) => false);
+      _navigatorKey.currentState
+          .pushAndRemoveUntil(LoginPage.route(), (route) => false);
     } else {
       url_launcher.closeWebView();
-      _navigatorKey.currentState.pushAndRemoveUntil(HomeScreen.route(), (route) => false);
+      _navigatorKey.currentState
+          .pushAndRemoveUntil(HomeScreen.route(), (route) => false);
     }
   }
 
@@ -84,68 +87,73 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
           showDebugFloatingEntryPoint: false,
         ),
         child: StreamBuilder<ThemeMode>(
-            stream: widget.prefsBloc.themeModeSubject,
-            initialData: widget.prefsBloc.themeModeSubject.value,
-            builder: (context, snapshot) {
-              return MaterialApp(
-                navigatorKey: _navigatorKey,
-                title: 'GitHub Activity Feed',
-                theme: ThemeData(
-                  brightness: Brightness.light,
-                  colorScheme: ColorScheme.light().copyWith(
-                    primary: Color(0xff2962FF),
-                    primaryVariant: Color(0xff0039cb),
-                    secondary: Color(0xff3BACFF),
-                    secondaryVariant: Color(0xff007ecb),
-                  ),
-                  primaryColor: Color(0xff2962FF),
-                  // for CircularProgressIndicator and material scroll color
-                  accentColor: Color(0xff3BACFF),
-                  textTheme: GoogleFonts.interTextTheme(
-                    ThemeData.light().textTheme,
-                  ),
-                  appBarTheme: AppBarTheme(
-                    color: Color(0xff2962FF),
-                  ),
-                  bottomNavigationBarTheme: BottomNavigationBarThemeData(
-                    selectedItemColor: context.colorScheme.primary,
-                    unselectedItemColor: context.colorScheme.onSurface,
-                  ),
-                  visualDensity: VisualDensity.adaptivePlatformDensity,
+          stream: widget.prefsBloc.themeModeSubject,
+          initialData: widget.prefsBloc.themeModeSubject.value,
+          builder: (context, snapshot) {
+            return MaterialApp(
+              navigatorKey: _navigatorKey,
+              title: 'GitHub Activity Feed',
+              theme: ThemeData(
+                brightness: Brightness.light,
+                colorScheme: ColorScheme.light().copyWith(
+                  primary: Color(0xff2962FF),
+                  primaryVariant: Color(0xff0039cb),
+                  secondary: Color(0xff3BACFF),
+                  secondaryVariant: Color(0xff007ecb),
                 ),
-                darkTheme: ThemeData(
-                  brightness: Brightness.dark,
-                  colorScheme: ColorScheme.dark().copyWith(
-                    primary: Color(0xff2962FF),
-                    primaryVariant: Color(0xff0039cb),
-                    secondary: Color(0xff3BACFF),
-                    secondaryVariant: Color(0xff007ecb),
-                  ),
-                  primaryColor: Color(0xff2962FF),
-                  // for CircularProgressIndicator and material scroll color
-                  accentColor: Color(0xff3BACFF),
-                  canvasColor: ColorScheme.dark().background,
-                  textTheme: GoogleFonts.interTextTheme(
-                    ThemeData.dark().textTheme,
-                  ),
-                  appBarTheme: AppBarTheme(
-                    color: Colors.black,
-                  ),
-                  bottomNavigationBarTheme: BottomNavigationBarThemeData(
-                    selectedItemColor: context.colorScheme.primary,
-                    unselectedItemColor: context.colorScheme.onBackground,
-                  ),
-                  visualDensity: VisualDensity.adaptivePlatformDensity,
+                primaryColor: Color(0xff2962FF),
+                // for CircularProgressIndicator and material scroll color
+                accentColor: Color(0xff3BACFF),
+                textTheme: GoogleFonts.interTextTheme(
+                  ThemeData.light().textTheme,
                 ),
-                themeMode: snapshot.data,
-                initialRoute: widget.githubService.currentUser.value == null ? LoginPage.routeName : HomeScreen.routeName,
-                onGenerateInitialRoutes: (String initialRoute) => [
-                  _onGenerateRoute(RouteSettings(name: initialRoute)),
-                ],
-                onGenerateRoute: _onGenerateRoute,
-                debugShowCheckedModeBanner: false,
-              );
-            }),
+                appBarTheme: AppBarTheme(
+                  color: Color(0xff2962FF),
+                ),
+                bottomNavigationBarTheme: BottomNavigationBarThemeData(
+                  selectedItemColor: context.colorScheme.primary,
+                  unselectedItemColor: context.colorScheme.onSurface,
+                ),
+                visualDensity: VisualDensity.adaptivePlatformDensity,
+              ),
+              darkTheme: ThemeData(
+                brightness: Brightness.dark,
+                colorScheme: ColorScheme.dark().copyWith(
+                  primary: Color(0xff2962FF),
+                  primaryVariant: Color(0xff0039cb),
+                  secondary: Color(0xff3BACFF),
+                  secondaryVariant: Color(0xff007ecb),
+                ),
+                dialogBackgroundColor: Colors.grey.shade900,
+                dividerColor: Colors.grey,
+                primaryColor: Color(0xff2962FF),
+                // for CircularProgressIndicator and material scroll color
+                accentColor: Color(0xff3BACFF),
+                canvasColor: ColorScheme.dark().background,
+                textTheme: GoogleFonts.interTextTheme(
+                  ThemeData.dark().textTheme,
+                ),
+                appBarTheme: AppBarTheme(
+                  color: Colors.black,
+                ),
+                bottomNavigationBarTheme: BottomNavigationBarThemeData(
+                  selectedItemColor: context.colorScheme.primary,
+                  unselectedItemColor: context.colorScheme.onBackground,
+                ),
+                visualDensity: VisualDensity.adaptivePlatformDensity,
+              ),
+              themeMode: snapshot.data,
+              initialRoute: widget.githubService.currentUser.value == null
+                  ? LoginPage.routeName
+                  : HomeScreen.routeName,
+              onGenerateInitialRoutes: (String initialRoute) => [
+                _onGenerateRoute(RouteSettings(name: initialRoute)),
+              ],
+              onGenerateRoute: _onGenerateRoute,
+              debugShowCheckedModeBanner: false,
+            );
+          },
+        ),
       ),
     );
   }

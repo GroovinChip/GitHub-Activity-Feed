@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/state/prefs_bloc.dart';
+import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:provider/provider.dart';
 
 class ThemeSwitcherDialog extends StatefulWidget {
@@ -26,14 +27,14 @@ class _ThemeSwitcherDialogState extends State<ThemeSwitcherDialog> {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      backgroundColor: Theme.of(context).canvasColor,
       title: Text('Change app theme'),
       children: [
         RadioListTile(
           title: Text('System theme'),
           value: ThemeMode.system,
-          selected: widget.themeMode == ThemeMode.system ? true : false,
+          selected: widget.themeMode.isSystemMode,
           groupValue: widget.themeMode,
+          activeColor: Theme.of(context).accentColor,
           onChanged: (themeMode) {
             prefsbloc.setThemeModePref(themeMode);
             setState(() {});
@@ -43,8 +44,9 @@ class _ThemeSwitcherDialogState extends State<ThemeSwitcherDialog> {
         RadioListTile(
           title: Text('Light theme'),
           value: ThemeMode.light,
-          selected: widget.themeMode == ThemeMode.light ? true : false,
+          selected: widget.themeMode.isLightMode,
           groupValue: widget.themeMode,
+          activeColor: Theme.of(context).accentColor,
           onChanged: (themeMode) {
             prefsbloc.setThemeModePref(themeMode);
             setState(() {});
@@ -54,8 +56,9 @@ class _ThemeSwitcherDialogState extends State<ThemeSwitcherDialog> {
         RadioListTile(
           title: Text('Dark theme'),
           value: ThemeMode.dark,
-          selected: widget.themeMode == ThemeMode.dark ? true : false,
+          selected: widget.themeMode.isDarkMode,
           groupValue: widget.themeMode,
+          activeColor: Theme.of(context).accentColor,
           onChanged: (themeMode) {
             prefsbloc.setThemeModePref(themeMode);
             setState(() {});

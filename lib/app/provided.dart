@@ -15,5 +15,6 @@ mixin ProvidedState<T extends StatefulWidget> on State<T> {
 
   AuthService get auth => _authService ??= Provider.of<AuthService>(context, listen: false);
   GitHubService get githubService => _gitHubService ??= Provider.of<GitHubService>(context, listen: false);
+  GitHub get github => githubService.github;
   CurrentUser get user => _currentUser ??= Provider.of<CurrentUser>(context, listen: true);
 }

@@ -4,9 +4,9 @@ import 'package:github_activity_feed/data/base_user.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
-/// A tile that represents a User, with less detail that [UserCard]
+/// A tile that represents a User, with less detail than [UserCard]
 class UserTile extends StatelessWidget {
   final BaseUser user;
 
@@ -21,7 +21,7 @@ class UserTile extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
-      onTap: () => launch(user.url),
+      onTap: () => url_launcher.launch(user.url),
       child: UserInfoRow(
         user: user,
       ),
@@ -92,14 +92,6 @@ class UserInfoRow extends StatelessWidget {
               Text(user.login),
             ],
           ),
-          Spacer(),
-          if (user.viewerIsFollowing != null)
-            !user.viewerIsFollowing
-                ? IconButton(
-                    icon: Icon(MdiIcons.accountPlusOutline),
-                    onPressed: () {},
-                  )
-                : Container(),
         ],
       ),
     );
