@@ -11,22 +11,35 @@ extension DateTimeFormattingX on DateTime {
   String get asMonthDayYear => DateFormat.yMMMMd('en_US').format(this);
 }
 
-extension StringCheckX on String {
-  bool get isNullOrEmpty => this == null || this.isEmpty;
+extension ThemeModeX on ThemeMode {
+  String format() {
+    String themeModeString;
+    switch (this) {
+      case ThemeMode.system:
+        themeModeString = 'System theme';
+        break;
+      case ThemeMode.light:
+        themeModeString = 'Light theme';
+        break;
+      case ThemeMode.dark:
+        themeModeString = 'Dark theme';
+        break;
+    }
+    return themeModeString;
+  }
+
+  bool get isSystemMode => this == ThemeMode.system;
+  bool get isDarkMode => this == ThemeMode.dark;
+  bool get isLightMode => this == ThemeMode.light;
 }
 
 extension StringX on String {
-  String replaceAfter(String delimiter, String replacement, [String defaultValue]) {
-    final index = indexOf(delimiter);
-    return (index == -1) ? defaultValue.isNullOrEmpty ? this : defaultValue : replaceRange(index + 1, length, replacement);
-  }
+  bool get isNullOrEmpty => this == null || this.isEmpty;
 
   String capitalize() {
     return "${this[0].toUpperCase()}${this.substring(1)}";
   }
-}
 
-extension TextUtilsStringExtension on String {
   /// Returns true if string is:
   /// - null
   /// - empty

@@ -33,7 +33,7 @@ class AuthService {
     await _updateStateListener();
   }
 
-  final _firestore = Firestore.instance;
+  final _firestore = FirebaseFirestore.instance;
   final _onAuthStateChanged = StreamController<AuthState>.broadcast();
 
   File _stateFile;
@@ -89,8 +89,8 @@ class AuthService {
   Future<void> _updateStateListener() async {
     await _redirectSub?.cancel();
     if (_stateId != null) {
-      _redirectRef = _firestore.document('redirects/$_stateId');
-      await _redirectRef.setData({'state': 'waiting'});
+      _redirectRef = _firestore.doc('redirects/$_stateId');
+      await _redirectRef.set({'state': 'waiting'});
       _redirectSub = _redirectRef.snapshots().listen(_onCodeUpdated);
     }
   }
@@ -101,11 +101,11 @@ class AuthService {
       // document was deleted
       return;
     }
-    final state = snapshot.data['state'];
+    final state = snapshot.data()['state'];
     if (state != 'authorized') {
       return;
     }
-    final code = snapshot.data['code'];
+    final code = snapshot.data()['code'];
     if (code == null) {
       return;
     }

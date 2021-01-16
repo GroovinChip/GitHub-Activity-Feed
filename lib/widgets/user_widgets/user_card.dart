@@ -5,7 +5,7 @@ import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/utils/printers.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 /// A card that represents a User, with more detail than [UserTile]
 class UserCard extends StatelessWidget {
@@ -23,13 +23,16 @@ class UserCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       borderRadius: BorderRadius.circular(8),
       child: InkWell(
-        onTap: () => launch(user.url),
+        onTap: () => url_launcher.launch(user.url),
         onLongPress: () => printFormattedBaseUser(user),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+              padding: const EdgeInsets.symmetric(
+                vertical: 8.0,
+                horizontal: 8.0,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

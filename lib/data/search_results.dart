@@ -13,7 +13,7 @@ class SearchResults {
   SearchResults.fromJson(Map<String, dynamic> json) {
     userCount = json['userCount'];
     if (json['edges'] != null) {
-      edges = List<SearchEdge>();
+      edges = <SearchEdge>[];
       json['edges'].forEach((v) {
         edges.add(SearchEdge.fromJson(v));
       });
