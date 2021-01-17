@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/keys.dart';
 import 'package:github_activity_feed/screens/home_screen.dart';
@@ -49,9 +50,15 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
       _navigatorKey.currentState
           .pushAndRemoveUntil(LoginPage.route(), (route) => false);
     } else {
-      url_launcher.closeWebView();
-      _navigatorKey.currentState
-          .pushAndRemoveUntil(HomeScreen.route(), (route) => false);
+      try {
+        url_launcher.closeWebView();
+        _navigatorKey.currentState
+                  .pushAndRemoveUntil(HomeScreen.route(), (route) => false);
+      } catch (e) {
+        final message = 'Post-login crash: $e';
+        print(message);
+        FirebaseCrashlytics.instance.log(message);
+      }
     }
   }
 
