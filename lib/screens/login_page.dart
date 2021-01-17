@@ -51,6 +51,9 @@ class _LoginPageState extends State<LoginPage> with ProvidedState {
               child: _loading
                   ? CircularProgressIndicator()
                   : RaisedButton.icon(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                       color: context.isDarkTheme ? Colors.white : Colors.black,
                       textColor: context.colorScheme.onPrimary,
                       label: Text('Sign in with GitHub'),
