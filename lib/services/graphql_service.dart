@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:github_activity_feed/data/custom_repos.dart';
 import 'package:simple_gql/simple_gql.dart';
@@ -20,39 +21,11 @@ class GraphQLService {
 
   Future<Repo> getRepo(String name, String owner) async {
     GQLResponse response;
-    response = await client.query(
-      query: r'''
-        query getParentRepo($name: String!, $owner: String!) {
-          repository(name: $name, owner: $owner) {
-            owner {
-              avatarUrl
-              login
-              url
-            }
-            url
-            description
-            name
-            nameWithOwner
-            forkCount
-            stargazerCount
-            watchers {
-              totalCount
-            }
-            issues {
-              totalCount
-            }
-            languages(first: 3, orderBy: {field: SIZE, direction: DESC}) {
-              pageInfo {
-                hasNextPage
-              }
-              edges {
-                language: node {
-                  name
-                  color
-                }
-              }
-            }
-            parent {
+    try {
+      response = await client.query(
+        query: r'''
+          query getParentRepo($name: String!, $owner: String!) {
+            repository(name: $name, owner: $owner) {
               owner {
                 avatarUrl
                 login
@@ -81,13 +54,46 @@ class GraphQLService {
                   }
                 }
               }
+              parent {
+                owner {
+                  avatarUrl
+                  login
+                  url
+                }
+                url
+                description
+                name
+                nameWithOwner
+                forkCount
+                stargazerCount
+                watchers {
+                  totalCount
+                }
+                issues {
+                  totalCount
+                }
+                languages(first: 3, orderBy: {field: SIZE, direction: DESC}) {
+                  pageInfo {
+                    hasNextPage
+                  }
+                  edges {
+                    language: node {
+                      name
+                      color
+                    }
+                  }
+                }
+              }
             }
-          }
-        }''',
-      headers: {'Authorization': 'Bearer $token'},
-      variables: {"name": name, "owner": owner},
-    );
-    return Repo.fromJson(response.data);
+          }''',
+        headers: {'Authorization': 'Bearer $token'},
+        variables: {"name": name, "owner": owner},
+      );
+      return Repo.fromJson(response.data);
+    } catch (e) {
+      FirebaseCrashlytics.instance.log('Error when calling getRepo: $e');
+      return null;
+    }
   }
 
   /// This query returns a list of users that the viewer follows
