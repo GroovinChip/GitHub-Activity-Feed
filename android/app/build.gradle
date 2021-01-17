@@ -56,7 +56,6 @@ flutter {
 }
 
 dependencies {
-    implementation 'com.google.firebase:firebase-analytics:17.4.0'
     implementation 'com.android.support:multidex:1.0.3'
 }
 
