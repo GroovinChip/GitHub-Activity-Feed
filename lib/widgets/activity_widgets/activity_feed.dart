@@ -3,8 +3,10 @@ import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/data/activity_events/activity_feed_item.dart';
 import 'package:github_activity_feed/data/activity_events/activity_fork.dart';
 import 'package:github_activity_feed/data/activity_events/activity_repo.dart';
+import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/fork_event_card.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/repo_event_card.dart';
+import 'package:github_activity_feed/widgets/loading_spinner.dart';
 
 class ActivityFeed extends StatefulWidget {
   @override
@@ -20,7 +22,7 @@ class _ActivityFeedState extends State<ActivityFeed> with ProvidedState {
       builder: (context, snapshot) {
         if (snapshot.data) {
           return Center(
-            child: CircularProgressIndicator(),
+            child: LoadingSpinner(),
           );
         } else {
           return Scrollbar(

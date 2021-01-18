@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 /// Some extensions on BuildContext for shorthand access to certain theme properties
 extension ThemeExt on BuildContext {
   ColorScheme get colorScheme => Theme.of(this).colorScheme;
+  ThemeData get theme => Theme.of(this);
   bool get isDarkTheme => Theme.of(this).colorScheme.brightness == Brightness.dark;
 }
 

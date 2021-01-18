@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
           onTap: () => showModalBottomSheet(
             context: context,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(12.0),
             ),
             builder: (_) => MenuSheetContent(),
           ),

@@ -9,6 +9,7 @@ import 'package:github_activity_feed/services/github_service.dart';
 import 'package:github_activity_feed/services/graphql_service.dart';
 import 'package:github_activity_feed/state/prefs_bloc.dart';
 import 'package:github_activity_feed/theme/app_themes.dart';
+import 'package:github_activity_feed/theme/github_colors.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -88,8 +89,8 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
         secret: wiredashSecret,
         theme: WiredashThemeData(
           brightness: Brightness.dark,
-          primaryColor: Color(0xff2962FF),
-          secondaryColor: Color(0xff3BACFF),
+          primaryColor: GhColors.blue,
+          secondaryColor: GhColors.blue.shade300,
         ),
         options: WiredashOptionsData(
           showDebugFloatingEntryPoint: false,
@@ -124,7 +125,7 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
                 ),
                 visualDensity: VisualDensity.adaptivePlatformDensity,
               ),
-              darkTheme: darkTheme,
+              darkTheme: basicDark,
               /*darkTheme: ThemeData(
                 brightness: Brightness.dark,
                 colorScheme: ColorScheme.dark().copyWith(

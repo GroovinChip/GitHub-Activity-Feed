@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/following_users.dart';
 import 'package:github_activity_feed/services/graphql_service.dart';
 import 'package:github_activity_feed/state/prefs_bloc.dart';
+import 'package:github_activity_feed/widgets/feedback_on_error.dart';
+import 'package:github_activity_feed/widgets/loading_spinner.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_card.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_tile.dart';
 import 'package:provider/provider.dart';
@@ -70,12 +72,12 @@ class _ViewerFollowingListState extends State<ViewerFollowingList> {
           future: _followingUsers,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return ErrorWidget(snapshot.error);
+              return FeedbackOnError(
+                message: snapshot.error.toString(),
+              );
             } else if (!snapshot.hasData &&
                 snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+              return LoadingSpinner();
             } else if (!snapshot.hasData &&
                 snapshot.connectionState == ConnectionState.done) {
               return Center(

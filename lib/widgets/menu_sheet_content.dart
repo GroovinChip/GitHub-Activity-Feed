@@ -44,7 +44,7 @@ class _MenuSheetContentState extends State<MenuSheetContent>
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(top: 12.0),
             child: ModalDrawerHandle(),
           ),
           ListTile(

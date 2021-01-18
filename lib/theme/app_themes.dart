@@ -3,7 +3,7 @@ import 'package:github_activity_feed/theme/github_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 /// A custom dark application theme that uses colors defined in [GhColors]
-final darkTheme = ThemeData(
+final basicDark = ThemeData(
   brightness: Brightness.dark,
   primaryColor: GhColors.blue,
   accentColor: GhColors.blue.shade300,
@@ -11,6 +11,7 @@ final darkTheme = ThemeData(
   textTheme: GoogleFonts.interTextTheme(
     ThemeData.dark().textTheme,
   ),
+  dialogBackgroundColor: GhColors.grey.shade900,
   appBarTheme: AppBarTheme(
     centerTitle: true,
     color: GhColors.grey.shade900,
