@@ -1,67 +1,51 @@
 import 'package:github_activity_feed/data/base_user.dart';
 
-/// Generated using https://javiercbk.github.io/json_to_dart/
-class FollowingUsers {
-  Following following;
-
-  FollowingUsers({this.following});
-
-  FollowingUsers.fromJson(Map<String, dynamic> json) {
-    following = json['following'] != null ? Following.fromJson(json['following']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    if (this.following != null) {
-      data['following'] = this.following.toJson();
-    }
-    return data;
-  }
-}
-
 class Following {
-  int totalCount;
-  List<FollowingUser> users;
-
   Following({
-    this.totalCount,
+    this.totalCount = 0,
+    this.hasNextPage = false,
+    this.endCursor,
     this.users,
   });
 
-  Following.fromJson(Map<String, dynamic> json) {
-    totalCount = json['totalCount'];
-    if (json['users'] != null) {
-      users = <FollowingUser>[];
-      json['users'].forEach((v) {
-        users.add(FollowingUser.fromJson(v));
+  int totalCount;
+  bool hasNextPage;
+  String endCursor;
+  List<FollowingUser> users;
+
+  factory Following.fromJson(Map<String, dynamic> json) {
+    List<FollowingUser> _users = [];
+    int _totalCount;
+    bool _hasNextPage;
+    String _endCursor;
+
+    if (json['viewer']['following'] != null) {
+      _totalCount = json['viewer']['following']['totalCount'];
+      _hasNextPage = json['viewer']['following']['pageInfo']['hasNextPage'];
+      _endCursor = json['viewer']['following']['pageInfo']['endCursor'];
+      json['viewer']['following']['users'].forEach((v) {
+        _users.add(FollowingUser.fromJson(v));
       });
     }
+
+    return Following(
+      totalCount: _totalCount,
+      hasNextPage: _hasNextPage,
+      endCursor: _endCursor,
+      users: _users,
+    );
   }
 
+  //testme
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['totalCount'] = this.totalCount;
-    if (this.users != null) {
-      data['users'] = this.users.map((v) => v.toJson()).toList();
-    }
-    return data;
+    return {
+      'totalCount': totalCount ?? 0,
+      'users': users.map((user) => user.toJson()).toList(),
+    };
   }
 }
 
 class FollowingUser extends BaseUser {
-  final String location;
-  final String company;
-  final Status status;
-  final String id;
-  final String login;
-  final String url;
-  final String avatarUrl;
-  final String createdAt;
-  final bool viewerIsFollowing;
-  final String bio;
-  final String name;
-  final String email;
-
   FollowingUser({
     this.id,
     this.login,
@@ -77,20 +61,38 @@ class FollowingUser extends BaseUser {
     this.status,
   });
 
+  final String location;
+  final String company;
+  final Status status;
+  final String id;
+  final String login;
+  final String url;
+  final String avatarUrl;
+  final String createdAt;
+  final bool viewerIsFollowing;
+  final String bio;
+  final String name;
+  final String email;
+
   factory FollowingUser.fromJson(Map<String, dynamic> json) {
+    Status _status;
+    if (json['user']['status'] != null) {
+      _status = Status.fromJson(json['user']['status']);
+    }
+
     return FollowingUser(
-      id: json['id'],
-      login: json['login'],
-      url: json['url'],
-      avatarUrl: json['avatarUrl'],
-      createdAt: json['createdAt'],
-      viewerIsFollowing: json['viewerIsFollowing'],
-      bio: json['bio'],
-      location: json['location'],
-      name: json['name'],
-      email: json['email'],
-      company: json['company'],
-      status: json['status'] != null ? Status.fromJson(json['status']) : null,
+      id: json['user']['id'],
+      login: json['user']['login'],
+      url: json['user']['url'],
+      avatarUrl: json['user']['avatarUrl'],
+      createdAt: json['user']['createdAt'],
+      viewerIsFollowing: json['user']['viewerIsFollowing'],
+      bio: json['user']['bio'],
+      location: json['user']['location'],
+      name: json['user']['name'],
+      email: json['user']['email'],
+      company: json['user']['company'],
+      status: _status,
     );
   }
 
