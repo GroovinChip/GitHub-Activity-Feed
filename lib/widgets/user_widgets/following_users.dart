@@ -19,14 +19,46 @@ class ViewerFollowingList extends StatefulWidget {
 }
 
 class _ViewerFollowingListState extends State<ViewerFollowingList> {
-  Future _viewerFollowing;
   GraphQLService graphQLService;
+  String cursor;
+  List<FollowingUser> users = [];
+  Future _followingUsers;
 
   @override
   void initState() {
     super.initState();
     graphQLService = Provider.of<GraphQLService>(context, listen: false);
-    _viewerFollowing = graphQLService.getViewerFollowing();
+    _followingUsers = getFollowing();
+  }
+
+  Future<List<FollowingUser>> getFollowing() async {
+    // First query will execute with a null cursor. If query executes again,
+    // it will have a cursor.
+    final following = await graphQLService.getViewerFollowingPaginated(cursor);
+    // Case 1. If user not following anyone or response is null, return empty list.
+    if (following == null || following.users.isEmpty) {
+      return users;
+    }
+
+    // Case 2. Last page of data/only one page of data. Add users to list, set cursor
+    if (!following.hasNextPage && following.users.isNotEmpty) {
+      setState(() {
+        cursor = following.endCursor;
+        users.addAll(following.users);
+      });
+    }
+
+    // Case 3. First page of data/multiple pages of data. Add users to list,
+    // store cursor, request more data.
+    if (following.hasNextPage && following.users.isNotEmpty) {
+      setState(() {
+        cursor = following.endCursor;
+        users.addAll(following.users);
+      });
+      getFollowing();
+    }
+
+    return users;
   }
 
   @override
@@ -34,20 +66,22 @@ class _ViewerFollowingListState extends State<ViewerFollowingList> {
     return StreamBuilder<bool>(
       stream: Provider.of<PrefsBloc>(context).cardOrTileSubject,
       builder: (context, isCardOrTile) {
-        return FutureBuilder<dynamic>(
-          future: _viewerFollowing,
+        return FutureBuilder<List<FollowingUser>>(
+          future: _followingUsers,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return ErrorWidget(snapshot.error);
-            } else if (!snapshot.hasData) {
+            } else if (!snapshot.hasData &&
+                snapshot.connectionState == ConnectionState.waiting) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (snapshot.data.isEmpty && widget.emptyBuilder != null) {
-              return widget.emptyBuilder(context);
+            } else if (!snapshot.hasData &&
+                snapshot.connectionState == ConnectionState.done) {
+              return Center(
+                child: Text('No data'),
+              );
             } else {
-              FollowingUsers viewerFollowing =
-                  FollowingUsers.fromJson(snapshot.data['user']);
               if (isCardOrTile.data) {
                 return Scrollbar(
                   child: GridView.builder(
@@ -57,11 +91,11 @@ class _ViewerFollowingListState extends State<ViewerFollowingList> {
                       mainAxisSpacing: 8,
                       childAspectRatio: 1.1,
                     ),
-                    itemCount: viewerFollowing.following.users.length,
+                    itemCount: snapshot.data.length,
                     padding: EdgeInsets.all(8.0),
                     itemBuilder: (BuildContext context, int index) {
                       return UserCard(
-                        user: viewerFollowing.following.users[index],
+                        user: snapshot.data[index],
                       );
                     },
                   ),
@@ -69,11 +103,11 @@ class _ViewerFollowingListState extends State<ViewerFollowingList> {
               } else {
                 return Scrollbar(
                   child: ListView.builder(
-                    itemCount: viewerFollowing.following.users.length,
+                    itemCount: snapshot.data.length,
                     padding: const EdgeInsets.all(8.0),
                     itemBuilder: (context, index) {
                       return UserTile(
-                        user: viewerFollowing.following.users[index],
+                        user: snapshot.data[index],
                       );
                     },
                   ),
