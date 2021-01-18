@@ -2,16 +2,16 @@ import 'package:github_activity_feed/data/base_user.dart';
 
 class Following {
   Following({
-    this.totalCount = 0,
-    this.hasNextPage = false,
+    this.totalCount,
+    this.hasNextPage,
     this.endCursor,
     this.users,
   });
 
-  int totalCount;
-  bool hasNextPage;
-  String endCursor;
-  List<FollowingUser> users;
+  final int totalCount;
+  final bool hasNextPage;
+  final String endCursor;
+  final List<FollowingUser> users;
 
   factory Following.fromJson(Map<String, dynamic> json) {
     List<FollowingUser> _users = [];

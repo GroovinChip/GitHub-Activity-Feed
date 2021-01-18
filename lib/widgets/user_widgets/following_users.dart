@@ -4,7 +4,6 @@ import 'package:github_activity_feed/services/graphql_service.dart';
 import 'package:github_activity_feed/state/prefs_bloc.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_card.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_tile.dart';
-import 'package:groovin_widgets/groovin_widgets.dart';
 import 'package:provider/provider.dart';
 
 class ViewerFollowingList extends StatefulWidget {
@@ -20,47 +19,46 @@ class ViewerFollowingList extends StatefulWidget {
 }
 
 class _ViewerFollowingListState extends State<ViewerFollowingList> {
-  Future _viewerFollowing;
   GraphQLService graphQLService;
-  Following following;
+  String cursor;
+  List<FollowingUser> users = [];
+  Future _followingUsers;
 
   @override
   void initState() {
     super.initState();
     graphQLService = Provider.of<GraphQLService>(context, listen: false);
-    following = Following(
-      users: [],
-    );
-    _viewerFollowing = getFollowing();
+    _followingUsers = getFollowing();
   }
 
-  Future<Following> getFollowing() async {
-    graphQLService.getViewerFollowingPaginated(following.endCursor).then((value) {
-      if (value.hasNextPage) {
-        following.totalCount = value.totalCount;
-        following.users.addAll(value.users);
-        following.hasNextPage = value.hasNextPage;
-        following.endCursor = value.endCursor;
-        getFollowing();
-      }
-      following.totalCount = value.totalCount;
-      following.users.addAll(value.users);
-      following.hasNextPage = value.hasNextPage;
-      following.endCursor = value.endCursor;
-    });
-    print(following.users.length);
-    for (FollowingUser user in following.users) {
-      FollowingUser user2;
-      if (user2 == null) {
-        user2 = user;
-      } else {
-        if (user2.login == user.login) {
-          following.users.remove(user2);
-        }
-      }
+  Future<List<FollowingUser>> getFollowing() async {
+    // First query will execute with a null cursor. If query executes again,
+    // it will have a cursor.
+    final following = await graphQLService.getViewerFollowingPaginated(cursor);
+    // Case 1. If user not following anyone or response is null, return empty list.
+    if (following == null || following.users.isEmpty) {
+      return users;
     }
-    print(following.users.length);
-    return following;
+
+    // Case 2. Last page of data/only one page of data. Add users to list, set cursor
+    if (!following.hasNextPage && following.users.isNotEmpty) {
+      setState(() {
+        cursor = following.endCursor;
+        users.addAll(following.users);
+      });
+    }
+
+    // Case 3. First page of data/multiple pages of data. Add users to list,
+    // store cursor, request more data.
+    if (following.hasNextPage && following.users.isNotEmpty) {
+      setState(() {
+        cursor = following.endCursor;
+        users.addAll(following.users);
+      });
+      getFollowing();
+    }
+
+    return users;
   }
 
   @override
@@ -68,22 +66,22 @@ class _ViewerFollowingListState extends State<ViewerFollowingList> {
     return StreamBuilder<bool>(
       stream: Provider.of<PrefsBloc>(context).cardOrTileSubject,
       builder: (context, isCardOrTile) {
-        return FutureBuilder<Following>(
-          future: getFollowing(),
+        return FutureBuilder<List<FollowingUser>>(
+          future: _followingUsers,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return ErrorWidget(snapshot.error);
-            } else if (!snapshot.hasData && snapshot.connectionState == ConnectionState.waiting) {
+            } else if (!snapshot.hasData &&
+                snapshot.connectionState == ConnectionState.waiting) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (!snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
+            } else if (!snapshot.hasData &&
+                snapshot.connectionState == ConnectionState.done) {
               return Center(
                 child: Text('No data'),
               );
             } else {
-              //print(snapshot.data.totalCount);
-
               if (isCardOrTile.data) {
                 return Scrollbar(
                   child: GridView.builder(
@@ -93,11 +91,11 @@ class _ViewerFollowingListState extends State<ViewerFollowingList> {
                       mainAxisSpacing: 8,
                       childAspectRatio: 1.1,
                     ),
-                    itemCount: snapshot.data.users.length,
+                    itemCount: snapshot.data.length,
                     padding: EdgeInsets.all(8.0),
                     itemBuilder: (BuildContext context, int index) {
                       return UserCard(
-                        user: snapshot.data.users[index],
+                        user: snapshot.data[index],
                       );
                     },
                   ),
@@ -105,11 +103,11 @@ class _ViewerFollowingListState extends State<ViewerFollowingList> {
               } else {
                 return Scrollbar(
                   child: ListView.builder(
-                    itemCount: snapshot.data.users.length,
+                    itemCount: snapshot.data.length,
                     padding: const EdgeInsets.all(8.0),
                     itemBuilder: (context, index) {
                       return UserTile(
-                        user: snapshot.data.users[index],
+                        user: snapshot.data[index],
                       );
                     },
                   ),

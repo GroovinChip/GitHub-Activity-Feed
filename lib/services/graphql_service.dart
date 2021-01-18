@@ -97,41 +97,7 @@ class GraphQLService {
     }
   }
 
-  /// This query returns a list of users that the viewer follows
-  Future<dynamic> getViewerFollowing() async {
-    // todo: error handling
-    final GQLResponse viewerFollowingResponse = await client.query(
-      query: r'''
-        query {
-          user: viewer {
-            following (first: 100) {
-              totalCount
-              users: nodes {
-                id
-                login
-                url
-                avatarUrl
-                createdAt
-                viewerIsFollowing
-                bio
-                location
-                name
-                email
-                company
-                status {
-                  emoji
-                  message
-                }
-              }
-            }
-          }
-        }
-      ''',
-      headers: {'Authorization': 'Bearer $token'},
-    );
-    return viewerFollowingResponse.data;
-  }
-
+  /// This query returns a paginated list of users that the viewer follows
   Future<Following> getViewerFollowingPaginated(String endCursor) async {
     GQLResponse viewerFollowingResponse;
     try {
@@ -139,7 +105,7 @@ class GraphQLService {
         query: r'''
           query($endCursor: String){
             viewer {
-              following(first: 5, after: $endCursor) {
+              following(first: 10, after: $endCursor) {
                 totalCount
                 pageInfo {
                   hasNextPage
