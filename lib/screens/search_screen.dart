@@ -74,7 +74,8 @@ class SearchScreen extends SearchDelegate {
     return FutureBuilder<dynamic>(
       future: Provider.of<GraphQLService>(context).searchUsers(query),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (!snapshot.hasData && snapshot.connectionState == ConnectionState.waiting) {
+        if (!snapshot.hasData &&
+            snapshot.connectionState == ConnectionState.waiting) {
           /// loading
           return Center(
             child: CircularProgressIndicator(),
@@ -113,6 +114,10 @@ class SearchScreen extends SearchDelegate {
               padding: EdgeInsets.all(8.0),
               itemCount: searchResults.edges.length,
               itemBuilder: (BuildContext context, int index) {
+                if (searchResults.edges[index].node.name == null &&
+                    searchResults.edges[index].node.login == null) {
+                  return Container();
+                }
                 return UserTile(
                   user: searchResults.edges[index].node,
                 );
