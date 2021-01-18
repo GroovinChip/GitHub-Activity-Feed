@@ -61,7 +61,7 @@ class _MenuSheetContentState extends State<MenuSheetContent>
                 ),
               ),
               child: Text(
-                'Log out',
+                'Log Out',
                 style: TextStyle(
                   color: context.isDarkTheme ? Colors.white : Colors.black,
                 ),
