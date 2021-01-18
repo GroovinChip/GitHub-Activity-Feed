@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:github_activity_feed/theme/github_colors.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
@@ -22,7 +23,7 @@ class EventCard extends StatelessWidget {
       padding: const EdgeInsets.all(4.0),
       child: Material(
         elevation: 2,
-        color: context.isDarkTheme ? Colors.grey[900] : Colors.white,
+        color: context.isDarkTheme ? GhColors.grey.shade800 : Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
@@ -36,7 +37,7 @@ class EventCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Material(
-                      color: context.isDarkTheme ? context.colorScheme.background : Colors.white, // update for light theme
+                      color: context.isDarkTheme ? GhColors.grey.shade900 : Colors.white, // update for light theme
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),

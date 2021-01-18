@@ -8,6 +8,7 @@ import 'package:github_activity_feed/services/discovery_service.dart';
 import 'package:github_activity_feed/services/github_service.dart';
 import 'package:github_activity_feed/services/graphql_service.dart';
 import 'package:github_activity_feed/state/prefs_bloc.dart';
+import 'package:github_activity_feed/theme/app_themes.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -123,7 +124,8 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
                 ),
                 visualDensity: VisualDensity.adaptivePlatformDensity,
               ),
-              darkTheme: ThemeData(
+              darkTheme: darkTheme,
+              /*darkTheme: ThemeData(
                 brightness: Brightness.dark,
                 colorScheme: ColorScheme.dark().copyWith(
                   primary: Color(0xff2962FF),
@@ -148,7 +150,7 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
                   unselectedItemColor: context.colorScheme.onBackground,
                 ),
                 visualDensity: VisualDensity.adaptivePlatformDensity,
-              ),
+              ),*/
               themeMode: snapshot.data,
               initialRoute: widget.githubService.currentUser.value == null
                   ? LoginPage.routeName

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/base_user.dart';
+import 'package:github_activity_feed/theme/github_colors.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/utils/printers.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
@@ -19,7 +20,7 @@ class UserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: context.isDarkTheme ? Colors.grey[900] : Colors.grey[200],
+      color: context.isDarkTheme ? GhColors.grey.shade800 : Colors.grey.shade200,
       clipBehavior: Clip.antiAlias,
       borderRadius: BorderRadius.circular(8),
       child: InkWell(
