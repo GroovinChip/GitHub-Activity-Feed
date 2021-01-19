@@ -94,7 +94,7 @@ class _ViewerFollowingListState extends State<ViewerFollowingList> {
                       childAspectRatio: 1.1,
                     ),
                     itemCount: snapshot.data.length,
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     itemBuilder: (BuildContext context, int index) {
                       return UserCard(
                         user: snapshot.data[index],
