@@ -25,6 +25,7 @@ class _ActivityFeedState extends State<ActivityFeed> with ProvidedState {
         } else {
           return Scrollbar(
             child: ListView.builder(
+              padding: EdgeInsets.all(8),
               itemCount: githubService.activityFeed.length,
               itemBuilder: (context, index) {
                 switch (githubService.activityFeed[index].type) {
