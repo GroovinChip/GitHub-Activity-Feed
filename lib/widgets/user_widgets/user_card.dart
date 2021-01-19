@@ -20,7 +20,8 @@ class UserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: context.isDarkTheme ? GhColors.grey.shade800 : Colors.grey.shade200,
+      color: context.isDarkTheme ? GhColors.grey.shade800 : Colors.white,
+      elevation: 2,
       clipBehavior: Clip.antiAlias,
       borderRadius: BorderRadius.circular(8),
       child: InkWell(
@@ -52,7 +53,7 @@ class UserCard extends StatelessWidget {
                 ],
               ),
             ),
-            DefaultTextStyle(
+            DefaultTextStyle.merge(
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
@@ -75,7 +76,9 @@ class UserCard extends StatelessWidget {
                 user.name != null ? '@${user.login}' : '',
                 maxLines: 1,
                 style: TextStyle(
-                  color: Colors.grey,
+                  color: context.isDarkTheme
+                      ? GhColors.grey.shade300
+                      : Colors.grey.shade800,
                 ),
               ),
             ),
@@ -86,7 +89,9 @@ class UserCard extends StatelessWidget {
                   Icon(
                     MdiIcons.mapMarkerOutline,
                     size: 12,
-                    color: Colors.grey,
+                    color: context.isDarkTheme
+                        ? GhColors.grey.shade300
+                        : Colors.grey.shade800,
                   ),
                   Expanded(
                     child: Text(
@@ -94,7 +99,9 @@ class UserCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        color: Colors.grey,
+                        color: context.isDarkTheme
+                            ? GhColors.grey.shade300
+                            : Colors.grey.shade800,
                         fontSize: 12,
                       ),
                     ),

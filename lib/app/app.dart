@@ -102,56 +102,8 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
             return MaterialApp(
               navigatorKey: _navigatorKey,
               title: 'GitHub Activity Feed',
-              theme: ThemeData(
-                brightness: Brightness.light,
-                colorScheme: ColorScheme.light().copyWith(
-                  primary: Color(0xff2962FF),
-                  primaryVariant: Color(0xff0039cb),
-                  secondary: Color(0xff3BACFF),
-                  secondaryVariant: Color(0xff007ecb),
-                ),
-                primaryColor: Color(0xff2962FF),
-                // for CircularProgressIndicator and material scroll color
-                accentColor: Color(0xff3BACFF),
-                textTheme: GoogleFonts.interTextTheme(
-                  ThemeData.light().textTheme,
-                ),
-                appBarTheme: AppBarTheme(
-                  color: Color(0xff2962FF),
-                ),
-                bottomNavigationBarTheme: BottomNavigationBarThemeData(
-                  selectedItemColor: context.colorScheme.primary,
-                  unselectedItemColor: context.colorScheme.onSurface,
-                ),
-                visualDensity: VisualDensity.adaptivePlatformDensity,
-              ),
+              theme: basicLight,
               darkTheme: basicDark,
-              /*darkTheme: ThemeData(
-                brightness: Brightness.dark,
-                colorScheme: ColorScheme.dark().copyWith(
-                  primary: Color(0xff2962FF),
-                  primaryVariant: Color(0xff0039cb),
-                  secondary: Color(0xff3BACFF),
-                  secondaryVariant: Color(0xff007ecb),
-                ),
-                dialogBackgroundColor: Colors.grey.shade900,
-                dividerColor: Colors.grey,
-                primaryColor: Color(0xff2962FF),
-                // for CircularProgressIndicator and material scroll color
-                accentColor: Color(0xff3BACFF),
-                canvasColor: ColorScheme.dark().background,
-                textTheme: GoogleFonts.interTextTheme(
-                  ThemeData.dark().textTheme,
-                ),
-                appBarTheme: AppBarTheme(
-                  color: Colors.black,
-                ),
-                bottomNavigationBarTheme: BottomNavigationBarThemeData(
-                  selectedItemColor: context.colorScheme.primary,
-                  unselectedItemColor: context.colorScheme.onBackground,
-                ),
-                visualDensity: VisualDensity.adaptivePlatformDensity,
-              ),*/
               themeMode: snapshot.data,
               initialRoute: widget.githubService.currentUser.value == null
                   ? LoginPage.routeName

@@ -37,7 +37,7 @@ class EventCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Material(
-                      color: context.isDarkTheme ? GhColors.grey.shade900 : Colors.white, // update for light theme
+                      color: context.isDarkTheme ? GhColors.grey.shade900 : GhColors.grey.shadeZero,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),

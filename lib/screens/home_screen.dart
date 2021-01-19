@@ -10,6 +10,7 @@ import 'package:github_activity_feed/widgets/menu_sheet_content.dart';
 import 'package:github_activity_feed/widgets/user_widgets/following_users.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:github_activity_feed/utils/extensions.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = Navigator.defaultRouteName;
@@ -67,6 +68,7 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
+            color: context.isDarkTheme ? Colors.white : Colors.black,
           ),
           child: titles[_currentIndex],
         ),
@@ -76,7 +78,10 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
             initialData: prefsbloc.cardOrTileSubject.value,
             builder: (context, snapshot) {
               return IconButton(
-                icon: Icon(Icons.search),
+                icon: Icon(
+                  Icons.search,
+                  color: context.isDarkTheme ? Colors.white : Colors.black,
+                ),
                 onPressed: () => showSearch(
                   context: context,
                   delegate: SearchScreen(
@@ -114,7 +119,8 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
           ),*/
           BottomNavigationBarItem(
             icon: Icon(Icons.group_outlined),
-            label: '${githubService.currentUser.value?.followingCount} Following',
+            label:
+                '${githubService.currentUser.value?.followingCount} Following',
           ),
         ],
       ),

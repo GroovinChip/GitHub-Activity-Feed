@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/data/activity_events/activity_repo.dart';
+import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/count_item.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/event_card.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/language_label.dart';
@@ -65,7 +66,7 @@ class _RepoEventCardState extends State<RepoEventCard> with ProvidedState {
               ),
             ],
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onBackground,
+              color: context.theme.textTheme.bodyText1.color,
               fontSize: 16,
             ),
           ),

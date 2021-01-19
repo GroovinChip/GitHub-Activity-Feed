@@ -12,7 +12,7 @@ class GitHubColor extends ColorSwatch<int> {
   ) : super(primary, swatch);
 
   /// The lightest shade.
-  Color get shadeZero => this[50];
+  Color get shadeZero => this[0];
 
   /// The second lightest shade.
   Color get shade100 => this[100];
