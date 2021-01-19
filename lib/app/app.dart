@@ -8,6 +8,8 @@ import 'package:github_activity_feed/services/discovery_service.dart';
 import 'package:github_activity_feed/services/github_service.dart';
 import 'package:github_activity_feed/services/graphql_service.dart';
 import 'package:github_activity_feed/state/prefs_bloc.dart';
+import 'package:github_activity_feed/theme/app_themes.dart';
+import 'package:github_activity_feed/theme/github_colors.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -87,8 +89,8 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
         secret: wiredashSecret,
         theme: WiredashThemeData(
           brightness: Brightness.dark,
-          primaryColor: Color(0xff2962FF),
-          secondaryColor: Color(0xff3BACFF),
+          primaryColor: GhColors.blue,
+          secondaryColor: GhColors.blue.shade300,
         ),
         options: WiredashOptionsData(
           showDebugFloatingEntryPoint: false,
@@ -100,55 +102,8 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
             return MaterialApp(
               navigatorKey: _navigatorKey,
               title: 'GitHub Activity Feed',
-              theme: ThemeData(
-                brightness: Brightness.light,
-                colorScheme: ColorScheme.light().copyWith(
-                  primary: Color(0xff2962FF),
-                  primaryVariant: Color(0xff0039cb),
-                  secondary: Color(0xff3BACFF),
-                  secondaryVariant: Color(0xff007ecb),
-                ),
-                primaryColor: Color(0xff2962FF),
-                // for CircularProgressIndicator and material scroll color
-                accentColor: Color(0xff3BACFF),
-                textTheme: GoogleFonts.interTextTheme(
-                  ThemeData.light().textTheme,
-                ),
-                appBarTheme: AppBarTheme(
-                  color: Color(0xff2962FF),
-                ),
-                bottomNavigationBarTheme: BottomNavigationBarThemeData(
-                  selectedItemColor: context.colorScheme.primary,
-                  unselectedItemColor: context.colorScheme.onSurface,
-                ),
-                visualDensity: VisualDensity.adaptivePlatformDensity,
-              ),
-              darkTheme: ThemeData(
-                brightness: Brightness.dark,
-                colorScheme: ColorScheme.dark().copyWith(
-                  primary: Color(0xff2962FF),
-                  primaryVariant: Color(0xff0039cb),
-                  secondary: Color(0xff3BACFF),
-                  secondaryVariant: Color(0xff007ecb),
-                ),
-                dialogBackgroundColor: Colors.grey.shade900,
-                dividerColor: Colors.grey,
-                primaryColor: Color(0xff2962FF),
-                // for CircularProgressIndicator and material scroll color
-                accentColor: Color(0xff3BACFF),
-                canvasColor: ColorScheme.dark().background,
-                textTheme: GoogleFonts.interTextTheme(
-                  ThemeData.dark().textTheme,
-                ),
-                appBarTheme: AppBarTheme(
-                  color: Colors.black,
-                ),
-                bottomNavigationBarTheme: BottomNavigationBarThemeData(
-                  selectedItemColor: context.colorScheme.primary,
-                  unselectedItemColor: context.colorScheme.onBackground,
-                ),
-                visualDensity: VisualDensity.adaptivePlatformDensity,
-              ),
+              theme: basicLight,
+              darkTheme: basicDark,
               themeMode: snapshot.data,
               initialRoute: widget.githubService.currentUser.value == null
                   ? LoginPage.routeName

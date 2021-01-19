@@ -6,6 +6,7 @@ import 'package:github_activity_feed/widgets/feedback_on_error.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_card.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_tile.dart';
 import 'package:provider/provider.dart';
+import 'package:github_activity_feed/utils/extensions.dart';
 
 class SearchScreen extends SearchDelegate {
   SearchScreen({
@@ -26,7 +27,9 @@ class SearchScreen extends SearchDelegate {
     final ThemeData theme = Theme.of(context);
     return theme.copyWith(
       primaryColor: theme.appBarTheme.color,
-      primaryIconTheme: theme.appBarTheme.iconTheme,
+      primaryIconTheme: IconThemeData(
+        color: context.isDarkTheme ? Colors.white : Colors.black,
+      ),
       primaryColorBrightness: theme.appBarTheme.brightness,
       primaryTextTheme: theme.appBarTheme.textTheme,
     );

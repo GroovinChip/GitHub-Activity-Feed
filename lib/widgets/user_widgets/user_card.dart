@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/base_user.dart';
+import 'package:github_activity_feed/theme/github_colors.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/utils/printers.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
@@ -9,17 +10,18 @@ import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 /// A card that represents a User, with more detail than [UserTile]
 class UserCard extends StatelessWidget {
-  final BaseUser user;
-
   const UserCard({
     Key key,
     @required this.user,
   }) : super(key: key);
 
+  final BaseUser user;
+
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: context.isDarkTheme ? Colors.grey[900] : Colors.grey[200],
+      color: context.isDarkTheme ? GhColors.grey.shade800 : Colors.white,
+      elevation: 2,
       clipBehavior: Clip.antiAlias,
       borderRadius: BorderRadius.circular(8),
       child: InkWell(
@@ -41,17 +43,10 @@ class UserCard extends StatelessWidget {
                     height: 44,
                     width: 44,
                   ),
-                  if (user.viewerIsFollowing != null)
-                    !user.viewerIsFollowing
-                        ? IconButton(
-                            icon: Icon(MdiIcons.accountPlusOutline),
-                            onPressed: () {},
-                          )
-                        : Container(),
                 ],
               ),
             ),
-            DefaultTextStyle(
+            DefaultTextStyle.merge(
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
@@ -74,7 +69,9 @@ class UserCard extends StatelessWidget {
                 user.name != null ? '@${user.login}' : '',
                 maxLines: 1,
                 style: TextStyle(
-                  color: Colors.grey,
+                  color: context.isDarkTheme
+                      ? GhColors.grey.shade300
+                      : Colors.grey.shade800,
                 ),
               ),
             ),
@@ -85,7 +82,9 @@ class UserCard extends StatelessWidget {
                   Icon(
                     MdiIcons.mapMarkerOutline,
                     size: 12,
-                    color: Colors.grey,
+                    color: context.isDarkTheme
+                        ? GhColors.grey.shade300
+                        : Colors.grey.shade800,
                   ),
                   Expanded(
                     child: Text(
@@ -93,7 +92,9 @@ class UserCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        color: Colors.grey,
+                        color: context.isDarkTheme
+                            ? GhColors.grey.shade300
+                            : Colors.grey.shade800,
                         fontSize: 12,
                       ),
                     ),

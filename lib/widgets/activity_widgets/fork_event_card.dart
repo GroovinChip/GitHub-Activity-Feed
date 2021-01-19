@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/activity_events/activity_fork.dart';
+import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/count_item.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/event_card.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
@@ -62,7 +63,7 @@ class _ForkEventCardState extends State<ForkEventCard> {
               ),
             ],
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onBackground,
+              color: context.theme.textTheme.bodyText1.color,
               fontSize: 16,
             ),
           ),

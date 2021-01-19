@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:github_activity_feed/data/base_user.dart';
+import 'package:github_activity_feed/theme/github_colors.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -46,7 +47,7 @@ class RippleCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Material(
-        color: context.isDarkTheme ? Colors.grey[900] : Colors.white,
+        color: context.isDarkTheme ? GhColors.grey.shade800 : Colors.white,
         shape: shape,
         elevation: 2.0,
         child: InkWell(
@@ -82,13 +83,21 @@ class UserInfoRow extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(
-                user.name ?? user.login,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
+              user.name != null
+                  ? Text(
+                      user.name,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    )
+                  : Text(
+                      user.login,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
               Text(user.login),
             ],
           ),
