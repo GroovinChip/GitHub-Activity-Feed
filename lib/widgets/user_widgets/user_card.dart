@@ -10,12 +10,12 @@ import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 /// A card that represents a User, with more detail than [UserTile]
 class UserCard extends StatelessWidget {
-  final BaseUser user;
-
   const UserCard({
     Key key,
     @required this.user,
   }) : super(key: key);
+
+  final BaseUser user;
 
   @override
   Widget build(BuildContext context) {
@@ -43,13 +43,6 @@ class UserCard extends StatelessWidget {
                     height: 44,
                     width: 44,
                   ),
-                  if (user.viewerIsFollowing != null)
-                    !user.viewerIsFollowing
-                        ? IconButton(
-                            icon: Icon(MdiIcons.accountPlusOutline),
-                            onPressed: () {},
-                          )
-                        : Container(),
                 ],
               ),
             ),
