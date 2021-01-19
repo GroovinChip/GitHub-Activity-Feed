@@ -5,6 +5,7 @@ import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/widgets/dialogs/logout_dialog.dart';
 import 'package:github_activity_feed/widgets/dialogs/theme_switcher_dialog.dart';
 import 'package:groovin_widgets/groovin_widgets.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:wiredash/wiredash.dart';
@@ -51,7 +52,12 @@ class _MenuSheetContentState extends State<MenuSheetContent>
             leading: CircleAvatar(
               backgroundImage: NetworkImage(user.avatarUrl),
             ),
-            title: Text(user.login),
+            title: Text(
+              user.login,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             subtitle: Text(user.email ?? user.login),
             trailing: OutlinedButton(
               style: OutlinedButton.styleFrom(
@@ -78,8 +84,21 @@ class _MenuSheetContentState extends State<MenuSheetContent>
             stream: prefsbloc.themeModeSubject,
             initialData: prefsbloc.themeModeSubject.value,
             builder: (BuildContext context, AsyncSnapshot<ThemeMode> snapshot) {
+              IconData themeIcon;
+              switch (snapshot.data) {
+                case ThemeMode.system:
+                  themeIcon = MdiIcons.themeLightDark;
+                  break;
+                case ThemeMode.light:
+                  themeIcon = Icons.wb_sunny_outlined;
+                  break;
+                case ThemeMode.dark:
+                  themeIcon = MdiIcons.moonWaningCrescent;
+                  break;
+              }
               return ListTile(
-                title: Text("Change app theme"),
+                leading: Icon(themeIcon),
+                title: Text('Change app theme'),
                 subtitle: Text(snapshot.data.format()),
                 onTap: () => showDialog(
                   context: context,
@@ -100,22 +119,29 @@ class _MenuSheetContentState extends State<MenuSheetContent>
                   prefsbloc.setCardOrTilePref(bool);
                   setState(() {});
                 },
+                secondary: Icon(
+                  snapshot.data == true
+                      ? MdiIcons.cardsOutline
+                      : Icons.format_list_bulleted_sharp,
+                ),
                 activeColor: Theme.of(context).primaryColor,
                 title: Text(
-                  snapshot.data == true ? 'Switch to tiles' : 'Switch to cards',
+                  snapshot.data == true ? 'Cards On' : 'Tiles On',
                 ),
                 subtitle: Text(snapshot.data == true
-                    ? 'Show users as tiles instead of cards'
-                    : 'Show users as cards instead of tiles'),
+                    ? 'Show users as cards instead of tile'
+                    : 'Show users as tiles instead of cards'),
               );
             },
           ),
-          Divider(height: 0.0),
+          Divider(),
           ListTile(
+            leading: Icon(Icons.perm_device_information_rounded),
             title: Text('GitHub Activity Feed'),
             subtitle: Text('Version ${_packageInfo?.version}'),
           ),
           ListTile(
+            leading: Icon(MdiIcons.sendCircleOutline),
             title: Text('Share feedback'),
             onTap: () {
               Navigator.pop(context);

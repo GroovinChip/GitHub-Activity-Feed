@@ -15,6 +15,7 @@ final basicLight = ThemeData(
     color: GhColors.grey.shadeZero,
     elevation: 0,
   ),
+  dividerColor: GhColors.grey,
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     selectedItemColor: GhColors.blue,
     unselectedItemColor: GhColors.grey.shade600,
