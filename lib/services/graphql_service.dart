@@ -2,6 +2,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:github_activity_feed/data/custom_repos.dart';
 import 'package:github_activity_feed/data/following_users.dart';
+import 'package:github_activity_feed/data/search_results.dart';
 import 'package:simple_gql/simple_gql.dart';
 
 /// This class handles GraphQL API calls to the GitHub v4 GraphQL endpoint
@@ -88,7 +89,7 @@ class GraphQLService {
             }
           }''',
         headers: {'Authorization': 'Bearer $token'},
-        variables: {"name": name, "owner": owner},
+        variables: {'name': name, 'owner': owner},
       );
       return Repo.fromJson(response.data);
     } catch (e) {
@@ -135,7 +136,7 @@ class GraphQLService {
           }
         ''',
         headers: {'Authorization': 'Bearer $token'},
-        variables: {"endCursor": endCursor},
+        variables: {'endCursor': endCursor},
       );
       return Following.fromJson(viewerFollowingResponse.data);
     } catch (e) {
@@ -144,15 +145,20 @@ class GraphQLService {
     }
   }
 
-  Future<dynamic> searchUsers(String query) async {
+  Future<List<UserFromSearch>> searchUsers(String query) async {
     GQLResponse searchResponse;
-    searchResponse = await client.query(
-      query: r'''
+    try {
+      searchResponse = await client.query(
+        query: r'''
         query ($user: String!) {
-          search(query: $user, type: USER, first: 25) {
+          search(query: $user, type: USER, first: 50) {
             userCount
+            pageInfo {
+              hasNextPage
+              endCursor
+            }
             edges {
-              node {
+              user: node {
                 ... on User {
                   id
                   login
@@ -172,9 +178,13 @@ class GraphQLService {
           }
         }
       ''',
-      headers: {'Authorization': 'Bearer $token'},
-      variables: {"user": query},
-    );
-    return searchResponse.data;
+        headers: {'Authorization': 'Bearer $token'},
+        variables: {'user': query},
+      );
+      return SearchResults.fromJson(searchResponse.data['search']).users;
+    } catch (e) {
+      FirebaseCrashlytics.instance.log('Error when calling searchUsers: $e');
+      return null;
+    }
   }
 }
