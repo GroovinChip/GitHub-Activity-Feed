@@ -106,7 +106,7 @@ class _ForkEventCardState extends State<ForkEventCard> {
               ),
             ],
           ),
-          SizedBox(height: 4),
+          SizedBox(height: 8),
           Text(widget.activityFork.parent.description ?? 'No description'),
           SizedBox(height: 8),
           Row(

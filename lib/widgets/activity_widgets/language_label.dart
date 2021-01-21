@@ -19,7 +19,7 @@ class LanguageLabel extends StatelessWidget {
           Icons.language_outlined,
           color: HexColor(language.color),
         ),
-        SizedBox(width: 8),
+        SizedBox(width: 4),
         Text(
           language.name,
           style: TextStyle(
