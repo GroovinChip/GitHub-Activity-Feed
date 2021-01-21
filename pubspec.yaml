@@ -2,7 +2,7 @@ name: github_activity_feed
 description: A Flutter application for viewing a rich feed of GitHub activity.
 publish_to: 'none'
 
-version: 0.6.1
+version: 0.7.0
 
 environment:
   sdk: '>=2.7.0 <3.0.0'
@@ -24,6 +24,7 @@ dependencies:
   intl: ^0.16.1
   material_design_icons_flutter: ^4.0.5855
   meta: ^1.2.4
+  octicons_icon: ^0.0.2
   package_info: ^0.4.3+2
   path_provider: ^1.6.27
   provider: ^4.3.2+4

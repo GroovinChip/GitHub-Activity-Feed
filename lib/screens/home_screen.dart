@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:github_activity_feed/app/provided.dart';
 import 'package:github_activity_feed/screens/search_screen.dart';
 import 'package:github_activity_feed/state/prefs_bloc.dart';
+import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/activity_feed.dart';
-import 'package:github_activity_feed/widgets/discovery/discovery.dart';
 import 'package:github_activity_feed/widgets/fade_indexed_stack.dart';
 import 'package:github_activity_feed/widgets/menu_sheet_content.dart';
 import 'package:github_activity_feed/widgets/user_widgets/following_users.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:octicons_icon/octicons_icon.dart';
 import 'package:provider/provider.dart';
-import 'package:github_activity_feed/utils/extensions.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = Navigator.defaultRouteName;
@@ -35,7 +34,6 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
   int _currentIndex = 0;
   final List<Widget> titles = [
     Text('Activity Feed'),
-    //Text('Discover'),
     Text('You Follow'),
   ];
 
@@ -53,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: CircleAvatar(
-              backgroundImage: NetworkImage(user.avatarUrl),
+              backgroundImage: NetworkImage(currentUser.avatarUrl),
             ),
           ),
           onTap: () => showModalBottomSheet(
@@ -79,7 +77,8 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
             builder: (context, snapshot) {
               return IconButton(
                 icon: Icon(
-                  Icons.search,
+                  OctIcons.search,
+                  size: 18,
                   color: context.isDarkTheme ? Colors.white : Colors.black,
                 ),
                 onPressed: () => showSearch(
@@ -99,7 +98,6 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
         duration: Duration(milliseconds: 100),
         children: [
           ActivityFeed(),
-          //Discovery(),
           ViewerFollowingList(),
         ],
       ),
@@ -110,17 +108,13 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
         },
         items: [
           BottomNavigationBarItem(
-            icon: Icon(MdiIcons.github),
+            icon: Icon(OctIcons.pulse),
             label: 'Feed',
           ),
-          /*BottomNavigationBarItem(
-            icon: Icon(MdiIcons.featureSearch),
-            label: 'Discover',
-          ),*/
+          //todo: contribute group icons to octicons package
           BottomNavigationBarItem(
             icon: Icon(Icons.group_outlined),
-            label:
-                '${githubService.currentUser.value?.followingCount} Following',
+            label: '${currentUser.followingCount} Following',
           ),
         ],
       ),
