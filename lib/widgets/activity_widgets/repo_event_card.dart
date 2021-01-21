@@ -99,20 +99,16 @@ class _RepoEventCardState extends State<RepoEventCard> with ProvidedState {
                 ),
                 SizedBox(width: 8),
                 Expanded(
-                  child: FittedBox(
-                    alignment: Alignment.topLeft,
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      widget.repoEvent.repo.nameWithOwner,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  child: Text(
+                    widget.repoEvent.repo.nameWithOwner,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ],
             ),
-          SizedBox(height: 4),
+          SizedBox(height: 8),
           Text(widget.repoEvent.repo.description ?? 'No description'),
           SizedBox(height: 8),
           Row(
@@ -135,7 +131,6 @@ class _RepoEventCardState extends State<RepoEventCard> with ProvidedState {
               LanguageLabel(
                 language: widget.repoEvent.repo.languages.first,
               ),
-              SizedBox(width: 8),
             ],
           ),
         ],
