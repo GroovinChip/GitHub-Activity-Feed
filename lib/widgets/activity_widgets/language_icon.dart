@@ -24,7 +24,7 @@ class LanguageIcon extends StatefulWidget {
 }
 
 class _LanguageIconState extends State<LanguageIcon> {
-  IconData languageIcon;
+  IconData languageIcon = Icons.language_outlined;
 
   @override
   void initState() {
@@ -32,6 +32,8 @@ class _LanguageIconState extends State<LanguageIcon> {
     _setLanguageIconData();
   }
 
+  /// Sets the proper IconData for a language by looping through the list of
+  /// languages in [_LangIcons].
   void _setLanguageIconData() {
     _LangIcons.icons.forEach((lang, icon) {
       if (lang == widget.language.name) {
