@@ -64,8 +64,6 @@ class _LanguageIconState extends State<LanguageIcon> {
 class _LangIcons {
   _LangIcons._();
 
-  static const _kFontFam = 'LangIcons';
-
   static const IconData dart = IconData(
     0xe800,
     fontFamily: 'LangIcons',
