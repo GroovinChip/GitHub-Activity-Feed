@@ -50,15 +50,15 @@ class _MenuSheetContentState extends State<MenuSheetContent>
           ),
           ListTile(
             leading: CircleAvatar(
-              backgroundImage: NetworkImage(user.avatarUrl),
+              backgroundImage: NetworkImage(currentUser.avatarUrl),
             ),
             title: Text(
-              user.login,
+              currentUser.login,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
-            subtitle: Text(user.email ?? user.login),
+            subtitle: Text(currentUser.email ?? currentUser.login),
             trailing: OutlinedButton(
               style: OutlinedButton.styleFrom(
                 shape: StadiumBorder(),
