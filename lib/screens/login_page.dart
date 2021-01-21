@@ -50,14 +50,27 @@ class _LoginPageState extends State<LoginPage> with ProvidedState {
               duration: const Duration(milliseconds: 350),
               child: _loading
                   ? CircularProgressIndicator()
-                  : RaisedButton.icon(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                  : ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        primary:
+                            context.isDarkTheme ? Colors.white : Colors.black,
                       ),
-                      color: context.isDarkTheme ? Colors.white : Colors.black,
-                      textColor: context.colorScheme.onPrimary,
-                      label: Text('Sign in with GitHub'),
-                      icon: Icon(MdiIcons.github),
+                      //textColor: context.colorScheme.onPrimary,
+                      label: Text(
+                        'Sign in with GitHub',
+                        style: TextStyle(
+                          color:
+                              context.isDarkTheme ? Colors.black : Colors.white,
+                        ),
+                      ),
+                      icon: Icon(
+                        MdiIcons.github,
+                        color:
+                            context.isDarkTheme ? Colors.black : Colors.white,
+                      ),
                       onPressed: () {
                         setState(() => _loading = true);
                         url_launcher.launch(

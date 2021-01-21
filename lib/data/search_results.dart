@@ -2,67 +2,37 @@ import 'base_user.dart';
 
 /// Generated using https://javiercbk.github.io/json_to_dart/
 class SearchResults {
-  int userCount;
-  List<SearchEdge> edges;
-
   SearchResults({
     this.userCount,
-    this.edges,
+    this.hasNextPage,
+    this.endCursor,
+    this.users,
   });
+  
+  final int userCount;
+  final bool hasNextPage;
+  final String endCursor;
+  final List<UserFromSearch> users;
 
-  SearchResults.fromJson(Map<String, dynamic> json) {
-    userCount = json['userCount'];
+  factory SearchResults.fromJson(Map<String, dynamic> json) {
+    List<UserFromSearch> _users = [];
     if (json['edges'] != null) {
-      edges = <SearchEdge>[];
       json['edges'].forEach((v) {
-        edges.add(SearchEdge.fromJson(v));
+        _users.add(UserFromSearch.fromJson(v['user']));
       });
     }
-  }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['userCount'] = this.userCount;
-    if (this.edges != null) {
-      data['edges'] = this.edges.map((v) => v.toJson()).toList();
-    }
-    return data;
+    return SearchResults(
+      userCount: json['userCount'],
+      hasNextPage: json['pageInfo']['hasNextPage'],
+      endCursor: json['pageInfo']['endCursor'],
+      users: _users,
+    );
   }
 }
 
-class SearchEdge {
-  UserSearchNode node;
-
-  SearchEdge({this.node});
-
-  SearchEdge.fromJson(Map<String, dynamic> json) {
-    node = json['node'] != null ? UserSearchNode.fromJson(json['node']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    if (this.node != null) {
-      data['node'] = this.node.toJson();
-    }
-    return data;
-  }
-}
-
-class UserSearchNode extends BaseUser {
-  final String location;
-  final String company;
-  final Status status;
-  final String id;
-  final String login;
-  final String url;
-  final String avatarUrl;
-  final String createdAt;
-  final bool viewerIsFollowing;
-  final String bio;
-  final String name;
-  final String email;
-
-  UserSearchNode({
+class UserFromSearch extends BaseUser {
+  UserFromSearch({
     this.id,
     this.login,
     this.url,
@@ -77,8 +47,26 @@ class UserSearchNode extends BaseUser {
     this.status,
   });
 
-  factory UserSearchNode.fromJson(Map<String, dynamic> json) {
-    return UserSearchNode(
+  final String location;
+  final String company;
+  final Status status;
+  final String id;
+  final String login;
+  final String url;
+  final String avatarUrl;
+  final String createdAt;
+  final bool viewerIsFollowing;
+  final String bio;
+  final String name;
+  final String email;
+
+  factory UserFromSearch.fromJson(Map<String, dynamic> json) {
+    Status _status;
+    if (json['status'] != null) {
+      _status = Status.fromJson(json['status']);
+    }
+
+    return UserFromSearch(
       id: json['id'],
       login: json['login'],
       url: json['url'],
@@ -90,7 +78,7 @@ class UserSearchNode extends BaseUser {
       name: json['name'],
       email: json['email'],
       company: json['company'],
-      status: json['status'] != null ? Status.fromJson(json['status']) : null,
+      status: _status,
     );
   }
 

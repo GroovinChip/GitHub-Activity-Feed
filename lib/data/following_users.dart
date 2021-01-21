@@ -35,14 +35,6 @@ class Following {
       users: _users,
     );
   }
-
-  //testme
-  Map<String, dynamic> toJson() {
-    return {
-      'totalCount': totalCount ?? 0,
-      'users': users.map((user) => user.toJson()).toList(),
-    };
-  }
 }
 
 class FollowingUser extends BaseUser {
