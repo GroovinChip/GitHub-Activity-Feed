@@ -8,7 +8,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
-import 'language_label.dart';
+import 'language_icon.dart';
 
 //todo: get parent repo, show that instead, or both?
 class ForkEventCard extends StatefulWidget {
@@ -126,7 +126,7 @@ class _ForkEventCardState extends State<ForkEventCard> {
                 countItem: widget.activityFork.parent.forkCount,
               ),
               Spacer(),
-              LanguageLabel(
+              LanguageIcon(
                 language: widget.activityFork.parent.languages.first,
               ),
               SizedBox(width: 8),

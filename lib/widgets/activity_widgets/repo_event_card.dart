@@ -4,7 +4,7 @@ import 'package:github_activity_feed/data/activity_events/activity_repo.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/count_item.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/event_card.dart';
-import 'package:github_activity_feed/widgets/activity_widgets/language_label.dart';
+import 'package:github_activity_feed/widgets/activity_widgets/language_icon.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -128,7 +128,7 @@ class _RepoEventCardState extends State<RepoEventCard> with ProvidedState {
                 countItem: widget.repoEvent.repo.forkCount,
               ),
               Spacer(),
-              LanguageLabel(
+              LanguageIcon(
                 language: widget.repoEvent.repo.languages.first,
               ),
             ],
