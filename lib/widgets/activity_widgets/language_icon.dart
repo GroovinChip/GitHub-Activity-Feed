@@ -33,7 +33,7 @@ class _LanguageIconState extends State<LanguageIcon> {
   }
 
   void _setLanguageIconData() {
-    _languageIcons.forEach((lang, icon) {
+    _LangIcons.icons.forEach((lang, icon) {
       if (lang == widget.language.name) {
         setState(() => languageIcon = icon);
       }
@@ -61,32 +61,46 @@ class _LanguageIconState extends State<LanguageIcon> {
   }
 }
 
-const _languageIcons = {
-  'C': MdiIcons.languageC,
-  'C++': MdiIcons.languageCpp,
-  'C#': MdiIcons.languageCsharp,
-  //todo: look up what label GH uses for css - has 3 or not?
-  'CSS': MdiIcons.languageCss3,
-  //todo: IconDate for Dart
-  'Fortran': MdiIcons.languageFortran,
-  'Go': MdiIcons.languageGo,
-  'Haskell': MdiIcons.languageHaskell,
-  //todo: look up what label GH uses for html - has 5 or not?
-  'HTML': MdiIcons.languageHtml5,
-  'Kotlin': MdiIcons.languageKotlin,
-  'Java': MdiIcons.languageJava,
-  'JavaScript': MdiIcons.languageJavascript,
-  'Lua': MdiIcons.languageLua,
-  'N/A': MdiIcons.languageMarkdown,
-  'PHP': MdiIcons.languagePhp,
-  'Python': MdiIcons.languagePython,
-  'R': MdiIcons.languageR,
-  'Ruby': MdiIcons.languageRuby,
-  'Rust': MdiIcons.languageRust,
-  'SCSS': MdiIcons.languageCss3, //todo: IconData for SASS
-  'Shell': MdiIcons.powershell, //todo: IconData for Shell
-  'Swift': MdiIcons.languageSwift,
-  'TypeScript': MdiIcons.languageTypescript,
-  'Xaml': MdiIcons.languageXaml,
-  'XSLT': MdiIcons.xml //todo: IconData for XSLT
-};
+class _LangIcons {
+  _LangIcons._();
+
+  static const _kFontFam = 'LangIcons';
+
+  static const IconData dart = IconData(
+    0xe800,
+    fontFamily: 'LangIcons',
+  );
+
+  static const IconData sass = IconData(
+    0xe802,
+    fontFamily: 'LangIcons',
+  );
+
+  static const icons = {
+    'C': MdiIcons.languageC,
+    'C++': MdiIcons.languageCpp,
+    'C#': MdiIcons.languageCsharp,
+    'CSS': MdiIcons.languageCss3,
+    'Dart': dart,
+    'Fortran': MdiIcons.languageFortran,
+    'Go': MdiIcons.languageGo,
+    'Haskell': MdiIcons.languageHaskell,
+    'HTML': MdiIcons.languageHtml5,
+    'Kotlin': MdiIcons.languageKotlin,
+    'Java': MdiIcons.languageJava,
+    'JavaScript': MdiIcons.languageJavascript,
+    'Lua': MdiIcons.languageLua,
+    'N/A': MdiIcons.languageMarkdown,
+    'PHP': MdiIcons.languagePhp,
+    'Python': MdiIcons.languagePython,
+    'R': MdiIcons.languageR,
+    'Ruby': MdiIcons.languageRuby,
+    'Rust': MdiIcons.languageRust,
+    'SCSS': sass,
+    'Shell': MdiIcons.console,
+    'Swift': MdiIcons.languageSwift,
+    'TypeScript': MdiIcons.languageTypescript,
+    'Xaml': MdiIcons.languageXaml,
+    'XSLT': MdiIcons.fileExcel
+  };
+}
