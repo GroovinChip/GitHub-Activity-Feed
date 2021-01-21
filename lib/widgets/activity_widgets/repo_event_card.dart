@@ -5,6 +5,7 @@ import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/count_item.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/event_card.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/language_icon.dart';
+import 'package:github_activity_feed/widgets/activity_widgets/repo_preview.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -77,63 +78,16 @@ class _RepoEventCardState extends State<RepoEventCard> with ProvidedState {
             Text(timeago.format(widget.repoEvent.createdAt, locale: 'en')),
       ),
       eventPreviewWebUrl: widget.repoEvent.repo.url,
-      eventPreview: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (widget.repoEvent.action == 'created')
-            Text(
-              widget.repoEvent.repo.nameWithOwner,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          if (widget.repoEvent.action == 'starred')
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                UserAvatar(
-                  avatarUrl: widget.repoEvent.repo.owner.avatarUrl,
-                  height: 25,
-                  width: 25,
-                ),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    widget.repoEvent.repo.nameWithOwner,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          SizedBox(height: 8),
-          Text(widget.repoEvent.repo.description ?? 'No description'),
-          SizedBox(height: 8),
-          Row(
-            children: [
-              CountItem(
-                iconData: Icons.remove_red_eye_outlined,
-                countItem: widget.repoEvent.repo.watcherCount,
-              ),
-              SizedBox(width: 16),
-              CountItem(
-                iconData: Icons.star_outline,
-                countItem: widget.repoEvent.repo.stargazerCount,
-              ),
-              SizedBox(width: 16),
-              CountItem(
-                iconData: MdiIcons.sourceFork,
-                countItem: widget.repoEvent.repo.forkCount,
-              ),
-              Spacer(),
-              LanguageIcon(
-                language: widget.repoEvent.repo.languages.first,
-              ),
-            ],
-          ),
-        ],
+      eventPreview: RepoPreview(
+        avatarUrl: widget.repoEvent.action == 'created'
+            ? widget.repoEvent.actor.avatarUrl
+            : widget.repoEvent.owner.avatarUrl,
+        repoName: widget.repoEvent.repo.nameWithOwner,
+        repoDescription: widget.repoEvent.repo.description,
+        watcherCount: widget.repoEvent.repo.watcherCount,
+        stargazerCount: widget.repoEvent.repo.stargazerCount,
+        forkCount: widget.repoEvent.repo.forkCount,
+        primaryLanguage: widget.repoEvent.repo.languages.first,
       ),
     );
   }
