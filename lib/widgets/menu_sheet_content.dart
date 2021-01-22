@@ -4,6 +4,7 @@ import 'package:github_activity_feed/state/prefs_bloc.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/widgets/dialogs/logout_dialog.dart';
 import 'package:github_activity_feed/widgets/dialogs/theme_switcher_dialog.dart';
+import 'package:github_activity_feed/widgets/octicons/oct_icons24_icons.dart';
 import 'package:groovin_widgets/groovin_widgets.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:package_info/package_info.dart';
@@ -50,15 +51,15 @@ class _MenuSheetContentState extends State<MenuSheetContent>
           ),
           ListTile(
             leading: CircleAvatar(
-              backgroundImage: NetworkImage(user.avatarUrl),
+              backgroundImage: NetworkImage(currentUser.avatarUrl),
             ),
             title: Text(
-              user.login,
+              currentUser.login,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
-            subtitle: Text(user.email ?? user.login),
+            subtitle: Text(currentUser.email ?? currentUser.login),
             trailing: OutlinedButton(
               style: OutlinedButton.styleFrom(
                 shape: StadiumBorder(),
@@ -90,10 +91,10 @@ class _MenuSheetContentState extends State<MenuSheetContent>
                   themeIcon = MdiIcons.themeLightDark;
                   break;
                 case ThemeMode.light:
-                  themeIcon = Icons.wb_sunny_outlined;
+                  themeIcon = OctIcons24.sun_24;
                   break;
                 case ThemeMode.dark:
-                  themeIcon = MdiIcons.moonWaningCrescent;
+                  themeIcon = OctIcons24.moon_24;
                   break;
               }
               return ListTile(
@@ -121,7 +122,7 @@ class _MenuSheetContentState extends State<MenuSheetContent>
                 },
                 secondary: Icon(
                   snapshot.data == true
-                      ? MdiIcons.cardsOutline
+                      ? OctIcons24.versions_24
                       : Icons.format_list_bulleted_sharp,
                 ),
                 activeColor: Theme.of(context).primaryColor,
@@ -136,12 +137,12 @@ class _MenuSheetContentState extends State<MenuSheetContent>
           ),
           Divider(),
           ListTile(
-            leading: Icon(Icons.perm_device_information_rounded),
+            leading: Icon(OctIcons24.info_24),
             title: Text('GitHub Activity Feed'),
             subtitle: Text('Version ${_packageInfo?.version}'),
           ),
           ListTile(
-            leading: Icon(MdiIcons.sendCircleOutline),
+            leading: Icon(OctIcons24.comment_discussion_24),
             title: Text('Share feedback'),
             onTap: () {
               Navigator.pop(context);

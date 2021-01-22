@@ -6,7 +6,7 @@ A Flutter application for viewing a rich feed of GitHub activity.
 
 ## Project status:
 
-**Public Preview**: Version 0.6.1
+**Public Preview**: Version 0.8.0
 
 **Supported platforms**: Android, iOS (see notes)
 

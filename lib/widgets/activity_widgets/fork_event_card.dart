@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/activity_events/activity_fork.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
-import 'package:github_activity_feed/widgets/activity_widgets/count_item.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/event_card.dart';
+import 'package:github_activity_feed/widgets/activity_widgets/repo_preview.dart';
+import 'package:github_activity_feed/widgets/octicons/oct_icons24_icons.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
-
-import 'language_label.dart';
 
 //todo: get parent repo, show that instead, or both?
 class ForkEventCard extends StatefulWidget {
@@ -75,66 +73,20 @@ class _ForkEventCardState extends State<ForkEventCard> {
 
         trailing: IconButton(
           tooltip: 'See this fork',
-          icon: Icon(MdiIcons.sourceFork),
+          icon: Icon(OctIcons24.git_fork_24),
           onPressed: () => url_launcher.launch(widget.activityFork.repo.url),
         ),
       ),
-      eventPreview: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              UserAvatar(
-                avatarUrl: widget.activityFork.repo.parent.owner.avatarUrl,
-                height: 25,
-                width: 25,
-              ),
-              SizedBox(width: 8),
-              Expanded(
-                child: FittedBox(
-                  alignment: Alignment.topLeft,
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    widget.activityFork.parent.nameWithOwner,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 4),
-          Text(widget.activityFork.parent.description ?? 'No description'),
-          SizedBox(height: 8),
-          Row(
-            children: [
-              CountItem(
-                iconData: Icons.remove_red_eye_outlined,
-                countItem: widget.activityFork.parent.watcherCount,
-              ),
-              SizedBox(width: 16),
-              CountItem(
-                iconData: Icons.star_outline,
-                countItem: widget.activityFork.parent.stargazerCount,
-              ),
-              SizedBox(width: 16),
-              CountItem(
-                iconData: MdiIcons.sourceFork,
-                countItem: widget.activityFork.parent.forkCount,
-              ),
-              Spacer(),
-              LanguageLabel(
-                language: widget.activityFork.parent.languages.first,
-              ),
-              SizedBox(width: 8),
-            ],
-          ),
-        ],
-      ),
       eventPreviewWebUrl: widget.activityFork.parent.url,
+      eventPreview: RepoPreview(
+        avatarUrl: widget.activityFork.repo.parent.owner.avatarUrl,
+        repoName: widget.activityFork.parent.nameWithOwner,
+        repoDescription: widget.activityFork.parent.description,
+        watcherCount: widget.activityFork.parent.watcherCount,
+        stargazerCount: widget.activityFork.parent.stargazerCount,
+        forkCount: widget.activityFork.parent.forkCount,
+        primaryLanguage: widget.activityFork.parent.languages.first,
+      ),
     );
   }
 }

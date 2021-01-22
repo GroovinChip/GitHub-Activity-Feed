@@ -4,6 +4,7 @@ import 'package:github_activity_feed/data/base_user.dart';
 import 'package:github_activity_feed/theme/github_colors.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/utils/printers.dart';
+import 'package:github_activity_feed/widgets/octicons/oct_icons16_icons.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
@@ -80,12 +81,13 @@ class UserCard extends StatelessWidget {
               child: Row(
                 children: [
                   Icon(
-                    MdiIcons.mapMarkerOutline,
+                    OctIcons16.location_16,
                     size: 12,
                     color: context.isDarkTheme
                         ? GhColors.grey.shade300
                         : Colors.grey.shade800,
                   ),
+                  SizedBox(width: 2),
                   Expanded(
                     child: Text(
                       user.location ?? '[no location]',
