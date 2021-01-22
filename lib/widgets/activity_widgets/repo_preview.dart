@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/custom_repos.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/count_item.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/language_icon.dart';
+import 'package:github_activity_feed/widgets/octicons/oct_icons16_icons.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class RepoPreview extends StatelessWidget {
   const RepoPreview({
@@ -56,17 +56,17 @@ class RepoPreview extends StatelessWidget {
         Row(
           children: [
             CountItem(
-              iconData: Icons.remove_red_eye_outlined,
+              iconData: OctIcons16.eye_16,
               countItem: watcherCount,
             ),
-            SizedBox(width: 16),
+            SizedBox(width: 12),
             CountItem(
-              iconData: Icons.star_outline,
+              iconData: OctIcons16.star_16,
               countItem: stargazerCount,
             ),
-            SizedBox(width: 16),
+            SizedBox(width: 12),
             CountItem(
-              iconData: MdiIcons.sourceFork,
+              iconData: OctIcons16.repo_forked_16,
               countItem: forkCount,
             ),
             Spacer(),

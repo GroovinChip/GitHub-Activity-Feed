@@ -15,7 +15,7 @@ class CountItem extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(iconData),
+        Icon(iconData, size: 16,),
         SizedBox(width: 6),
         Text('${countItem ?? '-'}'),
       ],

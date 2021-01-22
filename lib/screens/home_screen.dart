@@ -7,8 +7,8 @@ import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/activity_feed.dart';
 import 'package:github_activity_feed/widgets/fade_indexed_stack.dart';
 import 'package:github_activity_feed/widgets/menu_sheet_content.dart';
+import 'package:github_activity_feed/widgets/octicons/oct_icons24_icons.dart';
 import 'package:github_activity_feed/widgets/user_widgets/following_users.dart';
-import 'package:octicons_icon/octicons_icon.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -77,8 +77,7 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
             builder: (context, snapshot) {
               return IconButton(
                 icon: Icon(
-                  OctIcons.search,
-                  size: 18,
+                  Icons.search,
                   color: context.isDarkTheme ? Colors.white : Colors.black,
                 ),
                 onPressed: () => showSearch(
@@ -108,12 +107,12 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
         },
         items: [
           BottomNavigationBarItem(
-            icon: Icon(OctIcons.pulse),
+            icon: Icon(OctIcons24.pulse_24),
             label: 'Feed',
           ),
           //todo: contribute group icons to octicons package
           BottomNavigationBarItem(
-            icon: Icon(Icons.group_outlined),
+            icon: Icon(OctIcons24.people_24),
             label: '${currentUser.followingCount} Following',
           ),
         ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/app/provided.dart';
+import 'package:github_activity_feed/utils/crashlytics_util.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
@@ -72,12 +73,14 @@ class _LoginPageState extends State<LoginPage> with ProvidedState {
                             context.isDarkTheme ? Colors.black : Colors.white,
                       ),
                       onPressed: () {
-                        setState(() => _loading = true);
-                        url_launcher.launch(
-                          auth.authUrl,
-                          forceWebView: true,
-                          enableJavaScript: true,
-                        );
+                        doAndReportOnCrash('launchBrowserToSignIn', () {
+                          setState(() => _loading = true);
+                          url_launcher.launch(
+                            auth.authUrl,
+                            forceWebView: true,
+                            enableJavaScript: true,
+                          );
+                        });
                       },
                     ),
             ),
