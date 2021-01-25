@@ -10,8 +10,6 @@ import 'package:github_activity_feed/services/graphql_service.dart';
 import 'package:github_activity_feed/state/prefs_bloc.dart';
 import 'package:github_activity_feed/theme/app_themes.dart';
 import 'package:github_activity_feed/theme/github_colors.dart';
-import 'package:github_activity_feed/utils/extensions.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'package:wiredash/wiredash.dart';
