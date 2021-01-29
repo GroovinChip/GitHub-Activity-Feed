@@ -6,7 +6,6 @@ import 'package:github_activity_feed/widgets/activity_widgets/repo_preview.dart'
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-//todo: get parent repo, show that instead, or both?
 class ForkEventCard extends StatefulWidget {
   ForkEventCard({
     Key key,

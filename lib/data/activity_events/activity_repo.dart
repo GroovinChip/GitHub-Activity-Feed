@@ -25,5 +25,6 @@ class ActivityRepo implements ActivityFeedItem {
 
   ActivityFeedItemType get type => ActivityFeedItemType.repoEvent;
   User get actor => event.actor;
+  String get actorUrl => 'https://github.com/${actor.login}';
   Owner get owner => repo.owner;
 }

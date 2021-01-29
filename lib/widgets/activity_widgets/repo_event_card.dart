@@ -29,10 +29,9 @@ class _RepoEventCardState extends State<RepoEventCard> with ProvidedState {
           avatarUrl: widget.repoEvent.action == 'created'
               ? widget.repoEvent.owner.avatarUrl
               : widget.repoEvent.actor.avatarUrl,
-          //fixme:
           userUrl: widget.repoEvent.action == 'created'
               ? widget.repoEvent.owner.url
-              : 'https://github.com/${widget.repoEvent.actor.login}',
+              : widget.repoEvent.actorUrl,
           height: 44,
           width: 44,
         ),
