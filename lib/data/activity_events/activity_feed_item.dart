@@ -11,6 +11,8 @@ class ActivityFeedItemType {
   static const pushEvent = ActivityFeedItemType._('PushEvent');
   static const releaseEvent = ActivityFeedItemType._('ReleaseEvent');
   static const watchEvent = ActivityFeedItemType._('WatchEvent');
+  static const issueCommentEvent = ActivityFeedItemType._('IssueCommentEvent');
+  static const pullRequestEvent = ActivityFeedItemType._('PullRequestEvent');
 
   static const values = [
     repoEvent,
@@ -19,7 +21,9 @@ class ActivityFeedItemType {
     publicEvent,
     pushEvent,
     releaseEvent,
-    watchEvent
+    watchEvent,
+    issueCommentEvent,
+    pullRequestEvent
   ];
 
   static ActivityFeedItemType from(String value) {

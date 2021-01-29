@@ -3,7 +3,6 @@ import 'package:github/hooks.dart';
 import 'package:github_activity_feed/data/activity_events/activity_feed_item.dart';
 import 'package:github_activity_feed/data/custom_repos.dart';
 
-
 /// Defines a ForkEvent
 class ActivityFork implements ActivityFeedItem {
   ActivityFork({

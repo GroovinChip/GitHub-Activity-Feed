@@ -5,6 +5,7 @@ import 'package:github/github.dart';
 import 'package:github/hooks.dart';
 import 'package:github_activity_feed/data/activity_events/activity_feed_item.dart';
 import 'package:github_activity_feed/data/activity_events/activity_fork.dart';
+import 'package:github_activity_feed/data/activity_events/activity_pull_request.dart';
 import 'package:github_activity_feed/data/activity_events/activity_repo.dart';
 import 'package:github_activity_feed/services/auth_service.dart';
 import 'package:github_activity_feed/services/graphql_service.dart';
@@ -69,6 +70,7 @@ class GitHubService {
         createdAt: event.createdAt,
         forkEvent: ForkEvent.fromJson(event.payload),
       );
+      ActivityPullRequest activityPullRequest;
       String repoQuery;
       String userQuery;
       switch (event.type) {
@@ -80,6 +82,17 @@ class GitHubService {
         case 'ForkEvent':
           repoQuery = activityFork.forkEvent.forkee.name;
           userQuery = activityFork.forkEvent.forkee.fullName.split('/').first;
+          break;
+        case 'IssueCommentEvent':
+          break;
+        case 'MemberEvent':
+          break;
+        case 'PullRequestEvent':
+          activityPullRequest = ActivityPullRequest(
+            event: event,
+            createdAt: event.createdAt,
+          );
+          activityFeed.add(activityPullRequest);
           break;
         case 'WatchEvent':
           repoQuery = event.repo.name.split('/').last;
