@@ -1,5 +1,3 @@
-import 'dart:isolate';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -19,7 +17,8 @@ Future<void> main() async {
       await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
     } else {
       // Disable automatic data collection by Crashlytics
-      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
+      await FirebaseCrashlytics.instance
+          .setCrashlyticsCollectionEnabled(!kDebugMode);
 
       // Pass all uncaught errors to Crashlytics.
       Function originalOnError = FlutterError.onError;

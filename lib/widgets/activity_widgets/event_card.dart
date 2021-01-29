@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/theme/github_colors.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
+import 'package:github_activity_feed/widgets/octicons/oct_icons16_icons.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 typedef LaunchRepoInBrowserCallback = Future<void> Function();
@@ -11,11 +12,15 @@ class EventCard extends StatelessWidget {
     @required this.eventHeader,
     @required this.eventPreview,
     @required this.eventPreviewWebUrl,
+    this.showForkButton = false,
+    this.forkUrl,
   }) : super(key: key);
 
   final Widget eventHeader;
   final Widget eventPreview;
   final String eventPreviewWebUrl;
+  final bool showForkButton;
+  final String forkUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +37,14 @@ class EventCard extends StatelessWidget {
           children: [
             eventHeader,
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
                   Expanded(
                     child: Material(
-                      color: context.isDarkTheme ? GhColors.grey.shade900 : GhColors.grey.shadeZero,
+                      color: context.isDarkTheme
+                          ? GhColors.grey.shade900
+                          : GhColors.grey.shadeZero,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -45,7 +52,12 @@ class EventCard extends StatelessWidget {
                         customBorder: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        onTap: () => url_launcher.launch(eventPreviewWebUrl),
+                        onTap: () async {
+                          if (await url_launcher
+                              .canLaunch(eventPreviewWebUrl)) {
+                            url_launcher.launch(eventPreviewWebUrl);
+                          }
+                        },
                         child: Container(
                           padding: const EdgeInsets.all(8.0),
                           decoration: BoxDecoration(
@@ -62,6 +74,32 @@ class EventCard extends StatelessWidget {
                 ],
               ),
             ),
+            if (showForkButton) ...[
+              Row(
+                children: [
+                  SizedBox(width: 16),
+                  TextButton.icon(
+                    icon: Icon(
+                      OctIcons16.link_external_16,
+                      size: 16,
+                      color: GhColors.blue.shade400,
+                    ),
+                    label: Text(
+                      'View fork',
+                      style: TextStyle(
+                        color: GhColors.blue.shade400,
+                      ),
+                    ),
+                    onPressed: () async {
+                      if (await url_launcher.canLaunch(forkUrl)) {
+                        url_launcher.launch(forkUrl);
+                      }
+                    },
+                  ),
+                ],
+              )
+            ] else
+              SizedBox(height: 16),
           ],
         ),
       ),

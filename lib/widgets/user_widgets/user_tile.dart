@@ -4,7 +4,6 @@ import 'package:github_activity_feed/data/base_user.dart';
 import 'package:github_activity_feed/theme/github_colors.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 /// A tile that represents a User, with less detail than [UserCard]

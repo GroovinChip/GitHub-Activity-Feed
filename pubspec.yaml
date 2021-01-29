@@ -2,7 +2,7 @@ name: github_activity_feed
 description: A Flutter application for viewing a rich feed of GitHub activity.
 publish_to: 'none'
 
-version: 0.8.0
+version: 0.8.2
 
 environment:
   sdk: '>=2.7.0 <3.0.0'
@@ -10,6 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  github:
+    path: ../../packages_and_plugins/github.dart
 
   cloud_firestore: ^0.16.0
   crypto: ^2.1.5
@@ -17,8 +19,6 @@ dependencies:
   debounce_throttle: ^1.1.0
   firebase_core: ^0.7.0
   firebase_crashlytics: ^0.4.0+1
-  github:
-    path: ../../packages_and_plugins/github.dart
   google_fonts: ^1.1.1
   groovin_widgets: ^1.6.0
   intl: ^0.16.1
@@ -37,20 +37,20 @@ dependencies:
   wiredash: ^0.2.0
 
 dev_dependencies:
-  test: ^1.15.7
-  mockito: ^4.1.3
   flutter_test:
     sdk: flutter
+  mockito: ^4.1.3
+  test: ^1.15.7
 
 flutter:
   uses-material-design: true
   fonts:
-    - family:  LangIcons
+    - family: LangIcons
       fonts:
-      - asset: fonts/LangIcons.ttf
-    - family:  OctIcons16
+        - asset: fonts/LangIcons.ttf
+    - family: OctIcons16
       fonts:
-      - asset: fonts/OctIcons16.ttf
-    - family:  OctIcons24
+        - asset: fonts/OctIcons16.ttf
+    - family: OctIcons24
       fonts:
-      - asset: fonts/OctIcons24.ttf
+        - asset: fonts/OctIcons24.ttf
