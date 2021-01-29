@@ -3,10 +3,8 @@ import 'package:github_activity_feed/data/activity_events/activity_fork.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/event_card.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/repo_preview.dart';
-import 'package:github_activity_feed/widgets/octicons/oct_icons24_icons.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 //todo: get parent repo, show that instead, or both?
 class ForkEventCard extends StatefulWidget {
@@ -68,13 +66,8 @@ class _ForkEventCardState extends State<ForkEventCard> {
         ),
 
         /// Fuzzy timestamp
-        subtitle:
-            Text(timeago.format(widget.activityFork.createdAt, locale: 'en')),
-
-        trailing: IconButton(
-          tooltip: 'See this fork',
-          icon: Icon(OctIcons24.git_fork_24),
-          onPressed: () => url_launcher.launch(widget.activityFork.repo.url),
+        subtitle: Text(
+          timeago.format(widget.activityFork.createdAt, locale: 'en'),
         ),
       ),
       eventPreviewWebUrl: widget.activityFork.parent.url,
@@ -87,6 +80,8 @@ class _ForkEventCardState extends State<ForkEventCard> {
         forkCount: widget.activityFork.parent.forkCount,
         primaryLanguage: widget.activityFork.parent.languages.first,
       ),
+      showForkButton: true,
+      forkUrl: widget.activityFork.repo.url,
     );
   }
 }
