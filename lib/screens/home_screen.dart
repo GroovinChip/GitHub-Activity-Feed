@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/app/provided.dart';
@@ -86,7 +87,14 @@ class _HomeScreenState extends State<HomeScreen> with ProvidedState {
                     gitHub: githubService.github,
                     showCardsOrTiles: snapshot.data,
                   ),
-                ),
+                ).catchError((error, stackTrace) {
+                  print(error);
+                  FirebaseCrashlytics.instance.recordError(
+                    error,
+                    stackTrace,
+                    reason: 'Crashed when opening search',
+                  );
+                }),
               );
             },
           ),
