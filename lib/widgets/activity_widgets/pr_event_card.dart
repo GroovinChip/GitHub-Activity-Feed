@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/activity_events/activity_pull_request.dart';
 import 'package:github_activity_feed/theme/github_colors.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
-import 'package:github_activity_feed/widgets/activity_widgets/count_item.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/event_card.dart';
 import 'package:github_activity_feed/widgets/octicons/oct_icons16_icons.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:flutter_html/flutter_html.dart';
 
 class PrEventCard extends StatelessWidget {
   const PrEventCard({
@@ -131,7 +129,6 @@ class PrEventCard extends StatelessWidget {
             ],
           ),
 
-          //Html(data: pr.pullRequest.body),
           //todo: pr counts (not included in payload??)
         ],
       ),

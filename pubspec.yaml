@@ -19,7 +19,6 @@ dependencies:
   debounce_throttle: ^1.1.0
   firebase_core: ^0.7.0
   firebase_crashlytics: ^0.4.0+1
-  flutter_html: ^1.2.0
   google_fonts: ^1.1.1
   groovin_widgets: ^1.6.0
   intl: ^0.16.1
