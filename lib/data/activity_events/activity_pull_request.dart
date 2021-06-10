@@ -13,7 +13,7 @@ class ActivityPullRequest implements ActivityFeedItem {
   final Event event;
 
   /// Event timestamp
-  DateTime createdAt;
+  final DateTime createdAt;
 
   ActivityFeedItemType get type => ActivityFeedItemType.pullRequestEvent;
   User get actor => event.actor;

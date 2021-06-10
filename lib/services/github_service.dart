@@ -5,6 +5,7 @@ import 'package:github/github.dart';
 import 'package:github/hooks.dart';
 import 'package:github_activity_feed/data/activity_events/activity_feed_item.dart';
 import 'package:github_activity_feed/data/activity_events/activity_fork.dart';
+import 'package:github_activity_feed/data/activity_events/activity_member.dart';
 import 'package:github_activity_feed/data/activity_events/activity_pull_request.dart';
 import 'package:github_activity_feed/data/activity_events/activity_repo.dart';
 import 'package:github_activity_feed/services/auth_service.dart';
@@ -71,6 +72,10 @@ class GitHubService {
         forkEvent: ForkEvent.fromJson(event.payload),
       );
       ActivityPullRequest activityPullRequest;
+      ActivityMember activityMember = ActivityMember(
+        event: event,
+        createdAt: event.createdAt,
+      );
       String repoQuery;
       String userQuery;
       switch (event.type) {
@@ -86,6 +91,8 @@ class GitHubService {
         case 'IssueCommentEvent':
           break;
         case 'MemberEvent':
+          repoQuery = event.repo.name;
+          userQuery = event.actor.login;
           break;
         case 'PullRequestEvent':
           activityPullRequest = ActivityPullRequest(
@@ -112,6 +119,9 @@ class GitHubService {
             case 'ForkEvent':
               activityFork.repo = repo;
               break;
+            case 'MemberEvent':
+              activityMember.repo = repo;
+              break;
             default:
               break;
           }
@@ -120,6 +130,8 @@ class GitHubService {
             activityFeed.add(activityRepo);
           } else if (activityFork.repo != null) {
             activityFeed.add(activityFork);
+          } else if (activityMember.repo != null) {
+            activityFeed.add(activityMember);
           }
         });
       }
