@@ -101,16 +101,18 @@ class AuthService {
       // document was deleted
       return;
     }
-    final state = snapshot.data()['state'];
-    if (state != 'authorized') {
+    final state = snapshot.data() as Map<String, dynamic>;
+    //final state = snapshot.data()['state'];
+    if (state['state'] != 'authorized') {
       return;
     }
-    final code = snapshot.data()['code'];
-    if (code == null) {
+    final code = snapshot.data() as Map<String, dynamic>;
+    //final code = snapshot.data()['code'];
+    if (code['code'] == null) {
       return;
     }
     try {
-      final response = await _oAuth2Flow.exchange(code);
+      final response = await _oAuth2Flow.exchange(code['code']);
       _authState = AuthState._(response.token);
       _onAuthStateChanged.add(_authState);
       await _updateStateFile();
