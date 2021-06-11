@@ -19,7 +19,8 @@ class ActivityFeed extends StatefulWidget {
 class _ActivityFeedState extends State<ActivityFeed> with ProvidedState {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<bool>(
+    return Scaffold();
+    /*return StreamBuilder<bool>(
       stream: githubService.loadingFeed,
       initialData: githubService.loadingFeed.value,
       builder: (context, snapshot) {
@@ -66,6 +67,6 @@ class _ActivityFeedState extends State<ActivityFeed> with ProvidedState {
           );
         }
       },
-    );
+    );*/
   }
 }

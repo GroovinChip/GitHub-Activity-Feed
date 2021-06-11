@@ -21,7 +21,7 @@ class ActivityMember implements ActivityFeedItem {
   ActivityFeedItemType get type => ActivityFeedItemType.memberEvent;
 
   User get actor => event.actor;
-  MemberEvent get memberEvent => MemberEvent.fromJson(event.payload);
-  String get memberLogin => memberEvent.member.login;
-  String get action => memberEvent.action;
+  //MemberEvent get memberEvent => MemberEvent.fromJson(event.payload);
+  //String get memberLogin => memberEvent.member.login;
+  //String get action => memberEvent.action;
 }

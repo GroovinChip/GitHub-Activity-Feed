@@ -11,7 +11,6 @@ dependencies:
   flutter:
     sdk: flutter
   github:
-    path: ../../packages_and_plugins/github.dart
 
   cloud_firestore: ^2.2.2
   crypto: ^3.0.1

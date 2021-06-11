@@ -35,7 +35,7 @@ class MemberEventCard extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              TextSpan(
+              /*TextSpan(
                 text: ' ${memberEvent.action} ',
               ),
               TextSpan(
@@ -43,7 +43,7 @@ class MemberEventCard extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
-              ),
+              ),*/
               TextSpan(
                 text: ' as a collaborator',
               ),
