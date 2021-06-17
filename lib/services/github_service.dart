@@ -56,3 +56,40 @@ class GitHubService {
     await _authService.logOut();
   }
 }
+
+extension ActivityX on ActivityService {
+  /// List the events received by the authenticated user.
+  Stream<Event> listEventsReceivedByUser(String userLogin, {int pages}) {
+    return PaginationHelper(github).objects(
+      'GET',
+      '/users/$userLogin/received_events',
+      (i) => Event.fromJson(i),
+      pages: pages,
+    );
+  }
+}
+
+extension EventTypeX on Event {
+  String get action {
+    switch (this.type) {
+      case 'ForkEvent':
+        return 'forked ${this.repo.name}';
+      case 'ReleaseEvent':
+        return 'released a new version of ${this.repo.name}';
+      case 'WatchEvent':
+        return 'starred ${this.repo.name}';
+      case 'CreateEvent':
+        return 'created';
+      case 'PushEvent':
+        return 'pushed';
+      case 'PullRequestEvent':
+        return 'opened';
+      case 'IssueCommentEvent':
+        return 'commented on';
+      case 'IssuesEvent':
+        return this.payload['action'];
+      default:
+        return '';
+    }
+  }
+}

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
+import 'package:github_activity_feed/services/github_service.dart';
 import 'package:github_activity_feed/data/activity_events/activity_feed_item.dart';
 import 'package:github_activity_feed/data/activity_events/activity_fork.dart';
 import 'package:github_activity_feed/data/activity_events/activity_member.dart';
@@ -17,9 +19,38 @@ class ActivityFeed extends StatefulWidget {
 }
 
 class _ActivityFeedState extends State<ActivityFeed> with ProvidedState {
+  List<Event> events = [];
+
+  @override
+  void initState() {
+    super.initState();
+    github.activity.listEventsReceivedByUser(currentUser.login).listen((event) {
+      setState(() => events.add(event));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scrollbar(
+      child: RefreshIndicator(
+        onRefresh: () async {
+          setState(() {});
+        },
+        child: ListView.builder(
+          itemCount: events.length,
+          itemBuilder: (context, index) {
+            final event = events[index];
+            return ListTile(
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage(event.actor.avatarUrl),
+              ),
+              title: Text('${event.actor.login} ${event.action}'),
+              onTap: () {},
+            );
+          },
+        ),
+      ),
+    );
     /*return StreamBuilder<bool>(
       stream: githubService.loadingFeed,
       initialData: githubService.loadingFeed.value,
