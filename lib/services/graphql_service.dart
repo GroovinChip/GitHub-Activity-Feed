@@ -14,7 +14,7 @@ class GraphQLService {
   });
 
   /// Our GQL Client. We will make our api calls using this client.
-  final GQLClient client = GQLClient(url: 'https://api.github.com/graphql');
+  final GQLClient client = GQLClient('https://api.github.com/graphql');
 
   /// Our auth token. Required to make calls against the GitHub v4 API.
   final String token;

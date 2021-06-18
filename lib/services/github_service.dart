@@ -123,3 +123,15 @@ class GitHubService {
     await _authService.logOut();
   }
 }
+
+extension ActivityX on ActivityService {
+  /// List the events received by the authenticated user.
+  Stream<Event> listEventsReceivedByUser(String userLogin, {int pages}) {
+    return PaginationHelper(github).objects(
+      'GET',
+      '/users/$userLogin/received_events',
+          (i) => Event.fromJson(i),
+      pages: pages,
+    );
+  }
+}

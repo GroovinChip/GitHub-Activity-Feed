@@ -90,9 +90,7 @@ class _GitHubActivityFeedAppState extends State<GitHubActivityFeedApp> {
           primaryColor: GhColors.blue,
           secondaryColor: GhColors.blue.shade300,
         ),
-        options: WiredashOptionsData(
-          showDebugFloatingEntryPoint: false,
-        ),
+        options: WiredashOptionsData(),
         child: StreamBuilder<ThemeMode>(
           stream: widget.prefsBloc.themeModeSubject,
           initialData: widget.prefsBloc.themeModeSubject.value,
