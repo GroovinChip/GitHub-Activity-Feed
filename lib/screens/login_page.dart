@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> with ProvidedState {
             Text(
               'GitHub Activity Feed',
               style: Theme.of(context).textTheme.headline4.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontWeight: FontWeight.bold,
                   ),
             ),
