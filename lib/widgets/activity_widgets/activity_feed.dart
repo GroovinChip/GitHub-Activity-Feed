@@ -7,11 +7,13 @@ import 'package:github_activity_feed/data/activity_events/activity_fork.dart';
 import 'package:github_activity_feed/data/activity_events/activity_member.dart';
 import 'package:github_activity_feed/data/activity_events/activity_pull_request.dart';
 import 'package:github_activity_feed/data/activity_events/activity_repo.dart';
+import 'package:github_activity_feed/theme/github_colors.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/fork_event_card.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/member_event_card.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/pr_event_card.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/repo_event_card.dart';
 import 'package:github_activity_feed/widgets/loading_spinner.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class ActivityFeed extends StatefulWidget {
   @override
@@ -40,12 +42,16 @@ class _ActivityFeedState extends State<ActivityFeed> with ProvidedState {
           itemCount: events.length,
           itemBuilder: (context, index) {
             final event = events[index];
-            return ListTile(
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(event.actor.avatarUrl),
+            return Card(
+              color: GhColors.grey.shade800,
+              child: ListTile(
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(event.actor.avatarUrl),
+                ),
+                title: Text('${event.action}'),
+                subtitle: Text(timeago.format(event.createdAt, locale: 'en')),
+                onTap: () {},
               ),
-              title: Text('${event.actor.login} ${event.action}'),
-              onTap: () {},
             );
           },
         ),

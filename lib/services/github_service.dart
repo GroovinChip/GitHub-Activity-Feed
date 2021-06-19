@@ -73,23 +73,33 @@ extension EventTypeX on Event {
   String get action {
     switch (this.type) {
       case 'ForkEvent':
-        return 'forked ${this.repo.name}';
+        return '${this.actor.login} forked ${this.repo.name}';
       case 'ReleaseEvent':
-        return 'released a new version of ${this.repo.name}';
+        return '${this.actor.login} released a new version of ${this.repo.name}';
       case 'WatchEvent':
-        return 'starred ${this.repo.name}';
+        return '${this.actor.login} starred ${this.repo.name}';
       case 'CreateEvent':
-        return 'created';
+        if (this.payload['ref'] == null) {
+          return '${this.actor.login} created ${this.payload['ref_type']} ${this.repo.name}';
+        }
+        return '${this.actor.login} created ${this.payload['ref_type']} ${this.payload['ref']} at ${this.repo.name}';
       case 'PushEvent':
-        return 'pushed';
+        final branch = this.payload['ref'].split('/').last;
+        return '${this.actor.login} pushed ${this.payload['size']} commits to $branch at ${this.repo.name}';
       case 'PullRequestEvent':
-        return 'opened';
+        print(this.payload);
+        final prNum = this.payload['number'];
+        return '${this.actor.login} opened pull request #$prNum at ${this.repo.name}';
       case 'IssueCommentEvent':
-        return 'commented on';
+        final issueNum = this.payload['issue']['url'].split('issues/').last;
+        return '${this.actor.login} commented on issue #$issueNum at ${this.repo.name}';
       case 'IssuesEvent':
-        return this.payload['action'];
+        final issueNum = this.payload['issue']['url'].split('issues/').last;
+        return '${this.actor.login} ${this.payload['action']} issue #$issueNum at ${this.repo.name}';
+      case 'PublicEvent':
+        return '${this.actor.login} made ${this.repo.name} public';
       default:
-        return '';
+        return '${this.payload['member']['login']} was added to ${this.repo.name}';
     }
   }
 }
