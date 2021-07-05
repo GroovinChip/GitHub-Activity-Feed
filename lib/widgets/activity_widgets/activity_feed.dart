@@ -33,7 +33,7 @@ class _ActivityFeedState extends State<ActivityFeed> with ProvidedState {
 
   @override
   Widget build(BuildContext context) {
-    return Scrollbar(
+    /*return Scrollbar(
       child: RefreshIndicator(
         onRefresh: () async {
           setState(() {});
@@ -56,8 +56,8 @@ class _ActivityFeedState extends State<ActivityFeed> with ProvidedState {
           },
         ),
       ),
-    );
-    /*return StreamBuilder<bool>(
+    );*/
+    return StreamBuilder<bool>(
       stream: githubService.loadingFeed,
       initialData: githubService.loadingFeed.value,
       builder: (context, snapshot) {
@@ -104,6 +104,6 @@ class _ActivityFeedState extends State<ActivityFeed> with ProvidedState {
           );
         }
       },
-    );*/
+    );
   }
 }
