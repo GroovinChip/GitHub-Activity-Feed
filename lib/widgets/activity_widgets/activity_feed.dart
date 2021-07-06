@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:github_activity_feed/app/provided.dart';
-import 'package:github_activity_feed/services/github_service.dart';
 import 'package:github_activity_feed/data/activity_events/activity_feed_item.dart';
 import 'package:github_activity_feed/data/activity_events/activity_fork.dart';
 import 'package:github_activity_feed/data/activity_events/activity_member.dart';
 import 'package:github_activity_feed/data/activity_events/activity_pull_request.dart';
 import 'package:github_activity_feed/data/activity_events/activity_repo.dart';
-import 'package:github_activity_feed/theme/github_colors.dart';
+import 'package:github_activity_feed/services/github_service.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/fork_event_card.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/member_event_card.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/pr_event_card.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/repo_event_card.dart';
 import 'package:github_activity_feed/widgets/loading_spinner.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 class ActivityFeed extends StatefulWidget {
   @override
