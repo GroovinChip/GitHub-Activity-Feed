@@ -23,7 +23,7 @@ class _DiscoveryState extends State<Discovery> {
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(
-          child: Container(),
+          child: const SizedBox.shrink(),
         ),
       ],
     );

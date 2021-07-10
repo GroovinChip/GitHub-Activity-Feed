@@ -84,7 +84,7 @@ class SearchScreen extends SearchDelegate {
           itemBuilder: (BuildContext context, int index) {
             if (searchResults[index].name == null &&
                 searchResults[index].login == null) {
-              return Container();
+              return const SizedBox.shrink();
             }
             return UserTile(
               user: searchResults[index],
@@ -157,7 +157,7 @@ class SearchScreen extends SearchDelegate {
                     itemBuilder: (BuildContext context, int index) {
                       if (snapshot.data[index].name == null &&
                           snapshot.data[index].login == null) {
-                        return Container();
+                        return const SizedBox.shrink();
                       }
                       return UserTile(
                         user: snapshot.data[index],

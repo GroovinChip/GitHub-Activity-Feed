@@ -73,7 +73,7 @@ class _ActivityFeedState extends State<ActivityFeed> with ProvidedState {
                         pr: activityPullRequest,
                       );
                     default:
-                      return Container();
+                      return const SizedBox.shrink();
                   }
                 },
               ),

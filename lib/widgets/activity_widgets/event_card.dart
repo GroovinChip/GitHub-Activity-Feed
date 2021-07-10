@@ -58,15 +58,17 @@ class EventCard extends StatelessWidget {
                             url_launcher.launch(eventPreviewWebUrl);
                           }
                         },
-                        child: Container(
-                          padding: const EdgeInsets.all(8.0),
+                        child: DecoratedBox(
                           decoration: BoxDecoration(
                             border: Border.all(
                               color: Colors.grey,
                             ),
                             borderRadius: BorderRadius.circular(8.0),
                           ),
-                          child: eventPreview,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: eventPreview,
+                          ),
                         ),
                       ),
                     ),
