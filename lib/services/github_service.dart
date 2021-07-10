@@ -57,91 +57,100 @@ class GitHubService {
     }
   }
 
-  void loadActivityFeed() {
+  Future<void> loadActivityFeed() async {
+    loadingFeed.add(true);
+    activityFeed.clear();
     GraphQLService graphQLService = GraphQLService(token: github.auth.token);
     loadingFeed.add(true);
-    github.activity
+    final _events = await github.activity
         .listEventsReceivedByUser(currentUser.value.login, pages: 30)
-        .listen((event) {
+        .toList();
+
+    for (final event in _events) {
+      String repoQuery;
+      String userQuery;
       ActivityRepo activityRepo = ActivityRepo(
         createdAt: event.createdAt,
         event: event,
       );
-      ActivityFork activityFork = ActivityFork(
-        createdAt: event.createdAt,
-        forkEvent: ForkEvent.fromJson(event.payload),
-      );
-      ActivityPullRequest activityPullRequest;
-      ActivityMember activityMember = ActivityMember(
-        event: event,
-        createdAt: event.createdAt,
-      );
-      String repoQuery;
-      String userQuery;
       switch (event.type) {
         case 'CreateEvent':
           repoQuery = event.repo.name.split('/').first;
           userQuery = event.actor.login;
           activityRepo.action = 'created';
+
+          final repo = await graphQLService.getRepo(repoQuery, userQuery);
+
+          if (repo != null) {
+            activityRepo.repo = repo;
+            activityFeed.add(activityRepo);
+          }
+
           break;
         case 'ForkEvent':
+          ActivityFork activityFork = ActivityFork(
+            createdAt: event.createdAt,
+            forkEvent: ForkEvent.fromJson(event.payload),
+          );
           repoQuery = activityFork.forkEvent.forkee.name;
           userQuery = activityFork.forkEvent.forkee.fullName.split('/').first;
-          break;
-        case 'IssueCommentEvent':
+
+          final repo = await graphQLService.getRepo(repoQuery, userQuery);
+          if (repo != null) {
+            activityFork.repo = repo;
+            activityFeed.add(activityFork);
+          }
+
           break;
         case 'MemberEvent':
-          repoQuery = event.repo.name;
-          userQuery = event.actor.login;
-          break;
-        case 'PullRequestEvent':
-          activityPullRequest = ActivityPullRequest(
+          ActivityMember activityMember = ActivityMember(
             event: event,
             createdAt: event.createdAt,
           );
+          repoQuery = event.repo.name;
+          userQuery = event.actor.login;
+
+          final repo = await graphQLService.getRepo(repoQuery, userQuery);
+
+          if (repo != null) {
+            activityMember.repo = repo;
+            activityFeed.add(activityMember);
+          }
+
+          break;
+        case 'PullRequestEvent':
+          ActivityPullRequest activityPullRequest = ActivityPullRequest(
+            event: event,
+            createdAt: event.createdAt,
+          );
+
           activityFeed.add(activityPullRequest);
+
           break;
         case 'WatchEvent':
           repoQuery = event.repo.name.split('/').last;
           userQuery = event.repo.name.split('/').first;
           activityRepo.action = 'starred';
-          break;
-        default:
-          break;
-      }
-      if (repoQuery != null && userQuery != null) {
-        graphQLService.getRepo(repoQuery, userQuery).asStream().listen((repo) {
-          switch (event.type) {
-            case 'CreateEvent':
-            case 'WatchEvent':
-              activityRepo.repo = repo;
-              break;
-            case 'ForkEvent':
-              activityFork.repo = repo;
-              break;
-            case 'MemberEvent':
-              activityMember.repo = repo;
-              break;
-            default:
-              break;
-          }
-        }).onDone(() {
-          if (activityRepo.repo != null) {
+
+          final repo = await graphQLService.getRepo(repoQuery, userQuery);
+
+          if (repo != null) {
+            activityRepo.repo = repo;
             activityFeed.add(activityRepo);
-          } else if (activityFork.repo != null) {
-            activityFeed.add(activityFork);
-          } else if (activityMember.repo != null) {
-            activityFeed.add(activityMember);
           }
-        });
+
+          break;
       }
-    }).onDone(() {
+    }
+
+    if (activityFeed.isNotEmpty) {
       activityFeed.sort((ActivityFeedItem item1, ActivityFeedItem item2) {
         return item2.createdAt.compareTo(item1.createdAt);
       });
-      loadingFeed.add(false);
-      print('Finished loading feed');
-    });
+    }
+
+    loadingFeed.add(false);
+    print('Finished loading feed');
   }
 
   Future<void> logOut() async {

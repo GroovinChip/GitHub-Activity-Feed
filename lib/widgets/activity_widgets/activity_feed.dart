@@ -64,40 +64,43 @@ class _ActivityFeedState extends State<ActivityFeed> with ProvidedState {
             child: LoadingSpinner(),
           );
         } else {
-          return Scrollbar(
-            child: ListView.builder(
-              padding: EdgeInsets.all(8),
-              itemCount: githubService.activityFeed.length,
-              itemBuilder: (context, index) {
-                switch (githubService.activityFeed[index].type) {
-                  case ActivityFeedItemType.repoEvent:
-                    ActivityRepo activityRepo =
-                        githubService.activityFeed[index];
-                    return RepoEventCard(
-                      repoEvent: activityRepo,
-                    );
-                  case ActivityFeedItemType.forkEvent:
-                    ActivityFork activityFork =
-                        githubService.activityFeed[index];
-                    return ForkEventCard(
-                      activityFork: activityFork,
-                    );
-                  case ActivityFeedItemType.memberEvent:
-                    ActivityMember memberEvent =
-                        githubService.activityFeed[index];
-                    return MemberEventCard(
-                      memberEvent: memberEvent,
-                    );
-                  case ActivityFeedItemType.pullRequestEvent:
-                    ActivityPullRequest activityPullRequest =
-                        githubService.activityFeed[index];
-                    return PrEventCard(
-                      pr: activityPullRequest,
-                    );
-                  default:
-                    return Container();
-                }
-              },
+          return RefreshIndicator(
+            onRefresh: () => githubService.loadActivityFeed(),
+            child: Scrollbar(
+              child: ListView.builder(
+                padding: EdgeInsets.all(8),
+                itemCount: githubService.activityFeed.length,
+                itemBuilder: (context, index) {
+                  switch (githubService.activityFeed[index].type) {
+                    case ActivityFeedItemType.repoEvent:
+                      ActivityRepo activityRepo =
+                          githubService.activityFeed[index];
+                      return RepoEventCard(
+                        repoEvent: activityRepo,
+                      );
+                    case ActivityFeedItemType.forkEvent:
+                      ActivityFork activityFork =
+                          githubService.activityFeed[index];
+                      return ForkEventCard(
+                        activityFork: activityFork,
+                      );
+                    case ActivityFeedItemType.memberEvent:
+                      ActivityMember memberEvent =
+                          githubService.activityFeed[index];
+                      return MemberEventCard(
+                        memberEvent: memberEvent,
+                      );
+                    case ActivityFeedItemType.pullRequestEvent:
+                      ActivityPullRequest activityPullRequest =
+                          githubService.activityFeed[index];
+                      return PrEventCard(
+                        pr: activityPullRequest,
+                      );
+                    default:
+                      return Container();
+                  }
+                },
+              ),
             ),
           );
         }
