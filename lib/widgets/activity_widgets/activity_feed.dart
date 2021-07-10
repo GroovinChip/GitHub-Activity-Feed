@@ -31,30 +31,6 @@ class _ActivityFeedState extends State<ActivityFeed> with ProvidedState {
 
   @override
   Widget build(BuildContext context) {
-    /*return Scrollbar(
-      child: RefreshIndicator(
-        onRefresh: () async {
-          setState(() {});
-        },
-        child: ListView.builder(
-          itemCount: events.length,
-          itemBuilder: (context, index) {
-            final event = events[index];
-            return Card(
-              color: GhColors.grey.shade800,
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(event.actor.avatarUrl),
-                ),
-                title: Text('${event.action}'),
-                subtitle: Text(timeago.format(event.createdAt, locale: 'en')),
-                onTap: () {},
-              ),
-            );
-          },
-        ),
-      ),
-    );*/
     return StreamBuilder<bool>(
       stream: githubService.loadingFeed,
       initialData: githubService.loadingFeed.value,
