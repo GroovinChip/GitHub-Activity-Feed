@@ -12,14 +12,14 @@ dependencies:
     sdk: flutter
   github:
 
-  cloud_firestore: ^2.2.2
+  cloud_firestore: ^2.3.0
   crypto: ^3.0.1
   cupertino_icons: ^1.0.3
   debounce_throttle: ^2.0.0
   firebase_core: ^1.3.0
-  firebase_crashlytics: ^2.0.6
+  firebase_crashlytics: ^2.0.7
   google_fonts: ^2.1.0
-  groovin_widgets: ^2.1.0
+  groovin_widgets: ^3.0.2
   intl: ^0.17.0
   material_design_icons_flutter: ^4.0.5955
   meta: ^1.3.0

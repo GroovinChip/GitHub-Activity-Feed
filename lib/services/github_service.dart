@@ -201,10 +201,11 @@ extension EventTypeX on Event {
       case 'MemberEvent':
         return '${this.payload['member']['login']} was added to ${this.repo.name}';
       case 'PullRequestReviewEvent':
-        print(this.payload['pull_request']);
-        return '${this.actor.login} reviewed pull request #{} to ${this.repo.name}';
+        return '${this.actor.login} reviewed pull request #${this.payload['pull_request']['url'].split('/').last} to ${this.repo.name}';
       case 'PullRequestReviewCommentEvent':
-        return '${this.actor.login} commented on pull request #{} to ${this.repo.name}';
+        return '${this.actor.login} commented on pull request #${this.payload['pull_request']['url'].split('/').last} to ${this.repo.name}';
+      case 'DeleteEvent':
+        return '${this.actor.login} deleted ${this.payload['ref_type']} ${this.payload['ref']} at ${this.repo.name}';
       default:
         print(this.type);
         return '';
