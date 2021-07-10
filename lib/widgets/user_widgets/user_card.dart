@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:github_activity_feed/data/base_user.dart';
+import 'package:github_activity_feed/screens/user_feed_screen.dart';
+import 'package:github_activity_feed/services/github_service.dart';
 import 'package:github_activity_feed/theme/github_colors.dart';
 import 'package:github_activity_feed/utils/extensions.dart';
 import 'package:github_activity_feed/utils/printers.dart';
 import 'package:github_activity_feed/widgets/octicons/oct_icons16_icons.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 /// A card that represents a User, with more detail than [UserTile]
@@ -26,7 +29,18 @@ class UserCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(8),
       child: InkWell(
         onTap: () => url_launcher.launch(user.url),
-        onLongPress: () => printFormattedBaseUser(user),
+        onLongPress: () async {
+          //printFormattedBaseUser(user);
+          final events = await Provider.of<GitHubService>(context, listen: false).github.activity.listEventsPerformedByUser(user.login).toList();
+          //print(events);
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => UserFeedScreen(
+                username: user.login,
+              ),
+            ),
+          );
+        },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

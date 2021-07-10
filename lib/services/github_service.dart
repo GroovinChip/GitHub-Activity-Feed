@@ -169,3 +169,45 @@ extension ActivityX on ActivityService {
     );
   }
 }
+
+extension EventTypeX on Event {
+  String get action {
+    switch (this.type) {
+      case 'ForkEvent':
+        return '${this.actor.login} forked ${this.repo.name}';
+      case 'ReleaseEvent':
+        return '${this.actor.login} released a new version of ${this.repo.name}';
+      case 'WatchEvent':
+        return '${this.actor.login} starred ${this.repo.name}';
+      case 'CreateEvent':
+        if (this.payload['ref'] == null) {
+          return '${this.actor.login} created ${this.payload['ref_type']} ${this.repo.name}';
+        }
+        return '${this.actor.login} created ${this.payload['ref_type']} ${this.payload['ref']} at ${this.repo.name}';
+      case 'PushEvent':
+        final branch = this.payload['ref'].split('/').last;
+        return '${this.actor.login} pushed ${this.payload['size']} commits to $branch at ${this.repo.name}';
+      case 'PullRequestEvent':
+        final prNum = this.payload['number'];
+        return '${this.actor.login} opened pull request #$prNum at ${this.repo.name}';
+      case 'IssueCommentEvent':
+        final issueNum = this.payload['issue']['url'].split('issues/').last;
+        return '${this.actor.login} commented on issue #$issueNum at ${this.repo.name}';
+      case 'IssuesEvent':
+        final issueNum = this.payload['issue']['url'].split('issues/').last;
+        return '${this.actor.login} ${this.payload['action']} issue #$issueNum at ${this.repo.name}';
+      case 'PublicEvent':
+        return '${this.actor.login} made ${this.repo.name} public';
+      case 'MemberEvent':
+        return '${this.payload['member']['login']} was added to ${this.repo.name}';
+      case 'PullRequestReviewEvent':
+        print(this.payload['pull_request']);
+        return '${this.actor.login} reviewed pull request #{} to ${this.repo.name}';
+      case 'PullRequestReviewCommentEvent':
+        return '${this.actor.login} commented on pull request #{} to ${this.repo.name}';
+      default:
+        print(this.type);
+        return '';
+    }
+  }
+}
