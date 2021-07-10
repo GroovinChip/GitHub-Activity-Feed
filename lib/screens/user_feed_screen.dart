@@ -13,8 +13,10 @@ import 'package:github_activity_feed/widgets/activity_widgets/member_event_card.
 import 'package:github_activity_feed/widgets/activity_widgets/pr_event_card.dart';
 import 'package:github_activity_feed/widgets/activity_widgets/repo_event_card.dart';
 import 'package:github_activity_feed/widgets/loading_spinner.dart';
+import 'package:github_activity_feed/widgets/octicons/oct_icons24_icons.dart';
 import 'package:github_activity_feed/widgets/user_widgets/user_avatar.dart';
 import 'package:github_activity_feed/services/github_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UserFeedScreen extends StatefulWidget {
   const UserFeedScreen({
@@ -39,8 +41,8 @@ class _UserFeedScreenState extends State<UserFeedScreen> with ProvidedState {
   }
 
   Future<void> getUserEvents() async {
-    GraphQLService graphQLService = GraphQLService(token: github.auth.token);
     activityFeed.clear();
+    GraphQLService graphQLService = GraphQLService(token: github.auth.token);
     loading = true;
     final _events = await github.activity
         .listPublicEventsPerformedByUser(widget.username)
@@ -129,9 +131,7 @@ class _UserFeedScreenState extends State<UserFeedScreen> with ProvidedState {
         });
       }
 
-      setState(() {
-        loading = false;
-      });
+      setState(() => loading = false);
     }
   }
 
@@ -140,92 +140,56 @@ class _UserFeedScreenState extends State<UserFeedScreen> with ProvidedState {
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.username}\'s feed'),
+        actions: [
+          IconButton(
+            icon: Icon(OctIcons24.globe_24),
+            onPressed: () => launch('https://github.com/${widget.username}'),
+          ),
+        ],
       ),
-      body: Builder(
-        builder: (context) {
-          if (loading) {
-            return Center(
-              child: LoadingSpinner(),
-            );
-          }
-          return ListView.builder(
-            itemCount: activityFeed.length,
-            itemBuilder: (context, index) {
-              switch (activityFeed[index].type) {
-                case ActivityFeedItemType.repoEvent:
-                  ActivityRepo activityRepo =
-                  activityFeed[index];
-                  return RepoEventCard(
-                    repoEvent: activityRepo,
-                  );
-                case ActivityFeedItemType.forkEvent:
-                  ActivityFork activityFork =
-                  activityFeed[index];
-                  return ForkEventCard(
-                    activityFork: activityFork,
-                  );
-                case ActivityFeedItemType.memberEvent:
-                  ActivityMember memberEvent =
-                  activityFeed[index];
-                  return MemberEventCard(
-                    memberEvent: memberEvent,
-                  );
-                case ActivityFeedItemType.pullRequestEvent:
-                  ActivityPullRequest activityPullRequest =
-                  activityFeed[index];
-                  return PrEventCard(
-                    pr: activityPullRequest,
-                  );
-                default:
-                  return const SizedBox.shrink();
-              }
-            },
-          );
-        }
+      body: RefreshIndicator(
+        onRefresh: () => getUserEvents(),
+        child: Builder(
+          builder: (_) {
+            if (loading) {
+              return Center(
+                child: LoadingSpinner(),
+              );
+            } else {
+              return ListView.builder(
+                itemCount: activityFeed.length,
+                itemBuilder: (context, index) {
+                  switch (activityFeed[index].type) {
+                    case ActivityFeedItemType.repoEvent:
+                      ActivityRepo activityRepo = activityFeed[index];
+                      return RepoEventCard(
+                        repoEvent: activityRepo,
+                      );
+                    case ActivityFeedItemType.forkEvent:
+                      ActivityFork activityFork = activityFeed[index];
+                      return ForkEventCard(
+                        activityFork: activityFork,
+                      );
+                    case ActivityFeedItemType.memberEvent:
+                      ActivityMember memberEvent = activityFeed[index];
+                      return MemberEventCard(
+                        memberEvent: memberEvent,
+                      );
+                    case ActivityFeedItemType.pullRequestEvent:
+                      ActivityPullRequest activityPullRequest =
+                          activityFeed[index];
+                      return PrEventCard(
+                        pr: activityPullRequest,
+                      );
+                    default:
+                      return const SizedBox.shrink();
+                  }
+                },
+              );
+            }
+          },
+        ),
       ),
-      /*body: FutureBuilder<List<Event>>(
-        future:
-            github.activity.listEventsPerformedByUser(widget.username).toList(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-              child: LoadingSpinner(),
-            );
-          } else {
-            return ListView.builder(
-              itemCount: snapshot.data.length,
-              itemBuilder: (context, index) {
-                final event = snapshot.data[index];
-                return Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            UserAvatar(
-                              width: 44,
-                              height: 44,
-                              avatarUrl: event.actor.avatarUrl,
-                              userUrl: event.actor.htmlUrl,
-                            ),
-                            const SizedBox(width: 8.0),
-                            Expanded(
-                              child: Text(event.action),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            );
-          }
-        },
-      ),*/
     );
   }
 }

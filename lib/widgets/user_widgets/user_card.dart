@@ -28,19 +28,13 @@ class UserCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       borderRadius: BorderRadius.circular(8),
       child: InkWell(
-        onTap: () => url_launcher.launch(user.url),
-        onLongPress: () async {
-          //printFormattedBaseUser(user);
-          final events = await Provider.of<GitHubService>(context, listen: false).github.activity.listEventsPerformedByUser(user.login).toList();
-          //print(events);
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => UserFeedScreen(
-                username: user.login,
-              ),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => UserFeedScreen(
+              username: user.login,
             ),
-          );
-        },
+          ),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

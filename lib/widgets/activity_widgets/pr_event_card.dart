@@ -74,14 +74,15 @@ class PrEventCard extends StatelessWidget {
                 width: 25,
               ),
               SizedBox(width: 8),
-              Text(
-                pr.pullRequest.title,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
+              Expanded(
+                child: Text(
+                  pr.pullRequest.title,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               if (pr.pullRequest.merged) ...[
-                Spacer(),
                 Icon(
                   OctIcons16.git_merge_16,
                   size: 16,
